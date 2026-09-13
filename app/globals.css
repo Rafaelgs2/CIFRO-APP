@@ -185,4 +185,29 @@ main { max-width:1440px; margin:auto; min-width:0; padding:28px 44px 64px; outli
  .entry-layout { grid-template-columns:1fr; gap:36px; padding:0; }.entry-branding>.cifro-logo,.entry-slogan { display:none; }.entry-branding h1 { font-size:2.7rem; }.entry-branding>p:not(.entry-slogan) { margin-top:20px; }.entry-topics { margin-top:24px; gap:20px; }.entry-signin { padding:26px; }.skeleton-balance { grid-template-columns:1fr; gap:20px; }
 }
 @media(max-width:370px) { .mobile-nav button { font-size:.65rem; }.mobile-nav button.active { flex:3.5 1 0; }.mobile-nav button.active span { margin-left:5px; } main { padding-left:16px; padding-right:16px; }.topbar { padding:0 16px; }.top-actions { gap:6px; }.theme-label { display:none; }.account-grid { grid-template-columns:1fr; }.account-tile { grid-template-columns:32px minmax(0,1fr); }.filters-panel { grid-template-columns:1fr; }.transaction-row { gap:8px; }.transaction-row>.icon-badge { width:28px; height:28px; }.transaction-value b { font-size:.75rem; }.category-chart { gap:0 16px; }.report-line { flex-wrap:wrap; }.form-tabs button { padding:8px 7px; }.hero-metrics dd { font-size:1.45rem; }.entry-signin { padding:22px; } }
+/* Portals use a viewport frame, never percentage translations. This also
+   avoids WebKit's transform/animation interaction when a sheet opens. */
+.dialog-viewport { position:fixed; z-index:50; left:0; top:var(--visible-top,0px); width:100%; height:var(--visible-height,100dvh); padding:16px; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.dialog-viewport>[data-slot] { pointer-events:auto; min-width:0; max-height:100%; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; animation:page-enter var(--motion-normal) var(--motion-ease); }
+.dialog-viewport>.finance-dialog { position:relative!important; inset:auto!important; transform:none!important; translate:none!important; margin:0; max-height:100%; }
+[data-slot=dialog-close] { min-width:44px; min-height:44px; display:grid; place-items:center; top:8px; right:8px; }
+[data-slot=select-content] { max-width:calc(100vw - 24px); max-height:var(--radix-select-content-available-height); }
+@media(max-width:800px) {
+ .dialog-viewport { padding:12px 0 0; align-items:flex-end; }
+ .dialog-viewport>.finance-dialog { width:100%!important; max-height:100%; padding:24px 20px calc(20px + env(safe-area-inset-bottom))!important; border-radius:24px 24px 0 0!important; }
+ .confirmation-viewport { padding:16px; align-items:center; }
+ .confirmation-viewport>[data-slot] { width:100%; }
+ .finance-dialog [data-slot=dialog-header] { text-align:left; padding-right:24px; }
+ .finance-dialog .form-footer { bottom:0; padding-bottom:8px; }
+ .field input,.field textarea,.picker-trigger,.search-box input { font-size:16px; }
+ .field input[type=date],.field input[type=month] { min-width:0; max-width:100%; appearance:none; -webkit-appearance:none; }
+ .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .form-tabs { display:flex; width:100%; }
+ .form-tabs button { flex:1; min-width:0; padding:8px 5px; }
+ .form-footer>button { min-height:48px; }
+ main { padding-left:max(20px,env(safe-area-inset-left)); padding-right:max(20px,env(safe-area-inset-right)); padding-bottom:calc(112px + env(safe-area-inset-bottom)); }
+ html[data-keyboard-open] .mobile-nav { display:none; }
+}
+@media(max-width:370px) { .finance-dialog .form-grid { grid-template-columns:1fr; }.finance-dialog .money-input input { min-width:0; }.page-toolbar>.primary { max-width:100%; }.transaction-value { max-width:48%; }.transaction-value b { overflow-wrap:anywhere; } }
+@media(max-height:500px) and (max-width:1000px) { .dialog-viewport { padding-top:8px; }.dialog-viewport>.finance-dialog { max-height:100%; }.finance-dialog .form-footer { position:static; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
