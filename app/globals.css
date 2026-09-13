@@ -103,7 +103,9 @@ main { max-width:1440px; margin:auto; min-width:0; padding:28px 44px 64px; outli
 .category-total { display:grid; gap:6px; margin:4px 0 24px; }.category-total span { font-size:.7rem; color:var(--text-secondary); }.category-total b { font-size:1.65rem; font-weight:500; letter-spacing:-.04em; }
 .category-chart-row { margin:20px 0; }.category-chart-row>div:first-child { display:flex; justify-content:space-between; gap:12px; font-size:.75rem; margin-bottom:10px; }.category-chart-row b { font-weight:500; }.category-chart-row small { color:var(--text-secondary); margin-left:4px; font-size:.65rem; }
 .category-track { height:5px; background:var(--chart-track); border-radius:4px; overflow:hidden; }.category-track i { display:block; height:100%; background:var(--chart-primary); border-radius:4px; }.category-chart-row:nth-child(3) i { opacity:.72; }.category-chart-row:nth-child(n+4) i { opacity:.45; }
-.transaction-list { display:grid; }
+.transaction-list { display:grid; gap:4px; }
+.transaction-list>.transaction-row,.workspace .commitment-row,.report-line.full-width,.workspace .profile-link { padding:14px 12px; border-radius:14px; }
+.workspace .profile-link:hover { background:var(--surface-subtle); }
 .transaction-row,.commitment-row { display:flex; align-items:center; gap:12px; width:100%; min-height:76px; padding:15px 0; border-bottom:1px solid var(--border-subtle); text-align:left; }
 .transaction-row:last-child,.commitment-row:last-child { border-bottom:0; }.transaction-row:hover,.commitment-row:hover,.report-line.full-width:hover { background:var(--surface-subtle); }
 .icon-badge { width:36px; height:36px; border-radius:11px; display:inline-grid; place-items:center; color:var(--text-secondary); background:var(--surface-subtle); flex-shrink:0; }.icon-badge svg { width:18px; height:18px; stroke-width:1.6; }

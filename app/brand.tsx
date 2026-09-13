@@ -13,8 +13,8 @@ export function BrandSymbol({className=''}:{className?:string}) {
 export function Brand({className=''}:{className?:string}) {
   return <span className={'cifro-logo '+className} role="img" aria-label="CIFRO">
     <BrandSymbol className="cifro-symbol"/>
-    <svg className="cifro-wordmark" viewBox="0 0 260 62" fill="currentColor" aria-hidden="true">
-      <path d="M45 12A29 29 0 1 0 45 50L35 40A15 15 0 1 1 35 22Z"/>
+    <svg className="cifro-wordmark" viewBox="-2 -2 264 66" fill="currentColor" aria-hidden="true">
+      <path d="M49.506 10.494A29 29 0 1 0 49.506 51.506L39.607 41.607A15 15 0 1 1 39.607 20.393Z"/>
       <rect x="55" y="2" width="14" height="58" rx="2"/>
       <path d="M79 60V27C79 10 89 2 104 2H125V10Q125 16 119 16H105Q94 16 94 27H119V40H94V60Z"/>
       <path d="M132 2H157C177 2 183 12 183 24C183 35 177 40 169 43L185 60H165L147 39V60H132V30H157Q169 30 169 24Q169 16 157 16H142Q132 16 132 6Z"/>
