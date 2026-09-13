@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 import { ThemeProvider, useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 import { Switch as SwitchPrimitive } from 'radix-ui';
@@ -21,10 +21,10 @@ export function AppThemeProvider({ children }: { children: ReactNode }) {
   );
 }
 
+const subscribeToHydration=()=>()=>{};
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(subscribeToHydration,()=>true,()=>false);
 
   return (
     <div className="theme-control">

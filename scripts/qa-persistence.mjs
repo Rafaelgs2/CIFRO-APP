@@ -1,6 +1,6 @@
 import {chromium} from '../.sites-runtime/qa/node_modules/playwright/index.mjs';
 import assert from 'node:assert/strict';
-import {emptyState,totals,accountBalance,invoice} from '../.sites-runtime/finance-test-module.mjs';
+import {totals,accountBalance,invoice} from '../.sites-runtime/finance-test-module.mjs';
 const browser=await chromium.launch({channel:'msedge',headless:true});
 const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
 const page=await context.newPage();let original;const errors=[];page.on('pageerror',e=>errors.push(e.message));
