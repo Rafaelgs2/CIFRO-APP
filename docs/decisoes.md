@@ -3,6 +3,7 @@
 Os arquivos fornecidos pelo usuário orientaram os requisitos do produto. Suas instruções de processo foram tratadas separadamente do pedido de criar o site.
 
 - Nome definido pelo usuário em 13/09/2026: CIFRO. Interface em português do Brasil, com azul como cor principal, navegação inferior no celular e formulários em painéis acessíveis.
+- Tema claro/escuro em todas as telas e componentes sobrepostos. O controle no topo usa a preferência do sistema na primeira visita; uma escolha manual fica salva neste navegador, sem alterar os registros financeiros.
 - Uso individual. Publicação privada pela plataforma Sites. Cada registro é vinculado no servidor à identidade autenticada; não há compartilhamento financeiro na aplicação.
 - Dados pessoais começam vazios. A demonstração é ativada explicitamente, identificada e mantida somente em memória; nunca é gravada junto aos registros pessoais.
 - Armazenamento durável em Cloudflare D1. Um documento validado por usuário contém contas, cartões, lançamentos, categorias, compromissos e metas. A revisão do documento evita perda de atualizações concorrentes. Modelo simples para a primeira versão individual; um histórico muito grande poderá exigir tabelas normalizadas e paginação.
@@ -22,5 +23,7 @@ Os arquivos fornecidos pelo usuário orientaram os requisitos do produto. Suas i
 Testes de cálculo incluem saldos por conta, salário/VR, transferências, parcelas com restos de centavos, fechamento no fim do ano, anos bissextos, pagamento parcial/integral, atraso, referências inválidas e pagamentos excedentes.
 
 Testes no navegador a 390 × 844 verificam criação, edição, exclusão/cancelamento, filtros, metas, faturas e persistência. Também há verificação de layout no desktop a 1440 pixels. O teste de persistência usa exclusivamente o banco local de desenvolvimento e restaura seu estado anterior.
+
+O teste de tema cobre as nove telas, formulários, seletores, confirmação, faturas e notificações, com larguras de 320/390 e 1440 pixels. Verifica operação pelo teclado, preferência do sistema, escolha salva após recarregar e retorno ao tema claro. Os dados usados ficam na demonstração temporária.
 
 WebMCP: há uma ferramenta opcional de leitura do resumo do mês, ativada somente quando o navegador oferece `document.modelContext`. A validação nativa desse recurso depende de um navegador compatível; os fluxos comuns não dependem dele.

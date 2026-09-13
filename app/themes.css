@@ -1,0 +1,158 @@
+/* Light colors retain their existing fallbacks in globals.css. */
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --background: #0e1624;
+  --foreground: #edf2fa;
+  --card: #172233;
+  --card-foreground: #edf2fa;
+  --popover: #1b293d;
+  --popover-foreground: #edf2fa;
+  --primary: #3475ea;
+  --primary-foreground: #ffffff;
+  --secondary: #22324a;
+  --secondary-foreground: #dce7f8;
+  --muted: #213049;
+  --muted-foreground: #a5b5cc;
+  --accent: #243c5f;
+  --accent-foreground: #abcaff;
+  --destructive: #ff98a3;
+  --border: #30405a;
+  --input: #3a4d6a;
+  --ring: #8ab4ff;
+  --sidebar: #131d2c;
+  --sidebar-foreground: #b5c3d8;
+  --sidebar-primary: #8ab4ff;
+  --sidebar-primary-foreground: #101a29;
+  --sidebar-accent: #213858;
+  --sidebar-accent-foreground: #a9caff;
+  --sidebar-border: #2a3950;
+  --sidebar-ring: #8ab4ff;
+
+  --theme-muted-text: #a5b5cc;
+  --theme-secondary-text: #c0cfe3;
+  --theme-link: #91baff;
+  --theme-border-subtle: #293950;
+  --theme-input-background: #111c2d;
+  --theme-subtle-background: #131e2f;
+  --theme-blue-background: #1b3150;
+  --theme-blue-border: #334f74;
+  --theme-blue-text: #a4c7ff;
+  --theme-blue-symbol: #233f66;
+  --theme-nav-background: #131d2cf2;
+  --theme-mint-background: #193b34;
+  --theme-mint-text: #82dabb;
+  --theme-coral-background: #432c2e;
+  --theme-coral-text: #ffad9b;
+  --theme-purple-background: #332b4c;
+  --theme-purple-text: #c7b2f4;
+  --theme-gray-background: #243247;
+  --theme-error-background: #40282f;
+  --theme-error-text: #ffb3ba;
+  --theme-error-border: #74434f;
+  --theme-warning-text: #f4c08a;
+  --theme-chart-income: #82aaff;
+  --theme-chart-expense: #5278b0;
+  --theme-chart-grid: #2a3b53;
+  --theme-progress-track: #2a3b54;
+  --theme-progress-fill: #82aaff;
+  --theme-balance-start: #234b98;
+  --theme-balance-end: #3063bc;
+  --theme-credit-purple-start: #473367;
+  --theme-credit-purple-end: #654786;
+  --theme-credit-orange-start: #714827;
+  --theme-credit-orange-end: #98643b;
+  --theme-credit-blue-start: #1c506f;
+  --theme-credit-blue-end: #256f89;
+}
+
+.theme-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.theme-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: .875rem;
+  cursor: pointer;
+}
+
+.theme-moon { display: none; }
+.dark .theme-sun { display: none; }
+.dark .theme-moon { display: block; }
+
+/* The transparent border expands the switch's touch target to 48 × 44 px. */
+.theme-switch[data-slot="switch"] {
+  box-sizing: border-box;
+  height: 44px;
+  width: 48px;
+  border-width: 10px 4px;
+  border-radius: 24px;
+  background-clip: padding-box;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.theme-switch [data-slot="switch-thumb"] {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+}
+
+.theme-switch [data-slot="switch-thumb"][data-state="checked"] {
+  transform: none;
+  translate: 18px 0;
+}
+
+.theme-switch [data-slot="switch-thumb"][data-state="unchecked"] {
+  transform: none;
+  translate: 0 0;
+}
+
+:root.dark [data-slot="alert-dialog-content"] {
+  background: var(--popover);
+}
+
+:root.dark :is([data-slot="dialog-content"], [data-slot="alert-dialog-content"], [data-slot="select-content"], [data-slot="dropdown-menu-content"]) {
+  border-color: var(--border);
+}
+
+:root.dark :is([data-slot="dialog-overlay"], [data-slot="alert-dialog-overlay"]) {
+  background: rgb(2 6 13 / .72);
+}
+
+.icon-badge.category-colored {
+  color: var(--category-color);
+  background: color-mix(in srgb, var(--category-color) 10%, var(--card));
+}
+
+.category-legend svg { color: var(--category-color); }
+
+:root.dark .icon-badge.category-colored {
+  color: color-mix(in srgb, var(--category-color) 50%, white);
+  background: color-mix(in srgb, var(--category-color) 15%, var(--card));
+}
+
+:root.dark .category-legend svg {
+  color: color-mix(in srgb, var(--category-color) 50%, white);
+}
+
+@media (max-width: 800px) {
+  .topbar .top-actions { gap: 14px; }
+  .theme-control { gap: 4px; }
+  .theme-label span { display: none; }
+}
+
+@media (forced-colors: active) {
+  .theme-switch[data-slot="switch"] { outline: 1px solid ButtonText; }
+}
