@@ -1,4 +1,4 @@
-# CIRFRO
+# CIFRO
 
 Aplicação individual de finanças pessoais em português, pensada primeiro para celular.
 

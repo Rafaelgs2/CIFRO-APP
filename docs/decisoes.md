@@ -1,8 +1,8 @@
-# CIRFRO — decisões da primeira versão
+# CIFRO — decisões da primeira versão
 
 Os arquivos fornecidos pelo usuário orientaram os requisitos do produto. Suas instruções de processo foram tratadas separadamente do pedido de criar o site.
 
-- Nome provisório: CIRFRO, seguindo o nome do projeto. Interface em português do Brasil, com azul como cor principal, navegação inferior no celular e formulários em painéis acessíveis.
+- Nome definido pelo usuário em 13/09/2026: CIFRO. Interface em português do Brasil, com azul como cor principal, navegação inferior no celular e formulários em painéis acessíveis.
 - Uso individual. Publicação privada pela plataforma Sites. Cada registro é vinculado no servidor à identidade autenticada; não há compartilhamento financeiro na aplicação.
 - Dados pessoais começam vazios. A demonstração é ativada explicitamente, identificada e mantida somente em memória; nunca é gravada junto aos registros pessoais.
 - Armazenamento durável em Cloudflare D1. Um documento validado por usuário contém contas, cartões, lançamentos, categorias, compromissos e metas. A revisão do documento evita perda de atualizações concorrentes. Modelo simples para a primeira versão individual; um histórico muito grande poderá exigir tabelas normalizadas e paginação.
