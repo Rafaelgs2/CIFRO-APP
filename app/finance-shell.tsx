@@ -45,7 +45,7 @@ export function FinanceShell({children,view,navigate,name,title}:{children:React
     </div>
     <nav className="mobile-nav" aria-label="Navegação principal">{mainNavigation.map(item=>{
       const active=view===item.id||item.id==='profile'&&['accounts','cards','categories'].includes(view)||item.id==='reports'&&view==='closing';
-      return <button key={item.id} aria-label={item.name} onClick={()=>navigate(item.id)} className={active?'active':''} aria-current={active?'page':undefined}><item.icon size={21}/><span>{item.mobile}</span></button>;
+      return <button key={item.id} aria-label={item.name} title={item.name} onClick={()=>navigate(item.id)} className={active?'active':''} aria-current={active?'page':undefined}><item.icon size={21}/><span aria-hidden="true">{item.mobile}</span></button>;
     })}</nav>
   </div>;
 }

@@ -112,7 +112,7 @@ try {
   await page.keyboard.press('Space');
   await waitTheme('light');
   assert.equal(await page.evaluate(() => localStorage.getItem('cifro-theme')),'light');
-  assert.equal(await page.locator('.panel').first().evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 255, 255)');
+  assert.equal(await page.locator('.panel').first().evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(255, 255, 255, 0.62)');
   await page.screenshot({path:'outputs/light-reports.png',fullPage:true});
   await page.reload({waitUntil:'networkidle'});
   await waitTheme('light');
