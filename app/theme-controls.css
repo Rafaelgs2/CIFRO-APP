@@ -1,0 +1,17 @@
+.theme-control { display:flex; align-items:center; gap:var(--space-2); color:var(--text-secondary); flex-shrink:0; }
+.theme-label { display:flex; align-items:center; gap:var(--space-2); min-height:44px; font-size:var(--text-sm); cursor:pointer; }
+.theme-moon { display:none; }
+.dark .theme-sun { display:none; }
+.dark .theme-moon { display:block; }
+
+/* A 48×44 touch target contains a separate 40×24 track and 20×20 thumb.
+   Positioning is independent of Tailwind transforms and border calculations. */
+button.theme-switch { position:relative; display:block; flex:0 0 48px; width:48px; height:44px; padding:0; border:0; border-radius:var(--radius-input); background:transparent; box-shadow:none; cursor:pointer; }
+button.theme-switch::before { content:''; position:absolute; left:4px; top:10px; width:40px; height:24px; border-radius:12px; background:var(--switch-track); transition:background-color var(--motion-fast); }
+button.theme-switch[data-state=checked]::before { background:var(--primary); }
+button.theme-switch .theme-thumb { position:absolute; display:block; top:12px; left:6px; width:20px; height:20px; border:0; border-radius:50%; background:var(--on-primary); transform:none; translate:none; transition:left var(--motion-fast); }
+button.theme-switch[data-state=checked] .theme-thumb { left:22px; }
+button.theme-switch:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
+button.theme-switch:disabled { opacity:.5; cursor:wait; }
+@media(max-width:800px) { .theme-label span { display:none; } .theme-control { gap:0; } }
+@media(forced-colors:active) { button.theme-switch::before { border:1px solid ButtonText; } button.theme-switch .theme-thumb { background:ButtonText; } }

@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { ThemeProvider, useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import { Switch as SwitchPrimitive } from 'radix-ui';
 import { Toaster } from '@/components/ui/sonner';
 
 export function AppThemeProvider({ children }: { children: ReactNode }) {
@@ -33,7 +33,7 @@ export function ThemeToggle() {
         <Moon className="theme-moon" size={18} aria-hidden="true" />
         <span>Modo escuro</span>
       </label>
-      <Switch
+      <SwitchPrimitive.Root
         id="theme-toggle"
         className="theme-switch"
         aria-label="Modo escuro"
@@ -41,7 +41,7 @@ export function ThemeToggle() {
         checked={mounted && resolvedTheme === 'dark'}
         onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
         disabled={!mounted}
-      />
+      ><SwitchPrimitive.Thumb className="theme-thumb" /></SwitchPrimitive.Root>
     </div>
   );
 }

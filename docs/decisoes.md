@@ -4,6 +4,8 @@ Os arquivos fornecidos pelo usuário orientaram os requisitos do produto. Suas i
 
 - Nome definido pelo usuário em 13/09/2026: CIFRO. Interface em português do Brasil, com azul como cor principal, navegação inferior no celular e formulários em painéis acessíveis.
 - Tema claro/escuro em todas as telas e componentes sobrepostos. O controle no topo usa a preferência do sistema na primeira visita; uma escolha manual fica salva neste navegador, sem alterar os registros financeiros.
+- Identidade visual revisada a partir da referência fornecida: símbolo conectado da CIFRO, wordmark próprio, favicon e slogan “SUAS FINANÇAS MAIS CONECTADAS”. Inter é servida pelo próprio site; cores, tipografia, espaçamentos, raios, bordas, sombras e movimento usam tokens semânticos compartilhados nos temas claro e escuro.
+- O resumo principal agrupa saldo, receitas e despesas em uma única superfície para estabelecer hierarquia entre os valores. Textos de interface são objetivos, cards comuns usam bordas sutis sem sombra e cores de estado ficam reservadas à semântica financeira.
 - Uso individual. Publicação privada pela plataforma Sites. Cada registro é vinculado no servidor à identidade autenticada; não há compartilhamento financeiro na aplicação.
 - Dados pessoais começam vazios. A demonstração é ativada explicitamente, identificada e mantida somente em memória; nunca é gravada junto aos registros pessoais.
 - Armazenamento durável em Cloudflare D1. Um documento validado por usuário contém contas, cartões, lançamentos, categorias, compromissos e metas. A revisão do documento evita perda de atualizações concorrentes. Modelo simples para a primeira versão individual; um histórico muito grande poderá exigir tabelas normalizadas e paginação.

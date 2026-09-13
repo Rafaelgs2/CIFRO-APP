@@ -35,7 +35,9 @@ try {
   await waitTheme('dark');
   assert.equal(await toggle.getAttribute('aria-checked'),'true');
   assert.equal(await page.evaluate(() => localStorage.getItem('cifro-theme')),'dark');
-  assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor),'rgb(14, 22, 36)');
+  const geometry=await toggle.evaluate(el=>{const track=el.getBoundingClientRect(),thumb=el.querySelector('.theme-thumb').getBoundingClientRect();return {track:{left:track.left+4,right:track.right-4,top:track.top+10,bottom:track.bottom-10},thumb:{left:thumb.left,right:thumb.right,top:thumb.top,bottom:thumb.bottom}}});
+  assert.ok(geometry.thumb.left>=geometry.track.left && geometry.thumb.right<=geometry.track.right && geometry.thumb.top>=geometry.track.top && geometry.thumb.bottom<=geometry.track.bottom,'toggle thumb remains inside track');
+  assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor),'rgb(12, 20, 34)');
   const touch = await toggle.boundingBox();
   assert.ok(touch.width >= 44 && touch.height >= 44, '44px touch target');
   await page.reload({waitUntil:'networkidle'});
