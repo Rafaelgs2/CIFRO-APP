@@ -23,19 +23,28 @@ Aplicação individual de finanças pessoais em português, pensada primeiro par
 
 ## Execução local
 
-Requer Node.js compatível com `package.json`.
+Requer Node.js 22.13 ou superior (conforme definido em `package.json`) e npm.
+
+Clone o repositório, instale as dependências e inicie o ambiente de desenvolvimento:
 
 ```bash
-npm ci
+git clone https://github.com/Rafaelgs2/CIRFRO-APP.git
+cd CIRFRO-APP
+npm install
 npm run dev
 ```
 
 A prévia fica em `http://localhost:5173`.
 
-Para executar a compilação local com o worker gerado:
+Para gerar uma compilação de produção:
 
 ```bash
 npm run build
+```
+
+Para executar localmente o worker gerado após a compilação:
+
+```bash
 npm run start
 ```
 

@@ -30,9 +30,15 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .cache/
+.turbo/
+.eslintcache
+.swc/
+*.cache
 tmp/
 temp/
 *.tmp
+*.bak
+*.swp
 *.tsbuildinfo
 outputs/
 
