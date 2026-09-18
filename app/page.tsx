@@ -1,2 +1,5 @@
-import FinanceApp from './finance-main';
-export default function Home() { return <FinanceApp />; }
+import { LoginScreen } from './login-screen';
+
+export default function Home() {
+  return <LoginScreen />;
+}
