@@ -1,47 +1,42 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies and generated builds
+node_modules/
+.next/
+next-env.d.ts
+.vinext/
+dist/
+build/
+coverage/
+.wrangler/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/.vinext/
-/out/
-
-# misc
-.DS_Store
+# Environment files and credentials
+.env
+.env.*
+!.env.example
 *.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.token
+secrets/
+credentials/
 
-# debug
+# Logs, caches and temporary files
+*.log
+logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-next-env.d.ts
-/dist/
-/.wrangler/
-# Checkout-local execution profile and tool state; never publish them.
-/.sites-runtime/
-/.agents/
-/.codex/
-/outputs/
-/work/
+pnpm-debug.log*
+.cache/
+tmp/
+temp/
+*.tmp
 *.tsbuildinfo
+outputs/
+
+# OS and editor files
+.DS_Store
+.vscode/
+.idea/

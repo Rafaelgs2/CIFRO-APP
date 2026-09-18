@@ -6,7 +6,7 @@ Os arquivos fornecidos pelo usuário orientaram os requisitos do produto. Suas i
 - Tema claro/escuro em todas as telas e componentes sobrepostos. O controle no topo usa a preferência do sistema na primeira visita; uma escolha manual fica salva neste navegador, sem alterar os registros financeiros.
 - Identidade visual revisada a partir da referência fornecida: símbolo conectado da CIFRO, wordmark próprio, favicon e slogan “SUAS FINANÇAS MAIS CONECTADAS”. Inter é servida pelo próprio site; cores, tipografia, espaçamentos, raios, bordas, sombras e movimento usam tokens semânticos compartilhados nos temas claro e escuro.
 - O resumo principal agrupa saldo, receitas e despesas em uma única superfície para estabelecer hierarquia entre os valores. Textos de interface são objetivos, cards comuns usam bordas sutis sem sombra e cores de estado ficam reservadas à semântica financeira.
-- Uso individual. Publicação privada pela plataforma Sites. Cada registro é vinculado no servidor à identidade autenticada; não há compartilhamento financeiro na aplicação.
+- Uso individual. A versão local usa um único perfil de dados e não inclui autenticação. Uma futura publicação deverá definir sua própria estratégia de acesso antes de expor registros financeiros.
 - Dados pessoais começam vazios. A demonstração é ativada explicitamente, identificada e mantida somente em memória; nunca é gravada junto aos registros pessoais.
 - Armazenamento durável em Cloudflare D1. Um documento validado por usuário contém contas, cartões, lançamentos, categorias, compromissos e metas. A revisão do documento evita perda de atualizações concorrentes. Modelo simples para a primeira versão individual; um histórico muito grande poderá exigir tabelas normalizadas e paginação.
 - Dinheiro calculado em centavos inteiros. Saldo inicial pertence à conta e não entra como receita. Transferências internas não entram em receitas nem despesas consolidadas.
@@ -17,15 +17,13 @@ Os arquivos fornecidos pelo usuário orientaram os requisitos do produto. Suas i
 - Metas acompanham o saldo atual da conta selecionada. Compromissos somente movimentam o saldo ao confirmar o recebimento ou pagamento.
 - Contas arquivadas mantêm o histórico e o saldo consolidado. Categorias excluídas exigem transferência dos registros para outra categoria do mesmo tipo.
 - Fechamento mensal é uma revisão; não bloqueia nem modifica lançamentos.
-- Sem integração bancária, importação automática, orçamentos por categoria ou uso familiar. O arquivo de prompt exclui orçamentos da primeira versão; o restante da seção de planejamento foi mantido.
+- Sem integração bancária, importação automática, orçamentos por categoria ou uso familiar.
 - A exportação JSON permite guardar uma cópia dos registros. Importação e restauração automática não fazem parte desta versão.
 
 ## Verificação
 
 Testes de cálculo incluem saldos por conta, salário/VR, transferências, parcelas com restos de centavos, fechamento no fim do ano, anos bissextos, pagamento parcial/integral, atraso, referências inválidas e pagamentos excedentes.
 
-Testes no navegador a 390 × 844 verificam criação, edição, exclusão/cancelamento, filtros, metas, faturas e persistência. Também há verificação de layout no desktop a 1440 pixels. O teste de persistência usa exclusivamente o banco local de desenvolvimento e restaura seu estado anterior.
+Os testes de interface devem verificar criação, edição, exclusão/cancelamento, filtros, metas, faturas, persistência e o layout em celular e desktop.
 
 O teste de tema cobre as nove telas, formulários, seletores, confirmação, faturas e notificações, com larguras de 320/390 e 1440 pixels. Verifica operação pelo teclado, preferência do sistema, escolha salva após recarregar e retorno ao tema claro. Os dados usados ficam na demonstração temporária.
-
-WebMCP: há uma ferramenta opcional de leitura do resumo do mês, ativada somente quando o navegador oferece `document.modelContext`. A validação nativa desse recurso depende de um navegador compatível; os fluxos comuns não dependem dele.
