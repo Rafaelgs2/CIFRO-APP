@@ -1,5 +1,6 @@
 'use client';
 import {useEffect,useState,useRef,useCallback} from 'react';
+import {useRouter} from 'next/navigation';
 import {ChevronLeft,ChevronRight,Search,SlidersHorizontal,Info,ArrowRight,X} from 'lucide-react';
 import {AlertDialog,AlertDialogContent,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {AppToaster} from './theme-controls';
@@ -19,11 +20,12 @@ const titles:Record<View,string>={home:'Visão geral',transactions:'Lançamentos
 const monthNames=['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 const periodLabel=(month:string)=>monthLabel(month).replace(' de ',' ');
 export default function FinanceApp(){
+ const router=useRouter();
  const [state,setState]=useState<State>(emptyState);const [revision,setRevision]=useState(0);const [loading,setLoading]=useState(true);const [error,setError]=useState('');const [demo,setDemo]=useState(false);const [busy,setBusy]=useState(false);const lock=useRef(false);const [view,setView]=useState<View>('home');const [month,setMonth]=useState(monthOf(today()));const [hide,setHide]=useState(false);const [modal,setModal]=useState<Modal|null>(null);const [accountId,setAccountId]=useState<string|null>(null);const [cardId,setCardId]=useState<string|null>(null);const [confirm,setConfirm]=useState<Confirmation|null>(null);const [search,setSearch]=useState('');const [filtersOpen,setFiltersOpen]=useState(false);const [typeFilter,setTypeFilter]=useState('all');const [categoryFilter,setCategoryFilter]=useState('all');const [accountFilter,setAccountFilter]=useState('all');const [cardFilter,setCardFilter]=useState('all');const [statusFilter,setStatusFilter]=useState('all');const [startDate,setStartDate]=useState('');const [endDate,setEndDate]=useState('');
  const [monthPickerOpen,setMonthPickerOpen]=useState(false);const [pickerYear,setPickerYear]=useState(Number(month.slice(0,4)));const monthPickerRef=useRef<HTMLDivElement>(null);
  const start=startDate||`${month}-01`,end=endDate||dateInMonth(month,31);
  function setPeriod(next:string){setMonth(next);setStartDate('');setEndDate('')}
- const authorizedFetch=useCallback(async(input:RequestInfo|URL,init?:RequestInit)=>{const {data:{session}}=await getSupabaseBrowserClient().auth.getSession();if(!session)throw Error('Sua sessão expirou. Entre novamente.');const headers=new Headers(init?.headers);headers.set('Authorization',`Bearer ${session.access_token}`);return fetch(input,{...init,headers});},[]);
+ const authorizedFetch=useCallback(async(input:RequestInfo|URL,init?:RequestInit)=>{const supabase=getSupabaseBrowserClient();const {data:{session}}=await supabase.auth.getSession();if(!session)throw Error('Sua sessão expirou. Entre novamente.');const headers=new Headers(init?.headers);headers.set('Authorization',`Bearer ${session.access_token}`);const response=await fetch(input,{...init,headers});if(response.status===401){await supabase.auth.signOut({scope:'local'});router.replace('/');throw Error('Sua sessão expirou. Entre novamente.');}return response;},[router]);
  const load=useCallback(async()=>{setLoading(true);setError('');try{const r=await authorizedFetch('/api/finance',{cache:'no-store'});const data=await r.json() as {state:State,revision:number,error:string};if(!r.ok)throw Error(data.error);setState(data.state);setRevision(data.revision);}catch(e){setError(e instanceof Error?e.message:'Não foi possível carregar.');}finally{setLoading(false)}},[authorizedFetch]);
  useEffect(()=>{void Promise.resolve().then(load)},[load]);
  useEffect(()=>{const handler=()=>{const hash=location.hash.slice(1);if(hash in titles)setView(hash as View)};handler();window.addEventListener('hashchange',handler);return()=>window.removeEventListener('hashchange',handler)},[]);

@@ -13,9 +13,9 @@ export function AuthGate({children}:{children:ReactNode}){
     if(!configured)return;
     const supabase=getSupabaseBrowserClient();
     let active=true;
-    void supabase.auth.getSession().then(({data})=>{
+    void supabase.auth.getUser().then(({data,error})=>{
       if(!active)return;
-      if(!data.session){router.replace('/');return;}
+      if(error||!data.user){void supabase.auth.signOut({scope:'local'});router.replace('/');return;}
       setReady(true);
     });
     const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{

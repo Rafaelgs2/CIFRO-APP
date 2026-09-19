@@ -27,6 +27,8 @@ Requer Node.js 22.13 ou superior (conforme definido em `package.json`) e npm.
 
 Antes de iniciar, copie `.env.example` para `.env.local` e preencha a Project URL e a Publishable key do Supabase. Nunca use uma Secret key no navegador.
 
+`FINANCE_STORAGE=d1` mantém a persistência de transição. Depois de aplicar todas as migrations até `202609190003_finance_state_rpc.sql`, use `FINANCE_STORAGE=supabase` para tornar o PostgreSQL relacional a fonte oficial dos dados.
+
 Clone o repositório, instale as dependências e inicie o ambiente de desenvolvimento:
 
 ```bash

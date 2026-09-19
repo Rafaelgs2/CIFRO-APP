@@ -8,11 +8,26 @@ function config(){
 }
 
 export async function authenticatedUser(request:Request){
+  const context=await authenticatedContext(request);
+  return context?.user??null;
+}
+
+export function supabaseRequestContext(request:Request){
   const authorization=request.headers.get('authorization');
   const token=authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
   if(!token)return null;
   const {url,key}=config();
-  const supabase=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
+  const supabase=createClient(url,key,{
+    auth:{persistSession:false,autoRefreshToken:false},
+    global:{headers:{Authorization:`Bearer ${token}`}},
+  });
+  return {supabase,token};
+}
+
+export async function authenticatedContext(request:Request){
+  const context=supabaseRequestContext(request);
+  if(!context)return null;
+  const {supabase,token}=context;
   const {data:{user},error}=await supabase.auth.getUser(token);
-  return error?null:user;
+  return error||!user?null:{user,supabase};
 }
