@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Brand } from './brand';
 
 type FieldErrors = {
@@ -20,9 +20,8 @@ export function LoginScreen() {
 
   function validate() {
     const nextErrors: FieldErrors = {};
-    const normalizedEmail = email.trim();
 
-    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
       nextErrors.email = 'Insira um e-mail válido.';
     }
 
@@ -39,87 +38,59 @@ export function LoginScreen() {
     if (!validate()) return;
 
     setLoading(true);
-    window.setTimeout(() => {
-      router.push('/dashboard');
-    }, 850);
+    window.setTimeout(() => router.push('/dashboard'), 850);
   }
 
   return (
     <main className="login-page">
-      <section className="login-brand-panel" aria-labelledby="login-brand-title">
-        <div className="login-brand-inner">
+      <div className="login-atmosphere" aria-hidden="true">
+        <div className="login-grid" />
+        <div className="login-glow login-glow-one" />
+        <div className="login-glow login-glow-two" />
+
+        <svg className="login-flow" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMidYMid slice">
+          <path className="flow-path flow-path-soft" d="M-90 698C137 704 188 513 342 482C493 451 506 561 650 511C800 458 742 235 953 174C1140 120 1277 225 1531 182" />
+          <path className="flow-path flow-path-wide" d="M-72 226C148 191 250 267 354 381C465 502 522 555 676 493C848 424 865 298 1014 308C1184 320 1247 508 1515 443" />
+          <path className="flow-path flow-path-main" d="M-70 547C169 546 242 635 398 608C559 580 533 404 704 397C857 391 900 535 1041 572C1197 613 1316 525 1513 594" />
+          <path className="flow-path flow-path-light" d="M64 922C189 730 331 736 435 632C553 515 511 300 694 232C890 159 1006 272 1118 140C1190 56 1268-4 1456-21" />
+          <path className="flow-accent" d="M354 381C465 502 522 555 676 493C848 424 865 298 1014 308" />
+
+          <g className="flow-nodes">
+            <circle cx="354" cy="381" r="5" />
+            <circle cx="676" cy="493" r="7" />
+            <circle cx="704" cy="397" r="4" />
+            <circle cx="1014" cy="308" r="5" />
+            <circle cx="1041" cy="572" r="4" />
+          </g>
+        </svg>
+      </div>
+
+      <section className="login-auth" aria-labelledby="login-title">
+        <span className="login-corner login-corner-top" aria-hidden="true" />
+        <span className="login-corner login-corner-bottom" aria-hidden="true" />
+
+        <header className="login-brand-lockup">
           <Brand className="login-brand" />
+          <p>Suas finanças mais conectadas</p>
+        </header>
 
-          <div className="login-story">
-            <div className="login-story-copy">
-              <p className="login-eyebrow">Clareza para suas escolhas</p>
-              <h1 id="login-brand-title">
-                Suas finanças<br />mais conectadas.
-              </h1>
-              <p className="login-intro">
-                Organize sua vida financeira de forma simples e tenha uma visão clara do seu dinheiro.
-              </p>
-            </div>
-
-            <div className="finance-preview" aria-label="Resumo financeiro ilustrativo">
-              <article className="preview-card preview-balance">
-                <div className="preview-card-top">
-                  <span>Saldo disponível</span>
-                  <span className="preview-period">Setembro</span>
-                </div>
-                <strong>R$ 8.420,00</strong>
-                <span className="preview-positive">↗ 12,4% este mês</span>
-                <div className="preview-bars" aria-hidden="true">
-                  <i style={{ height: '34%' }} />
-                  <i style={{ height: '48%' }} />
-                  <i style={{ height: '42%' }} />
-                  <i style={{ height: '66%' }} />
-                  <i style={{ height: '57%' }} />
-                  <i style={{ height: '84%' }} />
-                  <i style={{ height: '76%' }} />
-                </div>
-              </article>
-
-              <article className="preview-card preview-income">
-                <span>Receitas</span>
-                <strong>R$ 5.800</strong>
-                <small>+ R$ 640 este mês</small>
-              </article>
-
-              <article className="preview-card preview-expense">
-                <span>Gastos</span>
-                <strong>R$ 3.140</strong>
-                <small>37% do saldo</small>
-              </article>
-            </div>
-          </div>
-
-          <p className="login-brand-footnote">CIFRO · Controle financeiro pessoal</p>
-        </div>
-      </section>
-
-      <section className="login-form-panel" aria-labelledby="login-title">
-        <div className="login-mobile-brand">
-          <Brand />
+        <div className="login-heading">
+          <p className="login-kicker">Acesso seguro</p>
+          <h1 id="login-title">Bem-vindo de volta</h1>
+          <p>Acesse sua conta para continuar</p>
         </div>
 
-        <div className="login-form-wrap">
-          <header className="login-form-header">
-            <p className="login-form-kicker">Sua conta</p>
-            <h2 id="login-title">Bem-vindo de volta</h2>
-            <p>Entre na sua conta para continuar.</p>
-          </header>
-
-          <form className="login-form" onSubmit={handleSubmit} noValidate>
-            <div className="login-field">
-              <label htmlFor="email">E-mail</label>
+        <form className="login-form" onSubmit={handleSubmit} noValidate>
+          <div className="login-field">
+            <label htmlFor="email">E-mail</label>
+            <div className="login-input-shell">
               <input
                 id="email"
                 name="email"
                 type="email"
                 inputMode="email"
                 autoComplete="email"
-                placeholder="seuemail@exemplo.com"
+                placeholder="seu@email.com"
                 value={email}
                 aria-invalid={Boolean(errors.email)}
                 aria-describedby={errors.email ? 'email-error' : undefined}
@@ -128,57 +99,73 @@ export function LoginScreen() {
                   if (errors.email) setErrors((current) => ({ ...current, email: undefined }));
                 }}
               />
-              {errors.email && <p id="email-error" className="login-field-error">{errors.email}</p>}
             </div>
+            {errors.email && <p id="email-error" className="login-field-error">{errors.email}</p>}
+          </div>
 
-            <div className="login-field">
-              <label htmlFor="password">Senha</label>
-              <div className="password-field">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="Digite sua senha"
-                  value={password}
-                  aria-invalid={Boolean(errors.password)}
-                  aria-describedby={errors.password ? 'password-error' : undefined}
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                    if (errors.password) setErrors((current) => ({ ...current, password: undefined }));
-                  }}
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                  aria-pressed={showPassword}
-                  onClick={() => setShowPassword((visible) => !visible)}
-                >
-                  {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
-                </button>
-              </div>
-              {errors.password && <p id="password-error" className="login-field-error">{errors.password}</p>}
+          <div className="login-field">
+            <label htmlFor="password">Senha</label>
+            <div className="login-input-shell password-field">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                placeholder="••••••••"
+                value={password}
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={errors.password ? 'password-error' : undefined}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  if (errors.password) setErrors((current) => ({ ...current, password: undefined }));
+                }}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                aria-pressed={showPassword}
+                onClick={() => setShowPassword((visible) => !visible)}
+              >
+                {showPassword ? <EyeOff /> : <Eye />}
+              </button>
             </div>
+            {errors.password && <p id="password-error" className="login-field-error">{errors.password}</p>}
+          </div>
 
-            <a className="forgot-password" href="#recuperar-senha" onClick={(event) => event.preventDefault()}>
+          <div className="login-options">
+            <label className="login-remember">
+              <input type="checkbox" name="remember" />
+              <span className="login-checkbox" aria-hidden="true" />
+              <span>Lembrar de mim</span>
+            </label>
+            <a href="#recuperar-senha" onClick={(event) => event.preventDefault()}>
               Esqueci minha senha
             </a>
+          </div>
 
-            <button className="login-submit" type="submit" disabled={loading}>
-              {loading && <span className="login-spinner" aria-hidden="true" />}
-              <span>{loading ? 'Entrando...' : 'Entrar'}</span>
-            </button>
+          <button className="login-submit" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <span className="login-spinner" aria-hidden="true" />
+                <span>Entrando...</span>
+              </>
+            ) : (
+              <>
+                <span>Entrar</span>
+                <ArrowRight aria-hidden="true" />
+              </>
+            )}
+          </button>
 
-            <p className="login-signup">
-              Ainda não possui uma conta?{' '}
-              <a href="#criar-conta" onClick={(event) => event.preventDefault()}>Criar conta</a>
-            </p>
-          </form>
-        </div>
-
-        <p className="login-form-footnote">Ao entrar, você concorda com os termos de uso e privacidade.</p>
+          <p className="login-signup">
+            Ainda não possui uma conta?{' '}
+            <a href="#criar-conta" onClick={(event) => event.preventDefault()}>Criar conta</a>
+          </p>
+        </form>
       </section>
+
+      <p className="login-trust"><span aria-hidden="true" /> Ambiente protegido e seguro</p>
     </main>
   );
 }
