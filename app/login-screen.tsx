@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Brand } from './brand';
@@ -9,30 +9,60 @@ import {getSupabaseBrowserClient,isSupabaseConfigured} from '@/lib/supabase/brow
 type FieldErrors = {
   email?: string;
   password?: string;
+  confirmPassword?: string;
 };
+
+type AuthMode = 'signIn' | 'signUp' | 'forgot' | 'reset';
+
+function authMessage(message: string) {
+  const normalized = message.toLowerCase();
+  if (normalized.includes('invalid login credentials')) return 'E-mail ou senha inválidos. Se necessário, redefina sua senha.';
+  if (normalized.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
+  if (normalized.includes('user already registered')) return 'Este e-mail já possui uma conta. Entre ou redefina sua senha.';
+  if (normalized.includes('email rate limit exceeded') || normalized.includes('over_email_send_rate_limit')) return 'Limite temporário de e-mails atingido. Aguarde e tente novamente mais tarde.';
+  return message;
+}
 
 export function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
-  const [mode,setMode]=useState<'signIn'|'signUp'>('signIn');
+  const [mode,setMode]=useState<AuthMode>('signIn');
   const [authError,setAuthError]=useState('');
   const [notice,setNotice]=useState('');
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    const supabase = getSupabaseBrowserClient();
+    const {data: {subscription}} = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setMode('reset');
+        setAuthError('');
+        setNotice('Defina uma nova senha para concluir a recuperação.');
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   function validate() {
     const nextErrors: FieldErrors = {};
 
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+    if (mode !== 'reset' && !/^\S+@\S+\.\S+$/.test(email.trim())) {
       nextErrors.email = 'Insira um e-mail válido.';
     }
 
-    if (!password) {
+    if (mode !== 'forgot' && !password) {
       nextErrors.password = 'Insira sua senha.';
-    } else if(mode==='signUp'&&password.length<12) {
+    } else if((mode==='signUp'||mode==='reset')&&password.length<12) {
       nextErrors.password = 'Use ao menos 12 caracteres.';
+    }
+
+    if (mode === 'reset' && confirmPassword !== password) {
+      nextErrors.confirmPassword = 'As senhas precisam ser iguais.';
     }
 
     setErrors(nextErrors);
@@ -48,7 +78,15 @@ export function LoginScreen() {
     setLoading(true);
     try{
       const supabase=getSupabaseBrowserClient();
-      if(mode==='signUp'){
+      if(mode==='forgot'){
+        const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:`${window.location.origin}/`});
+        if(error)throw error;
+        setNotice('Enviamos um link para redefinir sua senha. Confira também a caixa de spam.');
+      }else if(mode==='reset'){
+        const {error}=await supabase.auth.updateUser({password});
+        if(error)throw error;
+        router.replace('/dashboard');
+      }else if(mode==='signUp'){
         const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:`${window.location.origin}/dashboard`}});
         if(error)throw error;
         if(data.session)router.replace('/dashboard');
@@ -58,7 +96,7 @@ export function LoginScreen() {
         if(error)throw error;
         router.replace('/dashboard');
       }
-    }catch(error){setAuthError(error instanceof Error?error.message:'Não foi possível concluir a autenticação.');}
+    }catch(error){setAuthError(error instanceof Error?authMessage(error.message):'Não foi possível concluir a autenticação.');}
     finally{setLoading(false);}
   }
 
@@ -97,12 +135,12 @@ export function LoginScreen() {
 
         <div className="login-heading">
           <p className="login-kicker">Acesso seguro</p>
-          <h1 id="login-title">{mode==='signIn'?'Bem-vindo de volta':'Crie sua conta'}</h1>
-          <p>{mode==='signIn'?'Acesse sua conta para continuar':'Comece a organizar suas finanças.'}</p>
+          <h1 id="login-title">{mode==='signIn'?'Bem-vindo de volta':mode==='signUp'?'Crie sua conta':mode==='forgot'?'Recupere sua senha':'Crie uma nova senha'}</h1>
+          <p>{mode==='signIn'?'Acesse sua conta para continuar':mode==='signUp'?'Comece a organizar suas finanças.':mode==='forgot'?'Enviaremos um link seguro para seu e-mail.':'Use uma senha com pelo menos 12 caracteres.'}</p>
         </div>
 
         <form className="login-form" onSubmit={handleSubmit} noValidate>
-          <div className="login-field">
+          {mode!=='reset'&&<div className="login-field">
             <label htmlFor="email">E-mail</label>
             <div className="login-input-shell">
               <input
@@ -123,16 +161,16 @@ export function LoginScreen() {
               />
             </div>
             {errors.email && <p id="email-error" className="login-field-error">{errors.email}</p>}
-          </div>
+          </div>}
 
-          <div className="login-field">
-            <label htmlFor="password">Senha</label>
+          {mode!=='forgot'&&<div className="login-field">
+            <label htmlFor="password">{mode==='reset'?'Nova senha':'Senha'}</label>
             <div className="login-input-shell password-field">
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
+                autoComplete={mode==='reset'||mode==='signUp'?'new-password':'current-password'}
                 placeholder="••••••••"
                 value={password}
                 aria-invalid={Boolean(errors.password)}
@@ -154,7 +192,27 @@ export function LoginScreen() {
               </button>
             </div>
             {errors.password && <p id="password-error" className="login-field-error">{errors.password}</p>}
-          </div>
+          </div>}
+
+          {mode==='reset'&&<div className="login-field">
+            <label htmlFor="confirm-password">Confirme a nova senha</label>
+            <div className="login-input-shell">
+              <input
+                id="confirm-password"
+                name="confirmPassword"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={confirmPassword}
+                aria-invalid={Boolean(errors.confirmPassword)}
+                aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined}
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value);
+                  if (errors.confirmPassword) setErrors((current) => ({ ...current, confirmPassword: undefined }));
+                }}
+              />
+            </div>
+            {errors.confirmPassword && <p id="confirm-password-error" className="login-field-error">{errors.confirmPassword}</p>}
+          </div>}
 
           {mode==='signIn'&&<div className="login-options">
             <label className="login-remember">
@@ -162,7 +220,7 @@ export function LoginScreen() {
               <span className="login-checkbox" aria-hidden="true" />
               <span>Lembrar de mim</span>
             </label>
-            <a href="#recuperar-senha" onClick={(event) => event.preventDefault()}>
+            <a href="#recuperar-senha" onClick={(event) => {event.preventDefault();setMode('forgot');setErrors({});setAuthError('');setNotice('');}}>
               Esqueci minha senha
             </a>
           </div>}
@@ -174,17 +232,17 @@ export function LoginScreen() {
             {loading ? (
               <>
                 <span className="login-spinner" aria-hidden="true" />
-                <span>{mode==='signIn'?'Entrando...':'Criando conta...'}</span>
+                <span>{mode==='signIn'?'Entrando...':mode==='signUp'?'Criando conta...':mode==='forgot'?'Enviando...':'Salvando...'}</span>
               </>
             ) : (
               <>
-                <span>{mode==='signIn'?'Entrar':'Criar conta'}</span>
+                <span>{mode==='signIn'?'Entrar':mode==='signUp'?'Criar conta':mode==='forgot'?'Enviar link':'Salvar nova senha'}</span>
                 <ArrowRight aria-hidden="true" />
               </>
             )}
           </button>
 
-          <p className="login-signup">{mode==='signIn'?'Ainda não possui uma conta? ':'Já possui uma conta? '}<a href={mode==='signIn'?'#criar-conta':'#entrar'} onClick={(event)=>{event.preventDefault();setMode(mode==='signIn'?'signUp':'signIn');setErrors({});setAuthError('');setNotice('');}}>{mode==='signIn'?'Criar conta':'Entrar'}</a></p>
+          {mode!=='reset'&&<p className="login-signup">{mode==='signIn'?'Ainda não possui uma conta? ':mode==='signUp'?'Já possui uma conta? ':'Lembrou sua senha? '}<a href={mode==='signIn'?'#criar-conta':'#entrar'} onClick={(event)=>{event.preventDefault();setMode(mode==='signIn'?'signUp':'signIn');setErrors({});setAuthError('');setNotice('');setPassword('');}}>{mode==='signIn'?'Criar conta':'Entrar'}</a></p>}
         </form>
       </section>
 
