@@ -18,7 +18,7 @@ Aplicação individual de finanças pessoais em português, pensada primeiro par
 - `app/finance-ui.tsx`: elementos compartilhados e gráficos.
 - `app/globals.css`: identidade visual e estilos responsivos.
 - `lib/finance.ts`: modelos, validação, cálculos e exemplos.
-- `app/api/finance/route.ts`: API de leitura e gravação com controle de revisão, usando a RPC transacional do Supabase quando configurada.
+- `app/api/finance/route.ts`: API de leitura e gravação com controle de revisão, usando a RPC transacional do Supabase.
 - `db/schema.ts` e `drizzle/`: estrutura do banco e migração.
 
 ## Execução local
@@ -27,7 +27,7 @@ Requer Node.js 22.13 ou superior (conforme definido em `package.json`) e npm.
 
 Antes de iniciar, copie `.env.example` para `.env.local` e preencha a Project URL e a Publishable key do Supabase. Nunca use uma Secret key no navegador.
 
-`FINANCE_STORAGE=d1` mantém a persistência de transição. Depois de aplicar todas as migrations, inclusive `202609190004_grant_trigger_function_execution.sql`, use `FINANCE_STORAGE=supabase` para tornar o PostgreSQL relacional a fonte oficial dos dados. Antes de publicar, execute o [checklist de validação do Supabase](docs/checklist-validacao-supabase.md).
+Depois de aplicar todas as migrations, inclusive `202609190004_grant_trigger_function_execution.sql`, o PostgreSQL relacional do Supabase é a fonte oficial dos dados. Antes de publicar, execute o [checklist de validação do Supabase](docs/checklist-validacao-supabase.md).
 
 Clone o repositório, instale as dependências e inicie o ambiente de desenvolvimento:
 
@@ -46,26 +46,17 @@ Para gerar uma compilação de produção:
 npm run build
 ```
 
-Para executar localmente o worker gerado após a compilação:
+Para executar a compilação em modo de produção local:
 
 ```bash
 npm run start
 ```
-
-Para inicializar um banco D1 local vazio depois da compilação:
-
-```bash
-node node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_eminent_eddie_brock.sql
-```
-
-Não reaplique a migração em um banco local que já a recebeu.
 
 ## Verificação
 
 ```bash
 npm run lint
 node node_modules/typescript/bin/tsc --noEmit
-node scripts/test-finance.mjs
 npm run build
 ```
 
