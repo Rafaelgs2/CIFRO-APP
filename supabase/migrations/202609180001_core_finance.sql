@@ -1,4 +1,6 @@
 -- CIFRO core financial ledger. Run through Supabase migrations; do not execute piecemeal.
+begin;
+
 create extension if not exists pgcrypto;
 
 create type public.category_kind as enum ('income','expense');
@@ -140,6 +142,12 @@ $$;
 
 create trigger auth_user_created after insert on auth.users for each row execute procedure public.handle_new_user();
 
+-- Backfill profiles for users created before this migration was applied.
+insert into public.profiles (id,display_name)
+select id,nullif(trim(raw_user_meta_data ->> 'display_name'),'')
+from auth.users
+on conflict (id) do nothing;
+
 create or replace function public.assert_financial_event_integrity(p_event_id uuid)
 returns void
 language plpgsql
@@ -238,3 +246,5 @@ create policy accounts_update_own on public.financial_accounts for update to aut
 create policy financial_events_select_own on public.financial_events for select to authenticated using ((select auth.uid()) = user_id);
 create policy account_entries_select_own on public.account_entries for select to authenticated using ((select auth.uid()) = user_id);
 create policy transfers_select_own on public.transfers for select to authenticated using ((select auth.uid()) = user_id);
+
+commit;
