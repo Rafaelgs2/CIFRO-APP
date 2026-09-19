@@ -8,7 +8,7 @@ Aplicação individual de finanças pessoais em português, pensada primeiro par
 - Receitas, despesas, transferências, pesquisa e filtros.
 - Cartões, faturas, compras parceladas e pagamentos sem duplicar despesas.
 - Categorias personalizadas, contas a pagar/receber, metas e fechamento mensal.
-- Persistência local em Cloudflare D1, sem autenticação nesta versão.
+- Autenticação por Supabase Auth e isolamento temporário por usuário na persistência D1; a migration PostgreSQL relacional está em `supabase/migrations/`.
 
 ## Principais arquivos
 
@@ -24,6 +24,8 @@ Aplicação individual de finanças pessoais em português, pensada primeiro par
 ## Execução local
 
 Requer Node.js 22.13 ou superior (conforme definido em `package.json`) e npm.
+
+Antes de iniciar, copie `.env.example` para `.env.local` e preencha a Project URL e a Publishable key do Supabase. Nunca use uma Secret key no navegador.
 
 Clone o repositório, instale as dependências e inicie o ambiente de desenvolvimento:
 

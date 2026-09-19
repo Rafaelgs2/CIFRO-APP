@@ -1,10 +1,11 @@
 'use client';
-import {useEffect,useState,useRef} from 'react';
+import {useEffect,useState,useRef,useCallback} from 'react';
 import {ChevronLeft,ChevronRight,Search,SlidersHorizontal,Info,ArrowRight,X} from 'lucide-react';
 import {AlertDialog,AlertDialogContent,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {AppToaster} from './theme-controls';
 import {toast} from 'sonner';
 import {type State,type Transaction,emptyState,demoState,validateState,today,monthOf,monthLabel,addMonth,dateInMonth,invoice,typeLabels} from '@/lib/finance';
+import {getSupabaseBrowserClient} from '@/lib/supabase/browser';
 import {Picker,Field} from './finance-ui';
 import FinanceForm,{type Modal} from './finance-form';
 import FinanceViews,{Details} from './finance-views';
@@ -22,12 +23,13 @@ export default function FinanceApp(){
  const [monthPickerOpen,setMonthPickerOpen]=useState(false);const [pickerYear,setPickerYear]=useState(Number(month.slice(0,4)));const monthPickerRef=useRef<HTMLDivElement>(null);
  const start=startDate||`${month}-01`,end=endDate||dateInMonth(month,31);
  function setPeriod(next:string){setMonth(next);setStartDate('');setEndDate('')}
- async function load(){setLoading(true);setError('');try{const r=await fetch('/api/finance',{cache:'no-store'});const data=await r.json() as {state:State,revision:number,error:string};if(!r.ok)throw Error(data.error);setState(data.state);setRevision(data.revision);}catch(e){setError(e instanceof Error?e.message:'Não foi possível carregar.');}finally{setLoading(false)}}
- useEffect(()=>{void Promise.resolve().then(load)},[]);
+ const authorizedFetch=useCallback(async(input:RequestInfo|URL,init?:RequestInit)=>{const {data:{session}}=await getSupabaseBrowserClient().auth.getSession();if(!session)throw Error('Sua sessão expirou. Entre novamente.');const headers=new Headers(init?.headers);headers.set('Authorization',`Bearer ${session.access_token}`);return fetch(input,{...init,headers});},[]);
+ const load=useCallback(async()=>{setLoading(true);setError('');try{const r=await authorizedFetch('/api/finance',{cache:'no-store'});const data=await r.json() as {state:State,revision:number,error:string};if(!r.ok)throw Error(data.error);setState(data.state);setRevision(data.revision);}catch(e){setError(e instanceof Error?e.message:'Não foi possível carregar.');}finally{setLoading(false)}},[authorizedFetch]);
+ useEffect(()=>{void Promise.resolve().then(load)},[load]);
  useEffect(()=>{const handler=()=>{const hash=location.hash.slice(1);if(hash in titles)setView(hash as View)};handler();window.addEventListener('hashchange',handler);return()=>window.removeEventListener('hashchange',handler)},[]);
  useEffect(()=>{if(!monthPickerOpen)return;const close=(event:MouseEvent)=>{if(!monthPickerRef.current?.contains(event.target as Node))setMonthPickerOpen(false)};const escape=(event:KeyboardEvent)=>{if(event.key==='Escape')setMonthPickerOpen(false)};document.addEventListener('mousedown',close);document.addEventListener('keydown',escape);return()=>{document.removeEventListener('mousedown',close);document.removeEventListener('keydown',escape)}},[monthPickerOpen]);
  function navigate(v:View){setView(v);location.hash=v;window.scrollTo({top:0,behavior:'instant'});}
- async function save(next:State){if(lock.current)throw Error('Aguarde o salvamento em andamento.');next=validateState(next);lock.current=true;setBusy(true);try{if(demo){setState(next);toast.success('Alteração feita na demonstração');return;}const r=await fetch('/api/finance',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:next,revision})});const data=await r.json() as {state:State,revision:number,error:string};if(!r.ok)throw Error(data.error);setState(data.state);setRevision(data.revision);toast.success('Salvo com sucesso');}finally{setBusy(false);lock.current=false}}
+ async function save(next:State){if(lock.current)throw Error('Aguarde o salvamento em andamento.');next=validateState(next);lock.current=true;setBusy(true);try{if(demo){setState(next);toast.success('Alteração feita na demonstração');return;}const r=await authorizedFetch('/api/finance',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:next,revision})});const data=await r.json() as {state:State,revision:number,error:string};if(!r.ok)throw Error(data.error);setState(data.state);setRevision(data.revision);toast.success('Salvo com sucesso');}finally{setBusy(false);lock.current=false}}
  function open(m:Modal){if(!demo&&(loading||error)){toast.error('Carregue seus dados antes de fazer alterações.');return;}setModal(m)}
  function transaction(type:Transaction['type']='expense'){if(!state.accounts.length&&type!=='purchase'){toast('Primeiro, adicione uma conta para registrar a movimentação.');open({kind:'account'});return;}if(type==='purchase'&&!state.cards.length){open({kind:'card'});return;}open({kind:'transaction',type})}
  function switchDemo(){setDemo(true);setState(demoState(monthOf(today())));setMonth(monthOf(today()));setError('');setLoading(false);navigate('home');toast('Dados fictícios. As alterações na demonstração não são salvas.');}
