@@ -2,11 +2,9 @@
 node_modules/
 .next/
 next-env.d.ts
-.vinext/
 dist/
 build/
 coverage/
-.wrangler/
 
 # Environment files and credentials
 .env

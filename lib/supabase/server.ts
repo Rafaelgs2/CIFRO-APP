@@ -7,11 +7,6 @@ function config(){
   return {url,key};
 }
 
-export async function authenticatedUser(request:Request){
-  const context=await authenticatedContext(request);
-  return context?.user??null;
-}
-
 export function supabaseRequestContext(request:Request){
   const authorization=request.headers.get('authorization');
   const token=authorization?.match(/^Bearer\s+(.+)$/i)?.[1];

@@ -1,39 +1,58 @@
 # Checklist de validação do Supabase
 
-Este checklist confirma que o CIFRO está usando o Supabase como fonte oficial e que uma conta não consegue acessar os dados de outra.
+Conclua este checklist no projeto Supabase que será usado em produção antes de compartilhar o CIFRO com usuários reais.
 
-## Situação já validada
+## Banco e migrations
 
-- Login por e-mail e senha.
-- Persistência após recarregar a página.
-- Conta financeira, receita, despesa e transferência.
-- Cartão, compra parcelada, fatura e pagamento de fatura.
-- Compromisso e meta.
-- Regras de integridade e permissões das triggers PostgreSQL.
+- [ ] Todas as migrations em `supabase/migrations/` foram aplicadas em ordem.
+- [ ] A migration `202609190004_grant_trigger_function_execution.sql` está aplicada.
+- [ ] As tabelas financeiras estão com RLS habilitado.
+- [ ] O papel `anon` não possui acesso às tabelas financeiras nem às RPCs privadas.
+- [ ] O papel `authenticated` executa `finance_state_payload()` e `save_finance_state(jsonb,bigint)`.
 
-## Teste de isolamento entre duas contas
+## Isolamento entre usuários
 
-Faça este teste antes de disponibilizar o aplicativo para outra pessoa.
+1. Crie duas contas de teste diferentes no Supabase Auth.
+2. Entre com a primeira conta e crie uma conta financeira e um lançamento identificáveis.
+3. Em janela anônima, entre com a segunda conta.
+4. Confirme que nenhum registro da primeira conta aparece.
+5. Crie dados na segunda conta, volte à primeira e confirme o isolamento nos dois sentidos.
+6. Teste também edição, exclusão, cartões, compromissos, metas e exportação.
 
-1. No painel do Supabase, abra **Authentication > Users** e crie um segundo usuário de teste com outro e-mail. Para acelerar o teste, use a criação manual e deixe o e-mail já confirmado.
-2. Abra o CIFRO numa janela anônima (ou em outro navegador) e entre com esse segundo usuário.
-3. Confira que ele começa sem as contas, cartões, lançamentos, metas e compromissos da primeira conta. As categorias padrão podem aparecer, pois são criadas para cada usuário.
-4. Com o segundo usuário, crie uma conta chamada `Conta teste RLS` e uma receita pequena.
-5. Volte para a sessão do primeiro usuário e recarregue. Essa nova conta e receita não podem aparecer.
-6. Na aba **Perfil**, use **Sair da conta** e entre novamente com cada usuário para confirmar que cada sessão continua isolada.
+Se qualquer dado cruzar entre contas, interrompa a publicação e preserve os registros para diagnóstico.
 
-Se algum dado cruzar entre as duas contas, pare a publicação e não exclua os registros: anote qual conta criou o dado, em qual conta ele apareceu e em qual tela. Isso permite investigar a política RLS correta.
+## Autenticação
 
-## Preparação para produção
+- [ ] A Site URL aponta para o domínio de produção.
+- [ ] Redirect URLs incluem o domínio de produção e os Preview Deployments necessários.
+- [ ] `http://localhost:5173/**` permanece autorizado somente para desenvolvimento.
+- [ ] Confirmação de e-mail funciona no domínio público.
+- [ ] Recuperação e troca de senha funcionam no domínio público.
+- [ ] Logout remove a sessão local e impede novo acesso ao dashboard/API.
+- [ ] SMTP próprio está configurado; o provedor padrão não é usado para tráfego real.
+- [ ] Rate limits e templates de e-mail foram revisados.
 
-- [ ] Em **Authentication > URL Configuration**, troque a Site URL de `http://localhost:5173` pelo endereço público do CIFRO e mantenha também a URL local para desenvolvimento.
-- [ ] Cadastre a URL pública em **Redirect URLs**, principalmente para confirmação de e-mail e redefinição de senha.
-- [ ] Configure um SMTP próprio em **Authentication > Emails > SMTP Settings**. O envio padrão do Supabase serve para testes e possui limites baixos.
-- [ ] No provedor onde o CIFRO será hospedado, cadastre apenas `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Nunca exponha uma Secret key no navegador.
-- [ ] Verifique que todas as migrations em `supabase/migrations/` foram aplicadas, inclusive `202609190004_grant_trigger_function_execution.sql`.
-- [ ] Teste novamente login, recuperação de senha, criação de uma conta e um lançamento no endereço público.
-- [ ] Defina uma rotina de backup/exportação antes de convidar usuários reais.
+## Vercel
 
-## Próxima evolução técnica recomendada
+- [ ] `NEXT_PUBLIC_SUPABASE_URL` está configurada em Production e Preview.
+- [ ] `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` está configurada em Production e Preview.
+- [ ] Nenhuma secret key ou service-role key está cadastrada como `NEXT_PUBLIC_*`.
+- [ ] A versão de Node selecionada é 22.x.
+- [ ] Build, typecheck, lint e testes passam a partir de uma instalação limpa.
 
-Hoje a gravação no Supabase é transacional e as tabelas relacionais são a fonte dos dados. A interface ainda envia o estado financeiro completo por uma RPC de compatibilidade. A próxima evolução é substituir essa sincronização por operações granulares — criar, editar e excluir cada conta, lançamento, cartão e compromisso individualmente — para obter histórico de alterações mais detalhado e reduzir o volume de escrita.
+## Operação
+
+- [ ] Existe rotina de backup e restauração testada.
+- [ ] Logs/alertas não registram tokens nem conteúdo financeiro.
+- [ ] Uma conta de suporte/teste está separada dos usuários reais.
+- [ ] O procedimento de revogação de sessão e resposta a incidente está documentado.
+- [ ] O primeiro acesso, criação, edição, recarga e exportação foram testados em desktop e mobile.
+
+## Comandos locais
+
+```bash
+npm ci
+npm run check
+npm audit --omit=dev
+npm start
+```

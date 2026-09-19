@@ -1,13 +1,5 @@
-import {build} from 'esbuild';
 import assert from 'node:assert/strict';
-import {mkdir} from 'node:fs/promises';
-import {join} from 'node:path';
-import {fileURLToPath,pathToFileURL} from 'node:url';
-const root=fileURLToPath(new URL('../',import.meta.url));
-const testModule=join(root,'tmp','finance-test-module.mjs');
-await mkdir(join(root,'tmp'),{recursive:true});
-await build({absWorkingDir:root,entryPoints:['././lib/finance.ts'],bundle:true,platform:'node',format:'esm',outfile:testModule});
-const {emptyState,baseTransaction,validateState,accountBalance,totals,firstInvoice,purchaseInstallments,invoice,cardUsed,dateInMonth,demoState}=await import(pathToFileURL(testModule).href);
+const {emptyState,baseTransaction,validateState,accountBalance,totals,firstInvoice,purchaseInstallments,invoice,cardUsed,dateInMonth,demoState}=await import('../lib/finance.ts');
 const s=emptyState();
 s.accounts=['salary','vr','investment','reserve'].map((kind,i)=>({id:kind,name:kind,kind,initial:kind==='salary'?10000:0,date:'2026-01-01',archived:false,order:i}));
 const add=t=>s.transactions.push({...baseTransaction(),date:'2026-09-05',...t});

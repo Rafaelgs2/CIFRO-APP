@@ -1,63 +1,70 @@
 # CIFRO
 
-Aplicação individual de finanças pessoais em português, pensada primeiro para celular.
+Aplicação de finanças pessoais em português, com autenticação e persistência por usuário no Supabase.
 
 ## Recursos
 
-- Contas com saldo inicial e histórico, incluindo salário, VR, investimentos e reserva.
-- Receitas, despesas, transferências, pesquisa e filtros.
-- Cartões, faturas, compras parceladas e pagamentos sem duplicar despesas.
-- Categorias personalizadas, contas a pagar/receber, metas e fechamento mensal.
-- Autenticação por Supabase Auth e dados financeiros armazenados em tabelas relacionais do Supabase, protegidas por Row Level Security (RLS).
+- Contas, receitas, despesas, transferências, cartões, faturas e pagamentos.
+- Categorias, compromissos, metas, relatórios e fechamento mensal.
+- Valores monetários armazenados e calculados em centavos inteiros.
+- Autenticação por e-mail e senha com recuperação de conta.
+- Dados relacionais protegidos por Row Level Security (RLS).
+- Demonstração fictícia em memória, separada dos dados pessoais.
 
-## Principais arquivos
+## Requisitos
 
-- `app/finance-main.tsx`: estado da interface, dashboard e navegação.
-- `app/finance-views.tsx`: contas, cartões, planejamento, relatórios, perfil e detalhes.
-- `app/finance-form.tsx`: formulários de cadastro e edição.
-- `app/finance-ui.tsx`: elementos compartilhados e gráficos.
-- `app/globals.css`: identidade visual e estilos responsivos.
-- `lib/finance.ts`: modelos, validação, cálculos e exemplos.
-- `app/api/finance/route.ts`: API de leitura e gravação com controle de revisão, usando a RPC transacional do Supabase.
-- `db/schema.ts` e `drizzle/`: estrutura do banco e migração.
+- Node.js 22.13 ou mais recente dentro da linha 22.x.
+- npm.
+- Um projeto Supabase com todas as migrations de `supabase/migrations/` aplicadas em ordem.
 
-## Execução local
+## Configuração local
 
-Requer Node.js 22.13 ou superior (conforme definido em `package.json`) e npm.
+1. Copie `.env.example` para `.env.local`.
+2. Preencha somente:
 
-Antes de iniciar, copie `.env.example` para `.env.local` e preencha a Project URL e a Publishable key do Supabase. Nunca use uma Secret key no navegador.
+   - `NEXT_PUBLIC_SUPABASE_URL`;
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
-Depois de aplicar todas as migrations, inclusive `202609190004_grant_trigger_function_execution.sql`, o PostgreSQL relacional do Supabase é a fonte oficial dos dados. Antes de publicar, execute o [checklist de validação do Supabase](docs/checklist-validacao-supabase.md).
-
-Clone o repositório, instale as dependências e inicie o ambiente de desenvolvimento:
+3. Instale e inicie:
 
 ```bash
-git clone https://github.com/Rafaelgs2/CIRFRO-APP.git
-cd CIRFRO-APP
-npm install
+npm ci
 npm run dev
 ```
 
-A prévia fica em `http://localhost:5173`.
+A aplicação fica disponível em `http://localhost:5173`.
 
-Para gerar uma compilação de produção:
-
-```bash
-npm run build
-```
-
-Para executar a compilação em modo de produção local:
-
-```bash
-npm run start
-```
+As variáveis `NEXT_PUBLIC_*` são incorporadas ao frontend e não podem conter secrets. O acesso aos dados é protegido pelas políticas RLS e pelas RPCs autenticadas do Supabase.
 
 ## Verificação
 
 ```bash
 npm run lint
-node node_modules/typescript/bin/tsc --noEmit
+npm run typecheck
+npm test
 npm run build
 ```
 
-Os arquivos gerados pelos testes e pela execução local são ignorados pelo Git.
+Ou execute tudo com:
+
+```bash
+npm run check
+```
+
+## Estrutura principal
+
+- `app/`: páginas, interface e rota de API.
+- `lib/finance.ts`: modelos, validação e cálculos financeiros.
+- `lib/supabase/`: clientes autenticados de navegador e servidor.
+- `supabase/migrations/`: schema, RLS, integridade e RPCs transacionais.
+- `scripts/test-finance.mjs`: testes dos invariantes financeiros.
+- `docs/checklist-validacao-supabase.md`: validação obrigatória antes de usuários reais.
+- `docs/publicacao-vercel.md`: procedimento de publicação.
+
+## Segurança e publicação
+
+Antes de compartilhar o CIFRO, conclua o [checklist de validação do Supabase](docs/checklist-validacao-supabase.md). Ele inclui isolamento entre duas contas, URLs de autenticação, SMTP, backup e smoke test de produção.
+
+O resultado da revisão atual está no [relatório de pré-deploy de 19/09/2026](docs/relatorio-pre-deploy-2026-09-19.md).
+
+A Vercel detecta o projeto Next.js automaticamente. Não é necessário `vercel.json`.

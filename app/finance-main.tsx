@@ -1,11 +1,11 @@
 'use client';
-import {useEffect,useState,useRef,useCallback} from 'react';
+import {useEffect,useState,useRef,useCallback,useMemo} from 'react';
 import {useRouter} from 'next/navigation';
 import {ChevronLeft,ChevronRight,Search,SlidersHorizontal,Info,ArrowRight,X} from 'lucide-react';
 import {AlertDialog,AlertDialogContent,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {AppToaster} from './theme-controls';
 import {toast} from 'sonner';
-import {type State,type Transaction,emptyState,demoState,validateState,today,monthOf,monthLabel,addMonth,dateInMonth,invoice,typeLabels} from '@/lib/finance';
+import {type State,type Transaction,emptyState,demoState,validateState,today,monthOf,monthLabel,addMonth,dateInMonth,invoice,purchaseInstallments,typeLabels} from '@/lib/finance';
 import {getSupabaseBrowserClient} from '@/lib/supabase/browser';
 import {Picker,Field} from './finance-ui';
 import FinanceForm,{type Modal} from './finance-form';
@@ -39,7 +39,36 @@ export default function FinanceApp(){
  async function signOut(){try{await getSupabaseBrowserClient().auth.signOut({scope:'local'});setState(emptyState());router.replace('/');}catch(e){toast.error(e instanceof Error?e.message:'Não foi possível sair da conta.');}}
  function editTx(t:Transaction){open({kind:'transaction',id:t.id,type:t.type})}
  function resetFilters(){setSearch('');setTypeFilter('all');setCategoryFilter('all');setAccountFilter('all');setCardFilter('all');setStatusFilter('all');setStartDate('');setEndDate('')}
- const filtered=state.transactions.filter(t=>{const cat=state.categories.find(c=>c.id===t.categoryId);const text=`${t.description} ${cat?.name??''} ${t.notes}`.toLocaleLowerCase('pt-BR');return t.date>=start&&t.date<=end&&text.includes(search.toLocaleLowerCase('pt-BR'))&&(typeFilter==='all'||t.type===typeFilter)&&(categoryFilter==='all'||t.categoryId===categoryFilter)&&(accountFilter==='all'||t.accountId===accountFilter||t.destinationId===accountFilter)&&(cardFilter==='all'||t.cardId===cardFilter)&&(statusFilter==='all'||!!t.cardId&&invoice(state,state.cards.find(c=>c.id===t.cardId)!,t.type==='payment'?t.invoiceMonth:month).status===statusFilter)});
+ const filtered=useMemo(()=>{
+  const query=search.toLocaleLowerCase('pt-BR');
+  const invoiceStatuses=new Map<string,string>();
+  const statusFor=(cardId:string,invoiceMonth:string)=>{
+   const key=`${cardId}:${invoiceMonth}`;
+   const cached=invoiceStatuses.get(key);
+   if(cached)return cached;
+   const card=state.cards.find(item=>item.id===cardId);
+   if(!card)return null;
+   const status=invoice(state,card,invoiceMonth).status;
+   invoiceStatuses.set(key,status);
+   return status;
+  };
+  return state.transactions.filter(transaction=>{
+   const category=state.categories.find(item=>item.id===transaction.categoryId);
+   const text=`${transaction.description} ${category?.name??''} ${transaction.notes}`.toLocaleLowerCase('pt-BR');
+   if(transaction.date<start||transaction.date>end||!text.includes(query))return false;
+   if(typeFilter!=='all'&&transaction.type!==typeFilter)return false;
+   if(categoryFilter!=='all'&&transaction.categoryId!==categoryFilter)return false;
+   if(accountFilter!=='all'&&transaction.accountId!==accountFilter&&transaction.destinationId!==accountFilter)return false;
+   if(cardFilter!=='all'&&transaction.cardId!==cardFilter)return false;
+   if(statusFilter==='all')return true;
+   if(!transaction.cardId)return false;
+   if(transaction.type==='payment')return statusFor(transaction.cardId,transaction.invoiceMonth)===statusFilter;
+   if(transaction.type!=='purchase')return false;
+   const card=state.cards.find(item=>item.id===transaction.cardId);
+   if(!card||!purchaseInstallments(card,transaction).some(part=>part.month===month))return false;
+   return statusFor(transaction.cardId,month)===statusFilter;
+  });
+ },[state,start,end,search,typeFilter,categoryFilter,accountFilter,cardFilter,statusFilter,month]);
  function filters(){return <><div className="filter-bar"><div className="search-box"><Search size={18}/><input aria-label="Pesquisar lançamentos" placeholder="Buscar" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<button aria-label="Limpar pesquisa" onClick={()=>setSearch('')}><X size={16}/></button>}</div><button className={`secondary ${filtersOpen?'selected':''}`} onClick={()=>setFiltersOpen(!filtersOpen)}><SlidersHorizontal size={17}/> Filtros</button></div>{filtersOpen&&<div className="filters-panel"><Picker label="Tipo" value={typeFilter} onChange={setTypeFilter} options={[{value:'all',label:'Todos os tipos'},...Object.entries(typeLabels).map(([value,label])=>({value,label}))]}/><Picker label="Categoria" value={categoryFilter} onChange={setCategoryFilter} options={[{value:'all',label:'Todas as categorias'},...state.categories.map(c=>({value:c.id,label:c.name}))]}/><Picker label="Conta" value={accountFilter} onChange={setAccountFilter} options={[{value:'all',label:'Todas as contas'},...state.accounts.map(a=>({value:a.id,label:a.name}))]}/><Picker label="Cartão" value={cardFilter} onChange={setCardFilter} options={[{value:'all',label:'Todos os cartões'},...state.cards.map(c=>({value:c.id,label:c.name}))]}/><Picker label="Situação da fatura no mês" value={statusFilter} onChange={setStatusFilter} options={['all','Em aberto','Paga','Parcialmente paga','Em atraso'].map(v=>({value:v,label:v==='all'?'Todas as situações':v}))}/><Field label="De"><input type="date" value={startDate} onChange={e=>setStartDate(e.target.value)}/></Field><Field label="Até"><input type="date" min={startDate} value={endDate} onChange={e=>setEndDate(e.target.value)}/></Field><button className="text-button" onClick={resetFilters}>Limpar filtros</button></div>}{start>end&&<p role="alert" className="form-error">A data inicial deve ser anterior à data final.</p>}</>}
  const context:AppContext={state,view,month,demo,filtered,start,end,open,save,navigate,transaction,editTx,setConfirm,selectAccount:setAccountId,selectCard:setCardId,switchDemo,exitDemo:()=>void exitDemo(),signOut,filters};
  return <><AppToaster/><FinanceShell view={view} navigate={navigate} name={state.profile.name} title={titles[view]}>

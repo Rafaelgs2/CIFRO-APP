@@ -1,29 +1,44 @@
 # Publicação do CIFRO na Vercel
 
-O CIFRO está configurado como uma aplicação Next.js. A Vercel deve usar o repositório `Rafaelgs2/CIRFRO-APP`, o comando `npm run build` e a configuração presente em `vercel.json`.
+O CIFRO usa Next.js e deve ser publicado com a configuração padrão da Vercel. Não é necessário `vercel.json`.
+
+## Antes de importar o repositório
+
+1. Aplique todas as migrations do Supabase.
+2. Conclua `docs/checklist-validacao-supabase.md`.
+3. Confirme que `npm run check` passa em uma instalação limpa.
+4. Garanta que nenhum `.env` ou secret está versionado.
 
 ## Criar o projeto
 
-1. Entre em [vercel.com/new](https://vercel.com/new) com a mesma conta usada no GitHub.
-2. Importe o repositório `Rafaelgs2/CIRFRO-APP`.
-3. Mantenha **Framework Preset: Next.js**, **Root Directory: `./`** e **Build Command: `npm run build`**.
-4. Antes de clicar em **Deploy**, abra **Environment Variables** e adicione as variáveis abaixo para os ambientes Production, Preview e Development.
+1. Importe o repositório na Vercel.
+2. Mantenha Framework Preset `Next.js` e Root Directory `./`.
+3. Use o comando padrão `npm run build`.
+4. Selecione Node.js 22.x.
+5. Cadastre em Production e Preview:
 
-| Variável | Valor |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Project URL do projeto Supabase |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key do projeto Supabase |
+   - `NEXT_PUBLIC_SUPABASE_URL`;
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
-Não cadastre Secret keys do Supabase na Vercel para esta versão do CIFRO.
+Nunca cadastre secret/service-role key com prefixo `NEXT_PUBLIC_`.
 
-## Depois do primeiro deploy
+## Configuração de autenticação
 
-1. Copie a URL de produção gerada pela Vercel, por exemplo `https://cifro-app.vercel.app`.
-2. No Supabase, abra **Authentication > URL Configuration**.
-3. Em **Site URL**, informe a URL da Vercel.
-4. Em **Redirect URLs**, adicione:
-   - `https://SEU-DOMINIO.vercel.app/**`
-   - `http://localhost:5173/**` para continuar desenvolvendo localmente.
-5. Teste no endereço público: entrar, sair, atualizar a página, recuperar senha e salvar uma receita.
+Depois que a URL pública existir:
 
-Cada push na branch principal dispara um novo deploy de produção na Vercel. Antes de adicionar dados reais ou compartilhar o endereço, configure SMTP próprio no Supabase para evitar os limites do envio padrão.
+1. Atualize a Site URL no Supabase Auth.
+2. Adicione a URL de produção e os previews autorizados às Redirect URLs.
+3. Teste confirmação de e-mail, login, recuperação de senha e logout.
+4. Configure SMTP próprio antes de convidar usuários reais.
+
+## Smoke test público
+
+- Abra `/` e autentique uma conta de teste.
+- Atualize `/dashboard` diretamente.
+- Crie e edite uma conta e um lançamento.
+- Confirme a persistência após recarregar.
+- Valide uma segunda conta para confirmar o isolamento RLS.
+- Teste exportação e logout.
+- Verifique erros no Runtime Logs sem copiar tokens ou dados financeiros.
+
+Não compartilhe a aplicação enquanto algum item de segurança ou isolamento permanecer pendente.

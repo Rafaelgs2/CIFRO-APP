@@ -1,2 +1,0 @@
-import {sqliteTable,text,integer} from 'drizzle-orm/sqlite-core';
-export const financeState=sqliteTable('finance_state',{owner:text('owner').primaryKey(),data:text('data').notNull(),revision:integer('revision').notNull().default(1)});

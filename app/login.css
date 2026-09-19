@@ -262,51 +262,12 @@
 .login-options {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   margin-top: 1px;
   font-size: 0.71rem;
 }
 
-.login-remember {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #5d6a7e;
-  cursor: pointer;
-  user-select: none;
-}
-
-.login-remember input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
-
-.login-checkbox {
-  display: grid;
-  width: 15px;
-  height: 15px;
-  flex: 0 0 auto;
-  place-items: center;
-  background: rgb(255 255 255 / 0.78);
-  border: 1px solid rgb(31 63 111 / 0.25);
-  border-radius: 4px;
-  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-}
-
-.login-checkbox::after {
-  content: '';
-  width: 7px;
-  height: 4px;
-  margin-top: -1px;
-  border-bottom: 1.5px solid white;
-  border-left: 1.5px solid white;
-  opacity: 0;
-  transform: rotate(-45deg) scale(0.7);
-  transition: opacity 130ms ease, transform 130ms ease;
-}
-
-.login-remember input:checked + .login-checkbox { background: var(--login-blue); border-color: var(--login-blue); }
-.login-remember input:checked + .login-checkbox::after { opacity: 1; transform: rotate(-45deg) scale(1); }
-
-.login-remember input:focus-visible + .login-checkbox,
 .password-toggle:focus-visible,
 .login-options a:focus-visible,
 .login-signup a:focus-visible { outline: 2px solid rgb(7 85 217 / 0.72); outline-offset: 3px; }

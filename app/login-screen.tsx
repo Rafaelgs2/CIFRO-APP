@@ -20,7 +20,7 @@ function authMessage(message: string) {
   if (normalized.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.';
   if (normalized.includes('user already registered')) return 'Este e-mail já possui uma conta. Entre ou redefina sua senha.';
   if (normalized.includes('email rate limit exceeded') || normalized.includes('over_email_send_rate_limit')) return 'Limite temporário de e-mails atingido. Aguarde e tente novamente mais tarde.';
-  return message;
+  return 'Não foi possível concluir a autenticação. Tente novamente.';
 }
 
 export function LoginScreen() {
@@ -215,11 +215,6 @@ export function LoginScreen() {
           </div>}
 
           {mode==='signIn'&&<div className="login-options">
-            <label className="login-remember">
-              <input type="checkbox" name="remember" />
-              <span className="login-checkbox" aria-hidden="true" />
-              <span>Lembrar de mim</span>
-            </label>
             <a href="#recuperar-senha" onClick={(event) => {event.preventDefault();setMode('forgot');setErrors({});setAuthError('');setNotice('');}}>
               Esqueci minha senha
             </a>
