@@ -3,6 +3,7 @@ import {MobileViewport} from './mobile-viewport';
 import { AppThemeProvider } from './theme-controls';
 import './globals.css';
 import './login.css';
+import './landing.css';
 export const metadata:Metadata={
   title:{default:'CIFRO',template:'%s · CIFRO'},
   applicationName:'CIFRO',

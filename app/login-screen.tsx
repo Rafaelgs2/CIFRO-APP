@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Brand } from './brand';
@@ -23,7 +24,7 @@ function authMessage(message: string) {
   return 'Não foi possível concluir a autenticação. Tente novamente.';
 }
 
-export function LoginScreen() {
+export function LoginScreen({initialMode='signIn'}:{initialMode?:Extract<AuthMode,'signIn'|'signUp'>}) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +32,7 @@ export function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
-  const [mode,setMode]=useState<AuthMode>('signIn');
+  const [mode,setMode]=useState<AuthMode>(initialMode);
   const [authError,setAuthError]=useState('');
   const [notice,setNotice]=useState('');
 
@@ -79,7 +80,7 @@ export function LoginScreen() {
     try{
       const supabase=getSupabaseBrowserClient();
       if(mode==='forgot'){
-        const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:`${window.location.origin}/`});
+        const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:`${window.location.origin}/login`});
         if(error)throw error;
         setNotice('Enviamos um link para redefinir sua senha. Confira também a caixa de spam.');
       }else if(mode==='reset'){
@@ -129,7 +130,7 @@ export function LoginScreen() {
         <span className="login-corner login-corner-bottom" aria-hidden="true" />
 
         <header className="login-brand-lockup">
-          <Brand className="login-brand" />
+          <Link href="/" aria-label="Voltar para a página inicial"><Brand className="login-brand" /></Link>
           <p>Suas finanças mais conectadas</p>
         </header>
 
@@ -237,7 +238,7 @@ export function LoginScreen() {
             )}
           </button>
 
-          {mode!=='reset'&&<p className="login-signup">{mode==='signIn'?'Ainda não possui uma conta? ':mode==='signUp'?'Já possui uma conta? ':'Lembrou sua senha? '}<a href={mode==='signIn'?'#criar-conta':'#entrar'} onClick={(event)=>{event.preventDefault();setMode(mode==='signIn'?'signUp':'signIn');setErrors({});setAuthError('');setNotice('');setPassword('');}}>{mode==='signIn'?'Criar conta':'Entrar'}</a></p>}
+          {mode!=='reset'&&<p className="login-signup">{mode==='signIn'?'Ainda não possui uma conta? ':mode==='signUp'?'Já possui uma conta? ':'Lembrou sua senha? '}{mode==='forgot'?<button type="button" onClick={()=>{setMode('signIn');setErrors({});setAuthError('');setNotice('');}}>Entrar</button>:<Link href={mode==='signIn'?'/signup':'/login'}>{mode==='signIn'?'Criar conta':'Entrar'}</Link>}</p>}
         </form>
       </section>
 

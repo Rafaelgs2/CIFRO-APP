@@ -15,11 +15,11 @@ export function AuthGate({children}:{children:ReactNode}){
     let active=true;
     void supabase.auth.getUser().then(({data,error})=>{
       if(!active)return;
-      if(error||!data.user){void supabase.auth.signOut({scope:'local'});router.replace('/');return;}
+      if(error||!data.user){void supabase.auth.signOut({scope:'local'});router.replace('/login');return;}
       setReady(true);
     });
     const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{
-      if(!session){setReady(false);router.replace('/');return;}
+      if(!session){setReady(false);router.replace('/login');return;}
       setReady(true);
     });
     return()=>{active=false;subscription.unsubscribe();};
