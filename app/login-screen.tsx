@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Brand } from './brand';
 import {getSupabaseBrowserClient,isSupabaseConfigured} from '@/lib/supabase/browser';
 
@@ -128,6 +128,7 @@ export function LoginScreen({initialMode='signIn'}:{initialMode?:Extract<AuthMod
       <section className="login-auth" aria-labelledby="login-title">
         <span className="login-corner login-corner-top" aria-hidden="true" />
         <span className="login-corner login-corner-bottom" aria-hidden="true" />
+        <Link className="login-back" href="/"><ArrowLeft aria-hidden="true"/>Voltar</Link>
 
         <header className="login-brand-lockup">
           <Link href="/" aria-label="Voltar para a página inicial"><Brand className="login-brand" /></Link>
