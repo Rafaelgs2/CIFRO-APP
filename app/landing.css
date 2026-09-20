@@ -119,11 +119,13 @@
 .lp-chart-legend i.is-expense { background:#a9adb2; }
 .lp-chart svg { display:block; width:100%; height:auto; overflow:visible; }
 .lp-chart-grid path { fill:none; stroke:#e8ebef; stroke-width:1; }
-.lp-chart-area { fill:url(#lp-area); }
+.lp-chart-area { fill:url(#lp-area); transform-box:fill-box; transform-origin:50% 100%; }
 .lp-chart-line { fill:none; stroke:#0755d9; stroke-width:3; stroke-linecap:round; vector-effect:non-scaling-stroke; }
 .lp-chart-line.is-income { stroke:#7c948b; stroke-width:2; opacity:.72; }
 .lp-chart-line.is-expense { stroke:#a4aab0; stroke-width:2; opacity:.65; }
-.lp-chart-dots circle { fill:#fff; stroke:#0755d9; stroke-width:2; vector-effect:non-scaling-stroke; }
+.lp-chart-dots circle { fill:#fff; stroke:#0755d9; stroke-width:2; vector-effect:non-scaling-stroke; transform-box:fill-box; transform-origin:center; }
+.lp-chart-dots circle.is-income { stroke:#7c948b; }
+.lp-chart-dots circle.is-expense { stroke:#a4aab0; }
 .lp-chart-months { display:flex; justify-content:space-between; padding-left:3%; color:#929aa7; font-size:.4rem; }
 .lp-transaction-list { display:grid; }
 .lp-transaction { display:flex; align-items:center; gap:12px; min-height:72px; border-bottom:1px solid #e9edf1; }
@@ -176,8 +178,8 @@
 .lp-scattered { padding-top:150px; background:#fff; }
 .lp-scattered .lp-section-intro { margin:auto; text-align:center; }
 .lp-scattered .lp-section-copy { margin-right:auto; margin-left:auto; }
-.lp-convergence-scroll { --scene-progress:0; --scene-eased:0; position:relative; height:145vh; max-width:1120px; margin:80px auto 0; }
-.lp-convergence { position:sticky; top:96px; height:min(650px,calc(100vh - 126px)); max-width:1120px; margin:0 auto; overflow:hidden; }
+.lp-convergence-scroll { --scene-progress:0; --scene-eased:0; position:relative; height:145vh; max-width:1120px; margin:80px auto 0; overflow-x:clip; }
+.lp-convergence { position:sticky; top:96px; height:min(650px,calc(100vh - 126px)); max-width:1120px; margin:0 auto; overflow:visible; }
 .lp-convergence::before,.lp-convergence::after { content:''; position:absolute; top:50%; left:50%; border:1px solid rgb(7 85 217 / .1); border-radius:50%; transform:translate(-50%,-50%); }
 .lp-convergence::before { width:420px; height:420px; rotate:calc(var(--scene-progress,0) * 80deg); scale:calc(.9 + var(--scene-progress,0) * .35); }
 .lp-convergence::after { width:650px; height:650px; rotate:calc(var(--scene-progress,0) * -45deg); scale:calc(.92 + var(--scene-progress,0) * .2); }
@@ -202,9 +204,12 @@
 .lp-source-subscription { transform:translate(calc(var(--scene-eased,0) * -405px),calc(var(--scene-eased,0) * -5px)) scale(calc(1 - var(--scene-eased,0) * .16)); }
 .lp-source-expenses { transform:translate(calc(var(--scene-eased,0) * 300px),calc(var(--scene-eased,0) * -220px)) scale(calc(1 - var(--scene-eased,0) * .16)); }
 .lp-source-reserve { transform:translate(calc(var(--scene-eased,0) * -300px),calc(var(--scene-eased,0) * -225px)) scale(calc(1 - var(--scene-eased,0) * .16)); }
-.lp-convergence .lp-source { opacity:calc(1 - var(--scene-progress,0) * .88); will-change:transform,opacity; }
-.lp-convergence-caption { position:absolute; z-index:5; top:50%; left:50%; width:100%; color:var(--lp-ink); font-size:clamp(2.8rem,6vw,5.5rem); font-weight:520; letter-spacing:-.065em; line-height:.96; text-align:center; opacity:clamp(0,calc((var(--scene-progress,0) - .72) * 4),1); transform:translate(-50%,-50%) scale(calc(.9 + var(--scene-eased,0) * .1)); pointer-events:none; }
-.lp-convergence-caption span { color:var(--lp-blue); }
+.lp-convergence .lp-source { opacity:clamp(0,calc(1 - var(--scene-progress,0) * 1.35),1); will-change:transform,opacity; }
+.lp-convergence-caption { position:absolute; z-index:5; top:calc(50% + 265px); left:50%; display:grid; width:min(92%,980px); gap:10px; padding:16px 28px 20px; color:var(--lp-ink); font-size:clamp(2.8rem,6vw,5.5rem); font-weight:520; letter-spacing:-.065em; line-height:.96; text-align:center; opacity:clamp(0,calc((var(--scene-progress,0) - .72) * 4),1); transform:translate(-50%,-50%) scale(calc(.9 + var(--scene-eased,0) * .1)); filter:blur(calc((1 - var(--scene-eased,0)) * 7px)); pointer-events:none; }
+.lp-convergence-caption::before { content:''; position:absolute; z-index:-1; inset:-24px -50px; border-radius:50%; background:radial-gradient(ellipse, rgb(255 255 255 / .95) 0 48%, rgb(255 255 255 / .62) 68%, transparent 100%); filter:blur(4px); }
+.lp-convergence-caption::after { content:''; position:absolute; z-index:-1; bottom:calc(100% + 10px); left:50%; width:1px; height:118px; background:linear-gradient(180deg,transparent,rgb(7 85 217 / .5) 45%,transparent); box-shadow:0 0 16px rgb(8 112 250 / .3); opacity:clamp(0,calc((var(--scene-progress,0) - .7) * 3),1); }
+.lp-caption-line { display:block; color:var(--lp-ink); opacity:clamp(0,calc((var(--scene-progress,0) - .72) * 6),1); translate:0 calc((1 - var(--scene-eased,0)) * -70px); }
+.lp-caption-line.is-accent { color:var(--lp-blue); opacity:clamp(0,calc((var(--scene-progress,0) - .79) * 6),1); translate:0 calc((1 - var(--scene-eased,0)) * -42px); }
 
 .lp-product-section { background:linear-gradient(180deg,#fff,#f4f7fb 38%,#f6f8fa); }
 .lp-product-section .lp-section-intro { margin:auto; text-align:center; }
@@ -229,8 +234,9 @@
 .lp-dashboard-frame .lp-transaction-list.is-compact .lp-transaction-icon { width:29px; height:29px; flex-basis:29px; }
 .lp-dashboard-frame .lp-transaction-list.is-compact .lp-transaction-copy b,.lp-dashboard-frame .lp-transaction-list.is-compact .lp-transaction-value b { font-size:.58rem; }
 .lp-dashboard-frame .lp-transaction-list.is-compact .lp-transaction-copy small,.lp-dashboard-frame .lp-transaction-list.is-compact .lp-transaction-value small { font-size:.47rem; }
-.lp-motion-ready .lp-dashboard-frame.is-visible .lp-chart-line { stroke-dasharray:900; stroke-dashoffset:900; animation:lp-draw 1.4s 350ms var(--lp-ease) forwards; }
-@keyframes lp-draw { to { stroke-dashoffset:0; } }
+.lp-motion-ready .lp-dashboard-frame .lp-chart-series,.lp-motion-ready .lp-insight-chart .lp-chart-series { clip-path:inset(0 100% 0 0); will-change:clip-path; }
+.lp-motion-ready .lp-dashboard-frame.is-visible .lp-chart-series,.lp-motion-ready .lp-insight-chart.is-visible .lp-chart-series { animation:lp-chart-reveal 1.35s 120ms var(--lp-ease) forwards; }
+@keyframes lp-chart-reveal { to { clip-path:inset(0 0 0 0); } }
 
 .lp-movements { background:#fff; }
 .lp-split { display:grid; grid-template-columns:.86fr 1.14fr; gap:clamp(70px,9vw,150px); align-items:start; }
@@ -298,7 +304,6 @@
 .lp-chart-callout small { color:var(--lp-blue); font-size:.52rem; font-weight:800; letter-spacing:.11em; }
 .lp-chart-callout strong { font-size:1.15rem; }
 .lp-chart-callout span { color:var(--lp-muted); font-size:.56rem; }
-.lp-motion-ready .lp-insight-chart.is-visible .lp-chart-line { stroke-dasharray:1000; stroke-dashoffset:1000; animation:lp-draw 1.5s 200ms var(--lp-ease) forwards; }
 
 .lp-month-section { background:#f4f7fa; }
 .lp-month-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(70px,10vw,160px); align-items:center; }
@@ -504,7 +509,10 @@
   .lp-source-subscription { transform:translate(calc(var(--scene-eased,0) * -105px),calc(var(--scene-eased,0) * -18px)) scale(calc(1 - var(--scene-eased,0) * .18)); }
   .lp-source-expenses { transform:translate(calc(var(--scene-eased,0) * 105px),calc(var(--scene-eased,0) * -142px)) scale(calc(1 - var(--scene-eased,0) * .18)); }
   .lp-source-reserve { transform:translate(calc(var(--scene-eased,0) * -105px),calc(var(--scene-eased,0) * -220px)) scale(calc(1 - var(--scene-eased,0) * .18)); }
-  .lp-convergence-caption { font-size:2.75rem; }
+  .lp-convergence-caption { top:calc(50% + 210px); gap:7px; padding:12px 16px 16px; font-size:2.75rem; }
+  .lp-convergence-caption::after { height:82px; }
+  .lp-caption-line { translate:0 calc((1 - var(--scene-eased,0)) * -42px); }
+  .lp-caption-line.is-accent { translate:0 calc((1 - var(--scene-eased,0)) * -28px); }
   .lp-dashboard { border-radius:18px; }
   .lp-dashboard-topbar,.lp-dashboard-frame .lp-dashboard-topbar { height:40px; padding:0 12px; }
   .lp-window-mark,.lp-avatar { width:24px; height:24px; }

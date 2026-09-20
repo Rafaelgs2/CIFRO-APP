@@ -51,11 +51,13 @@ function FlowChart({large=false}:{large?:boolean}){
       <g className="lp-chart-grid">
         <path d="M20 36H660M20 94H660M20 152H660M20 210H660"/>
       </g>
-      <path className="lp-chart-area" d="M20 192C77 176 103 160 148 166C197 172 226 125 276 133C333 143 354 87 405 102C458 117 492 62 536 78C585 96 612 45 660 52V222H20Z"/>
-      <path className="lp-chart-line is-balance" d="M20 192C77 176 103 160 148 166C197 172 226 125 276 133C333 143 354 87 405 102C458 117 492 62 536 78C585 96 612 45 660 52"/>
-      <path className="lp-chart-line is-income" d="M20 139C80 128 104 105 148 113C201 123 226 72 276 88C334 107 357 58 405 72C461 89 490 45 536 57C588 71 615 31 660 39"/>
-      <path className="lp-chart-line is-expense" d="M20 176C77 164 106 173 148 154C202 129 226 147 276 120C330 91 359 122 405 91C459 55 493 96 536 68C585 36 618 76 660 51"/>
-      <g className="lp-chart-dots"><circle cx="660" cy="52" r="5"/><circle cx="536" cy="78" r="4"/><circle cx="405" cy="102" r="4"/></g>
+      <g className="lp-chart-series">
+        <path className="lp-chart-area" d="M20 192C77 176 103 160 148 166C197 172 226 125 276 133C333 143 354 87 405 102C458 117 492 62 536 78C585 96 612 38 660 26V222H20Z"/>
+        <path className="lp-chart-line is-balance" d="M20 192C77 176 103 160 148 166C197 172 226 125 276 133C333 143 354 87 405 102C458 117 492 62 536 78C585 96 612 38 660 26"/>
+        <path className="lp-chart-line is-income" d="M20 139C80 128 104 105 148 113C201 123 226 72 276 88C334 107 357 58 405 72C461 89 490 45 536 57C588 71 615 40 660 44"/>
+        <path className="lp-chart-line is-expense" d="M20 176C77 164 106 173 148 154C202 129 226 147 276 120C330 91 359 122 405 91C459 55 493 96 536 68C585 36 618 76 660 94"/>
+        <g className="lp-chart-dots"><circle className="is-balance" cx="660" cy="26" r="5"/><circle className="is-balance" cx="536" cy="78" r="4"/><circle className="is-balance" cx="405" cy="102" r="4"/><circle className="is-income" cx="660" cy="44" r="4"/><circle className="is-expense" cx="660" cy="94" r="4"/></g>
+      </g>
     </svg>
     <div className="lp-chart-months" aria-hidden="true"><span>ABR</span><span>MAI</span><span>JUN</span><span>JUL</span><span>AGO</span><span>SET</span></div>
   </div>;
@@ -234,7 +236,7 @@ export function LandingPage(){
               <div className="lp-source lp-source-expenses"><Wallet aria-hidden="true"/><span>Despesas</span><small>R$ 4.120,00</small></div>
               <div className="lp-source lp-source-reserve"><ShieldCheck aria-hidden="true"/><span>Reserva</span><small>R$ 7.180,00</small></div>
               <div className="lp-convergence-core"><BrandSymbol/><b>CIFRO</b><span>Uma única visão</span></div>
-              <p className="lp-convergence-caption">Tudo conectado.<br/><span>Agora faz sentido.</span></p>
+              <p className="lp-convergence-caption"><span className="lp-caption-line">Tudo conectado.</span><span className="lp-caption-line is-accent">Agora faz sentido.</span></p>
             </div>
           </div>
         </div>
