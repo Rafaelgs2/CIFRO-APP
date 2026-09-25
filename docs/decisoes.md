@@ -9,6 +9,8 @@ Este documento registra apenas decisões atualmente refletidas no código.
 - O slogan é “SUAS FINANÇAS MAIS CONECTADAS”.
 - Temas claro e escuro usam tokens compartilhados; a preferência visual pode ser persistida no navegador.
 - A demonstração usa dados fictícios somente em memória e nunca é salva na conta do usuário.
+- No primeiro acesso de uma conta recém-criada, o onboarding exige o cadastro de uma conta financeira. O nome começa como “Conta principal” e pode ser alterado; o saldo inicial é obrigatório, mas pode ser R$ 0,00.
+- Depois de criar a conta, o onboarding apresenta cartões, compromissos e metas, sem exigir o cadastro de nenhum deles. A apresentação pode ser pulada e sua conclusão é persistida no perfil.
 
 ## Identidade e segurança
 

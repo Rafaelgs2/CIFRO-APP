@@ -61,7 +61,12 @@ export async function GET(request:Request){
       return reply({error:'Não foi possível carregar seus dados. Tente novamente.'},503);
     }
 
-    return reply({state:parsed.state,revision:payload.revision});
+    const {data:profile,error:profileError}=await context.supabase.from('profiles').select('onboarding_completed_at').eq('id',context.user.id).maybeSingle();
+    if(profileError){
+      console.error('Onboarding status load failed',{code:profileError.code,message:profileError.message});
+      return reply({error:'Não foi possível carregar seus dados. Tente novamente.'},503);
+    }
+    return reply({state:parsed.state,revision:payload.revision,onboardingCompleted:Boolean(profile?.onboarding_completed_at)});
   }catch(error){
     console.error('Finance load failed',error);
     return reply({error:'Não foi possível carregar seus dados. Tente novamente.'},503);
