@@ -5,7 +5,7 @@ import {ChevronLeft,ChevronRight,Search,SlidersHorizontal,Info,ArrowRight,X} fro
 import {AlertDialog,AlertDialogContent,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {AppToaster} from './theme-controls';
 import {toast} from 'sonner';
-import {type State,type Transaction,emptyState,demoState,validateState,today,monthOf,monthLabel,addMonth,dateInMonth,invoice,purchaseInstallments,typeLabels} from '@/lib/finance';
+import {type Account,type State,type Transaction,emptyState,demoState,validateState,today,monthOf,monthLabel,addMonth,dateInMonth,invoice,purchaseInstallments,typeLabels} from '@/lib/finance';
 import {getSupabaseBrowserClient} from '@/lib/supabase/browser';
 import {Picker,Field} from './finance-ui';
 import FinanceForm,{type Modal} from './finance-form';
@@ -38,7 +38,7 @@ export default function FinanceApp(){
  function switchDemo(){setDemo(true);setState(demoState(monthOf(today())));setMonth(monthOf(today()));setError('');setLoading(false);navigate('home');toast('Dados fictícios. As alterações na demonstração não são salvas.');}
  async function exitDemo(){setDemo(false);setState(emptyState());await load();navigate('home')}
  async function signOut(){try{await getSupabaseBrowserClient().auth.signOut({scope:'local'});setState(emptyState());router.replace('/login');}catch(e){toast.error(e instanceof Error?e.message:'Não foi possível sair da conta.');}}
- async function createOnboardingAccount(account:{name:string;initial:number;date:string}){await save({...state,accounts:[...state.accounts,{id:crypto.randomUUID(),name:account.name,kind:'other',initial:account.initial,date:account.date,archived:false,order:state.accounts.length}]});}
+ async function createOnboardingAccount(account:Pick<Account,'name'|'kind'|'initial'|'date'>){await save({...state,accounts:[...state.accounts,{id:crypto.randomUUID(),...account,archived:false,order:state.accounts.length}]});}
  async function completeOnboarding(){const response=await authorizedFetch('/api/onboarding',{method:'POST'});const data=await response.json() as {error?:string};if(!response.ok)throw Error(data.error??'Não foi possível concluir a apresentação.');setOnboardingCompleted(true);}
  function editTx(t:Transaction){open({kind:'transaction',id:t.id,type:t.type})}
  function resetFilters(){setSearch('');setTypeFilter('all');setCategoryFilter('all');setAccountFilter('all');setCardFilter('all');setStatusFilter('all');setStartDate('');setEndDate('')}
