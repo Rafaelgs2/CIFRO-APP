@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-const {emptyState,baseTransaction,validateState,accountBalance,totals,firstInvoice,purchaseInstallments,invoice,cardUsed,dateInMonth,demoState}=await import('../lib/finance.ts');
+const {emptyState,baseTransaction,validateState,accountBalance,totals,firstInvoice,purchaseInstallments,invoice,cardUsed,dateInMonth,demoState,categoryUsage}=await import('../lib/finance.ts');
 const s=emptyState();
 s.accounts=['salary','vr','investment','reserve'].map((kind,i)=>({id:kind,name:kind,kind,initial:kind==='salary'?10000:0,date:'2026-01-01',archived:false,order:i}));
 const add=t=>s.transactions.push({...baseTransaction(),date:'2026-09-05',...t});
@@ -33,10 +33,14 @@ const self=structuredClone(s);self.transactions[4].destinationId='salary';assert
 const pre=structuredClone(s);pre.transactions[0].date='2025-12-31';assert.throws(()=>validateState(pre),/saldo inicial/);
 const badDate=structuredClone(s);badDate.transactions[0].date='2026-02-31';assert.throws(()=>validateState(badDate));
 const removed=structuredClone(s);removed.transactions=removed.transactions.filter(t=>t.type!=='purchase');assert.throws(()=>validateState(removed),/pagamento supera/);
+const custom=structuredClone(s);custom.categories.push({id:'cat-pet',name:'Pets',type:'expense',icon:'pet',color:'#c27bb0',order:10});custom.transactions.push({...baseTransaction(),type:'expense',accountId:'salary',categoryId:'cat-pet',amount:4500,description:'Ração',date:'2026-09-06'});validateState(custom);assert.deepEqual(categoryUsage(custom,'cat-pet'),{transactions:1,bills:0});
+const twin={...custom.categories.at(-1),id:'cat-twin',name:' PETS '};assert.throws(()=>validateState({...custom,categories:[...custom.categories,twin]}),/Já existe uma categoria de despesa chamada “PETS”/);validateState({...custom,categories:[...custom.categories,{...twin,type:'income'}]});
+assert.throws(()=>validateState({...custom,categories:custom.categories.map(x=>x.id==='cat-pet'?{...x,icon:'rocket'}:x)}));assert.throws(()=>validateState({...custom,categories:custom.categories.map(x=>x.id==='cat-pet'?{...x,type:'income'}:x)}),/compatível/);
 assert.equal(totals(s,'2026-10-01','2026-10-31').expense,0);
 validateState(demoState('2026-09'));
 const {firstRecordDate,monthsBetween,buildMonthlyReport,buildFullReport}=await import('../lib/report.ts');
 const {renderReportHtml,esc,resultNote}=await import('../lib/report-html.ts');
+assert.ok(renderReportHtml(buildMonthlyReport(custom,'2026-09'),{name:'',demo:false,origin:''}).includes('href="#i-pet"'));
 assert.equal(resultNote(3000,10000,7000),'Sobrou 30% do que entrou');assert.equal(resultNote(-5000,10000,15000),'Gastou 150% do que entrou');
 assert.equal(resultNote(-5000,0,5000),'Sem receitas no período');assert.equal(resultNote(0,0,0),'Sem movimentação no período');
 assert.equal(firstRecordDate(s),'2026-01-01');assert.deepEqual(monthsBetween('2026-11-20','2027-02-03'),['2026-11','2026-12','2027-01','2027-02']);
@@ -59,4 +63,4 @@ assert.ok(!html.includes('<script>')&&!html.includes('<img'));assert.ok(html.inc
 const monthlyHtml=renderReportHtml(monthly,{name:'Ana',demo:false,origin:''});assert.ok(monthlyHtml.includes('O saldo ao longo do mês')&&monthlyHtml.includes('saldo <em>'));
 const empty=renderReportHtml(buildMonthlyReport(emptyState(),'2026-09','2026-09-30'),{name:'',demo:false,origin:''});assert.ok(empty.includes('Nenhum lançamento neste mês.'));
 renderReportHtml(buildMonthlyReport(demoState('2026-09'),'2026-09'),{name:'Ana',demo:true,origin:''});
-console.log('PASS: accounts, salary/VR, transfers, no duplicate expenses, installments with exact cents, closing cycles, leap dates, payments, validation and demonstration, reports.');
+console.log('PASS: accounts, salary/VR, transfers, no duplicate expenses, installments with exact cents, closing cycles, leap dates, payments, validation and demonstration, custom categories, reports.');

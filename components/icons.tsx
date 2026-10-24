@@ -190,6 +190,84 @@ export const Shapes = icon('shapes', <>
   <circle {...dot} cx="18" cy="6" r="1.6"/>
 </>);
 
+export const Zap = icon('energy', <>
+  <path {...plane} d="M13.5 3 5.5 13h6l-1 8 8-10h-6Z"/>
+  <path d="M13.5 3 5.5 13h6l-1 8 8-10h-6Z"/>
+</>);
+
+export const Smartphone = icon('phone', <>
+  <path {...plane} d="M6.5 15.5h11V18a3 3 0 0 1-3 3h-5a3 3 0 0 1-3-3Z"/>
+  <rect x="6.5" y="3" width="11" height="18" rx="3"/>
+  <path d="M10.5 6h3"/>
+  <circle {...dot} cx="12" cy="18.2" r="1"/>
+</>);
+
+// Drawn along a horizontal axis, then turned so the open jaw points up and to the right.
+export const Wrench = icon('tools', <g transform="rotate(-45 12 12)">
+  <rect {...plane} x="2" y="10.4" width="10.3" height="3.2" rx="1.6"/>
+  <path d="M3.6 10.4h8.66A5 5 0 0 1 21.49 9.8H17.3v4.4h4.19A5 5 0 0 1 12.26 13.6H3.6a1.6 1.6 0 0 1 0-3.2Z"/>
+</g>);
+
+export const ShoppingCart = icon('market', <>
+  <path {...plane} d="M6.6 11.5h13l-.9 3.3a2 2 0 0 1-1.9 1.5H9.2a2 2 0 0 1-2-1.6Z"/>
+  <path d="M3 4h2.2l2 10.7a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.5L20.5 8H6"/>
+  <circle cx="9.5" cy="19.6" r="1.4"/>
+  <circle cx="17" cy="19.6" r="1.4"/>
+</>);
+
+export const Coffee = icon('coffee', <>
+  <path {...plane} d="M4.5 14h12v1a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5Z"/>
+  <path d="M4.5 9.5h12V15a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5ZM16.5 11h1.25a2.75 2.75 0 0 1 0 5.5H16M8.5 3.5c-.7.8-.7 1.7 0 2.5M12.5 3.5c-.7.8-.7 1.7 0 2.5"/>
+</>);
+
+export const Luggage = icon('travel', <>
+  <path {...plane} d="M12 7H8a3 3 0 0 0-3 3v6.5a3 3 0 0 0 3 3h4Z"/>
+  <rect x="5" y="7" width="14" height="12.5" rx="3"/>
+  <path d="M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M9.5 10.5v5.5M14.5 10.5v5.5"/>
+  <circle {...dot} cx="8.5" cy="21.3" r="1"/>
+  <circle {...dot} cx="15.5" cy="21.3" r="1"/>
+</>);
+
+export const Dumbbell = icon('fitness', <>
+  <rect {...plane} x="4.5" y="7" width="4" height="10" rx="1.6"/>
+  <rect x="4.5" y="7" width="4" height="10" rx="1.6"/>
+  <rect x="15.5" y="7" width="4" height="10" rx="1.6"/>
+  <path d="M8.5 12h7M2.5 10v4M21.5 10v4"/>
+</>);
+
+export const Sparkles = icon('beauty', <>
+  <path {...plane} d="M10 3.5c.6 3.6 2.4 5.4 6 6-3.6.6-5.4 2.4-6 6-.6-3.6-2.4-5.4-6-6 3.6-.6 5.4-2.4 6-6Z"/>
+  <path d="M10 3.5c.6 3.6 2.4 5.4 6 6-3.6.6-5.4 2.4-6 6-.6-3.6-2.4-5.4-6-6 3.6-.6 5.4-2.4 6-6ZM17.5 14.5c.3 1.5 1 2.2 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.3 2.2-1 2.5-2.5Z"/>
+  <circle {...dot} cx="18.5" cy="5.5" r="1.2"/>
+</>);
+
+export const Shirt = icon('clothes', <>
+  <path {...plane} d="M6 14h12v6H6Z"/>
+  <path d="M8.5 4 4 6.5l-1.2 4.1L6 11.8V20h12v-8.2l3.2-1.2L20 6.5 15.5 4a3.5 3.5 0 0 1-7 0Z"/>
+</>);
+
+export const GraduationCap = icon('education', <>
+  <path {...plane} d="M12 4.5 2.5 9.5 12 14.5l9.5-5Z"/>
+  <path d="M12 4.5 2.5 9.5 12 14.5l9.5-5ZM6.5 11.6v4.2c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-4.2M21.5 9.5V15"/>
+  <circle {...dot} cx="21.5" cy="16.8" r="1.1"/>
+</>);
+
+export const Users = icon('family', <>
+  <path {...plane} d="M3 20a6 6 0 0 1 12 0Z"/>
+  <path d="M3 20a6 6 0 0 1 12 0M15.6 14.5A4.5 4.5 0 0 1 21 18.9V20"/>
+  <circle cx="9" cy="8" r="3.5"/>
+  <circle cx="17" cy="9.5" r="2.5"/>
+</>);
+
+export const PawPrint = icon('pet', <>
+  <path {...plane} d="M12 12.5c-2.6 0-5 2.7-5 5 0 1.6 1.2 2.5 2.6 2.5 1 0 1.6-.6 2.4-.6s1.4.6 2.4.6c1.4 0 2.6-.9 2.6-2.5 0-2.3-2.4-5-5-5Z"/>
+  <path d="M12 12.5c-2.6 0-5 2.7-5 5 0 1.6 1.2 2.5 2.6 2.5 1 0 1.6-.6 2.4-.6s1.4.6 2.4.6c1.4 0 2.6-.9 2.6-2.5 0-2.3-2.4-5-5-5Z"/>
+  <circle {...dot} cx="5.5" cy="10.5" r="1.7"/>
+  <circle {...dot} cx="9.3" cy="6.3" r="1.8"/>
+  <circle {...dot} cx="14.7" cy="6.3" r="1.8"/>
+  <circle {...dot} cx="18.5" cy="10.5" r="1.7"/>
+</>);
+
 export const Tags = icon('tag', <>
   <circle {...plane} cx="8" cy="8" r="3.5"/>
   <path d="M3.5 5v6.2c0 .5.2 1 .6 1.4l7.3 7.3a2 2 0 0 0 2.8 0l6.7-6.7a2 2 0 0 0 0-2.8L13.6 4.1c-.4-.4-.9-.6-1.4-.6H5A1.5 1.5 0 0 0 3.5 5Z"/>

@@ -1,4 +1,4 @@
-import {money,accountKinds} from './finance.ts';
+import {money,accountKinds,type Category} from './finance.ts';
 import {type Report,type MonthlyReport,type FullReport,type Slice,type Row,type MonthPoint,type AccountLine,type GoalLine,type Bridge} from './report.ts';
 
 export type RenderOptions={name:string,demo:boolean,origin:string};
@@ -36,7 +36,8 @@ const logo=(id:string)=>`<span class="logo" role="img" aria-label="CIFRO"><svg c
 // The app's own icon set (components/icons.tsx), copied as markup because the report is a standalone file:
 // a translucent plane under a crisp stroke, plus an occasional solid dot.
 const P='fill="currentColor" fill-opacity=".32" stroke="none"',D='fill="currentColor" stroke="none"';
-const ICONS:Record<string,string>={
+// Typed against Category['icon'] so a new category icon that is missing here fails the build instead of printing as "other".
+const ICONS:Record<string,string>&Record<Category['icon'],string>={
  home:`<path ${P} d="M5 20V11.5a7 7 0 0 1 14 0V20Z"/><path d="M5 20V11.5a7 7 0 0 1 14 0V20M3 20h18M10 20v-3.5a2 2 0 0 1 4 0V20"/><circle ${D} cx="12" cy="10" r="1.25"/>`,
  food:`<circle ${P} cx="14.5" cy="13.5" r="6.5"/><circle cx="14.5" cy="13.5" r="3.25"/><path d="M4 3.5V8a2 2 0 0 0 4 0V3.5M6 3.5v4M6 10v10.5"/>`,
  car:`<path ${P} d="M8.3 10.7l1.5-2.2a1.2 1.2 0 0 1 1-.5h3.9c.4 0 .7.2.9.5l1.7 2.2Z"/><path d="M5.2 17H4a1 1 0 0 1-1-1v-2.6a2 2 0 0 1 1.4-1.9L7 10.7l2-3a2 2 0 0 1 1.7-.9h4.2a2 2 0 0 1 1.6.8l2.4 3.1 1.7.5a2 2 0 0 1 1.4 1.9V16a1 1 0 0 1-1 1h-1.2M9.8 17h4.4"/><circle cx="7.5" cy="17" r="2.2"/><circle cx="16.5" cy="17" r="2.2"/>`,
@@ -45,6 +46,19 @@ const ICONS:Record<string,string>={
  gift:`<path ${P} d="M12 9H7a2.5 2.5 0 0 0-2.5 2.5V18A2.5 2.5 0 0 0 7 20.5h5Z"/><rect x="4.5" y="9" width="15" height="11.5" rx="2.5"/><path d="M12 9v11.5M12 9C10.5 5.5 7 5.3 7 7.4 7 8.6 8.6 9 12 9c3.4 0 5-.4 5-1.6 0-2.1-3.5-1.9-5 1.6"/>`,
  health:`<path ${P} d="M12 20s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10Z"/><path d="M12 20s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10ZM3 13h3.5L8 10.5l2.5 5 2-3.5H21"/>`,
  other:`<circle ${P} cx="8" cy="8" r="4.75"/><rect x="11.5" y="11.5" width="9" height="9" rx="2.5"/><circle ${D} cx="18" cy="6" r="1.6"/>`,
+ energy:`<path ${P} d="M13.5 3 5.5 13h6l-1 8 8-10h-6Z"/><path d="M13.5 3 5.5 13h6l-1 8 8-10h-6Z"/>`,
+ phone:`<path ${P} d="M6.5 15.5h11V18a3 3 0 0 1-3 3h-5a3 3 0 0 1-3-3Z"/><rect x="6.5" y="3" width="11" height="18" rx="3"/><path d="M10.5 6h3"/><circle ${D} cx="12" cy="18.2" r="1"/>`,
+ tools:`<g transform="rotate(-45 12 12)"><rect ${P} x="2" y="10.4" width="10.3" height="3.2" rx="1.6"/><path d="M3.6 10.4h8.66A5 5 0 0 1 21.49 9.8H17.3v4.4h4.19A5 5 0 0 1 12.26 13.6H3.6a1.6 1.6 0 0 1 0-3.2Z"/></g>`,
+ market:`<path ${P} d="M6.6 11.5h13l-.9 3.3a2 2 0 0 1-1.9 1.5H9.2a2 2 0 0 1-2-1.6Z"/><path d="M3 4h2.2l2 10.7a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.5L20.5 8H6"/><circle cx="9.5" cy="19.6" r="1.4"/><circle cx="17" cy="19.6" r="1.4"/>`,
+ coffee:`<path ${P} d="M4.5 14h12v1a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5Z"/><path d="M4.5 9.5h12V15a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5ZM16.5 11h1.25a2.75 2.75 0 0 1 0 5.5H16M8.5 3.5c-.7.8-.7 1.7 0 2.5M12.5 3.5c-.7.8-.7 1.7 0 2.5"/>`,
+ travel:`<path ${P} d="M12 7H8a3 3 0 0 0-3 3v6.5a3 3 0 0 0 3 3h4Z"/><rect x="5" y="7" width="14" height="12.5" rx="3"/><path d="M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M9.5 10.5v5.5M14.5 10.5v5.5"/><circle ${D} cx="8.5" cy="21.3" r="1"/><circle ${D} cx="15.5" cy="21.3" r="1"/>`,
+ fitness:`<rect ${P} x="4.5" y="7" width="4" height="10" rx="1.6"/><rect x="4.5" y="7" width="4" height="10" rx="1.6"/><rect x="15.5" y="7" width="4" height="10" rx="1.6"/><path d="M8.5 12h7M2.5 10v4M21.5 10v4"/>`,
+ beauty:`<path ${P} d="M10 3.5c.6 3.6 2.4 5.4 6 6-3.6.6-5.4 2.4-6 6-.6-3.6-2.4-5.4-6-6 3.6-.6 5.4-2.4 6-6Z"/><path d="M10 3.5c.6 3.6 2.4 5.4 6 6-3.6.6-5.4 2.4-6 6-.6-3.6-2.4-5.4-6-6 3.6-.6 5.4-2.4 6-6ZM17.5 14.5c.3 1.5 1 2.2 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.3 2.2-1 2.5-2.5Z"/><circle ${D} cx="18.5" cy="5.5" r="1.2"/>`,
+ clothes:`<path ${P} d="M6 14h12v6H6Z"/><path d="M8.5 4 4 6.5l-1.2 4.1L6 11.8V20h12v-8.2l3.2-1.2L20 6.5 15.5 4a3.5 3.5 0 0 1-7 0Z"/>`,
+ education:`<path ${P} d="M12 4.5 2.5 9.5 12 14.5l9.5-5Z"/><path d="M12 4.5 2.5 9.5 12 14.5l9.5-5ZM6.5 11.6v4.2c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-4.2M21.5 9.5V15"/><circle ${D} cx="21.5" cy="16.8" r="1.1"/>`,
+ family:`<path ${P} d="M3 20a6 6 0 0 1 12 0Z"/><path d="M3 20a6 6 0 0 1 12 0M15.6 14.5A4.5 4.5 0 0 1 21 18.9V20"/><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9.5" r="2.5"/>`,
+ pet:`<path ${P} d="M12 12.5c-2.6 0-5 2.7-5 5 0 1.6 1.2 2.5 2.6 2.5 1 0 1.6-.6 2.4-.6s1.4.6 2.4.6c1.4 0 2.6-.9 2.6-2.5 0-2.3-2.4-5-5-5Z"/><path d="M12 12.5c-2.6 0-5 2.7-5 5 0 1.6 1.2 2.5 2.6 2.5 1 0 1.6-.6 2.4-.6s1.4.6 2.4.6c1.4 0 2.6-.9 2.6-2.5 0-2.3-2.4-5-5-5Z"/><circle ${D} cx="5.5" cy="10.5" r="1.7"/><circle ${D} cx="9.3" cy="6.3" r="1.8"/><circle ${D} cx="14.7" cy="6.3" r="1.8"/><circle ${D} cx="18.5" cy="10.5" r="1.7"/>`,
+ bag:`<path ${P} d="M5.7 14h12.6l-.4 5a2.2 2.2 0 0 1-2.2 2H8.3a2.2 2.2 0 0 1-2.2-2Z"/><path d="M5.2 8h13.6l-.9 11a2.2 2.2 0 0 1-2.2 2H8.3a2.2 2.2 0 0 1-2.2-2ZM9 8V7a3 3 0 0 1 6 0v1"/><circle ${D} cx="9" cy="10.8" r=".95"/><circle ${D} cx="15" cy="10.8" r=".95"/>`,
  card:`<rect ${P} x="7" y="4" width="14" height="10" rx="3"/><rect x="3" y="9.5" width="15" height="10.5" rx="3"/><path d="M3 13.5h15M10.5 16.8h4"/><circle ${D} cx="7" cy="16.8" r="1.1"/>`,
  wallet:`<path ${P} d="M20.5 11h-5a2.5 2.5 0 0 0 0 5h5Z"/><rect x="3.5" y="6.5" width="17" height="13.5" rx="3"/><path d="M20.5 11h-5a2.5 2.5 0 0 0 0 5h5M6.5 6.5l8.9-2.5a1.5 1.5 0 0 1 1.9 1.1l.4 1.4"/><circle ${D} cx="15.6" cy="13.5" r="1"/>`,
  trend:`<path ${P} d="M3 17l5.5-5.5 3.5 3 8-8V20H3Z"/><path d="M3 17l5.5-5.5 3.5 3 8-8M15 6.5h5v5"/>`,
