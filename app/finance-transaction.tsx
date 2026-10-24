@@ -1,12 +1,13 @@
 'use client';
-import {Pencil,Trash2,X,Wallet,CreditCard,CalendarDays,ArrowLeftRight,ReceiptText,ShoppingBag,RotateCcw,CheckCircle2,Info,Tags,type Icon as IconType} from '@/components/icons';
+import {Pencil,Trash2,X,Wallet,CreditCard,CalendarDays,ArrowLeftRight,ReceiptText,ShoppingBag,RotateCcw,CheckCircle2,CircleX,Info,Tags,type Icon as IconType} from '@/components/icons';
 import {Dialog,DialogContent,DialogTitle,DialogDescription,DialogClose} from '@/components/ui/dialog';
-import {type Transaction,money,monthLabel,invoice,purchaseInstallments,typeLabels} from '@/lib/finance';
+import {type Transaction,money,monthLabel,today,invoice,purchaseInstallments,typeLabels,frequencyLabels,isSeriesStart,recurrenceEnd,nextOccurrence,endRecurrence,removeTransaction} from '@/lib/finance';
 import {transactionVisual,categoryIcons} from './finance-ui';
 import {type AppContext} from './finance-main';
 const longDate=(d:string)=>new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 type Row={icon:IconType,label:string,value:string,color?:string};
-export function confirmRemoveTx({state,save,setConfirm}:AppContext,t:Transaction,after?:()=>void){setConfirm({title:'Excluir este lançamento?',description:`“${t.description}” será removido e os saldos serão recalculados. Um compromisso vinculado voltará a ficar pendente.`,action:async()=>{await save({...state,transactions:state.transactions.filter(x=>x.id!==t.id),bills:state.bills.map(b=>b.transactionId===t.id?{...b,transactionId:''}:b)});after?.()}})}
+export function confirmRemoveTx({state,save,setConfirm}:AppContext,t:Transaction,after?:()=>void){const confirmed=state.transactions.some(x=>x.seriesId===t.id);const effect=isSeriesStart(t)?`Os próximos compromissos previstos desta recorrência deixam de aparecer.${confirmed?' Os lançamentos já confirmados dela continuam.':''}`:t.seriesId?'Este mês da recorrência voltará a ficar pendente.':'Um compromisso vinculado voltará a ficar pendente.';setConfirm({title:'Excluir este lançamento?',description:`“${t.description}” será removido e os saldos serão recalculados. ${effect}`,action:async()=>{await save(removeTransaction(state,t.id));after?.()}})}
+export function confirmEndRecurrence({state,save,setConfirm}:AppContext,t:Transaction){setConfirm({title:'Encerrar recorrência?',description:`“${t.description}” deixa de aparecer nos próximos compromissos. Os previstos que você ainda não confirmou somem; os lançamentos já registrados continuam.`,action:()=>save(endRecurrence(state,t.id))})}
 export function TransactionDetails({context:c,id,onClose}:{context:AppContext,id:string,onClose:()=>void}){
  const {state,open}=c;
  const t=state.transactions.find(x=>x.id===id);
@@ -18,6 +19,8 @@ export function TransactionDetails({context:c,id,onClose}:{context:AppContext,id
  const bill=state.bills.find(b=>b.transactionId===t.id);
  const sign=t.type==='income'?'+ ':['expense','purchase','payment'].includes(t.type)?'− ':'';
  const installments=t.type==='purchase'&&card?purchaseInstallments(card,t):[];
+ const starts=isSeriesStart(t),end=starts?recurrenceEnd(state,t):'',next=starts?nextOccurrence(state,t):null,series=state.transactions.find(x=>x.id===t.seriesId);
+ const ongoing=starts&&(!end||!!next);
  const rows:Row[]=[
   ...(cat?[{icon:categoryIcons[cat.icon]??Tags,label:'Categoria',value:cat.name,color:cat.color}]:[]),
   {icon:CalendarDays,label:'Data',value:longDate(t.date)},
@@ -26,7 +29,9 @@ export function TransactionDetails({context:c,id,onClose}:{context:AppContext,id
   ...(t.type!=='transfer'&&t.type!=='purchase'?[{icon:Wallet,label:t.type==='payment'?'Pago com':t.type==='income'?'Recebido em':'Conta',value:account?.name??'—'}]:[]),
   ...(t.type==='payment'&&t.invoiceMonth?[{icon:ReceiptText,label:'Fatura',value:monthLabel(t.invoiceMonth)}]:[]),
   ...(t.type==='purchase'?[{icon:ShoppingBag,label:'Pagamento',value:t.installments>1?`${t.installments}× de ${money(installments[0]?.amount??t.amount)}`:'À vista'}]:[]),
-  ...(t.recurring?[{icon:RotateCcw,label:'Repetição',value:'Recorrente todo mês'}]:[]),
+  ...(starts?[{icon:RotateCcw,label:'Repetição',value:`${frequencyLabels[t.frequency]}${end?` · até ${monthLabel(end)}`:''}`}]:[]),
+  ...(next?[{icon:CalendarDays,label:next.date<today()?'Pendente desde':'Próximo previsto',value:`${new Date(next.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short',year:'numeric'})} · ${money(next.amount)}`}]:[]),
+  ...(series?[{icon:RotateCcw,label:'Recorrência',value:`${series.description} · ${monthLabel(t.seriesMonth)}`}]:[]),
   ...(bill?[{icon:CheckCircle2,label:'Compromisso vinculado',value:bill.name}]:[]),
  ];
  function edit(){onClose();open({kind:'transaction',id:t!.id,type:t!.type})}
@@ -46,5 +51,6 @@ export function TransactionDetails({context:c,id,onClose}:{context:AppContext,id
   <ul className="tx-detail-card">{rows.map(r=><li key={r.label}><span className="tx-row-icon" style={r.color?{color:r.color}:undefined}><r.icon size={18}/></span><span><small>{r.label}</small><b>{r.value}</b></span></li>)}</ul>
   {installments.length>1&&<section className="tx-detail-section"><h3>Parcelas</h3><ol className="tx-detail-card tx-installments">{installments.map(i=>{const status=invoice(state,card!,i.month).status;return <li key={i.number} className={status==='Paga'?'is-paid':''}><span className="tx-installment-number">{i.number}/{t.installments}</span><span><b>Fatura de {monthLabel(i.month)}</b><small>{status}</small></span><strong>{money(i.amount)}</strong></li>})}</ol></section>}
   {t.notes&&<section className="tx-detail-section"><h3><Info size={14}/> Observações</h3><p className="tx-detail-notes">{t.notes}</p></section>}
+  {ongoing&&<button className="secondary tx-detail-end" onClick={()=>confirmEndRecurrence(c,t)}><CircleX size={17}/> Encerrar recorrência</button>}
  </DialogContent></Dialog>;
 }

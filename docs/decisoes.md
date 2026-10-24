@@ -37,7 +37,7 @@ Este documento registra apenas decisões atualmente refletidas no código.
 - Parcelas distribuem os centavos exatamente.
 - Compras no dia do fechamento entram no ciclo seguinte.
 - Datas inexistentes de fechamento/vencimento são limitadas ao último dia do mês.
-- Recorrência é apenas uma indicação; nenhum lançamento é criado automaticamente.
+- Recorrência prevê compromissos mensais ou anuais; nenhum lançamento é criado automaticamente, cada ocorrência é confirmada pelo usuário. O valor previsto segue o último lançamento da série, e um lançamento feito à mão com a mesma descrição no mês conta como confirmado. Encerrar uma recorrência remove só os previstos não confirmados.
 - Fechamento mensal é uma revisão e não bloqueia nem altera lançamentos.
 
 ## Limites atuais

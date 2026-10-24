@@ -37,7 +37,7 @@ O CIFRO é uma aplicação de finanças pessoais em português do Brasil. Ele or
   - transferências internas não alteram o resultado consolidado;
   - compra no cartão é despesa na data da compra; pagamento de fatura não duplica a despesa;
   - parcelas distribuem os centavos exatamente; compra no dia do fechamento entra no ciclo seguinte;
-  - recorrência é só uma indicação, nada é lançado automaticamente;
+  - recorrência prevê os próximos meses (ou anos) como compromissos; cada um só vira lançamento quando o usuário confirma;
   - fechamento mensal é uma revisão e não bloqueia nem altera lançamentos.
 - Limites atuais: sem integração bancária, sem importação automática, sem uso familiar/compartilhado. Exportação JSON manual, sem restauração automática.
 - Stack existente: Next.js 16, React 19, Tailwind 4, Radix, Recharts, Supabase (Auth por e-mail e senha, Postgres com RLS e RPCs), deploy na Vercel.

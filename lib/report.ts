@@ -1,4 +1,4 @@
-import {type State,type Transaction,type Account,type Category,today,monthOf,addMonth,dateInMonth,monthLabel,totals,accountBalance,accountActivity,invoice,cardUsed,purchaseInstallments,accountKinds,typeLabels} from './finance.ts';
+import {type State,type Transaction,type Account,type Category,today,monthOf,addMonth,dateInMonth,monthLabel,totals,accountBalance,accountActivity,invoice,cardUsed,purchaseInstallments,accountKinds,typeLabels,recurrencesForMonth,occurrenceStatus} from './finance.ts';
 
 export type Slice={id:string,name:string,color:string,icon:Category['icon'],value:number,pct:number};
 /** `effect` is what the row did to the sum of all accounts; `after` is that sum right after it. */
@@ -69,7 +69,7 @@ export function buildMonthlyReport(s:State,month:string,asOf=today()):MonthlyRep
  return {kind:'monthly',month,generatedAt:asOf,start,end,label:capitalize(monthLabel(month)),income:p.income,expense:p.expense,result:p.result,balance:consolidated(s,end),bridge:bridge(s,start,end,p.transactions,p.result),daily,previous:{income:prev.income,expense:prev.expense,result:prev.result},
   accounts:accountLines(s,start,end),expenseCategories:categoryBreakdown(s,p.transactions,'expense'),incomeCategories:categoryBreakdown(s,p.transactions,'income'),future:future(s,p.transactions),
   cards:s.cards.map(c=>{const inv=invoice(s,c,month,asOf);const used=cardUsed(s,c);return {name:c.name,institution:c.institution,limit:c.limit,used,total:inv.total,paid:inv.paid,remaining:inv.remaining,status:inv.status,due:inv.due,closing:inv.closing,items:inv.items.map(i=>({description:i.transaction.description,date:i.transaction.date,number:i.number,installments:i.transaction.installments,amount:i.amount}))}}),
-  bills:s.bills.filter(b=>monthOf(b.date)===month).sort((a,b)=>a.date.localeCompare(b.date)).map(b=>({name:b.name,date:b.date,amount:b.amount,type:b.type,status:billStatus(b,asOf)})),
+  bills:[...s.bills.filter(b=>monthOf(b.date)===month).map(b=>({name:b.name,date:b.date,amount:b.amount,type:b.type,status:billStatus(b,asOf)})),...recurrencesForMonth(s,month,asOf).filter(o=>o.month===month).map(o=>({name:o.template.description,date:o.date,amount:o.amount,type:o.series.type==='income'?'income' as const:'expense' as const,status:occurrenceStatus(o,asOf)}))].sort((a,b)=>a.date.localeCompare(b.date)),
   goals:goals(s,asOf),topExpenses:rows.filter(r=>r.flow==='out').sort((a,b)=>b.amount-a.amount).slice(0,5),series:Array.from({length:6},(_,i)=>point(s,addMonth(month,i-5))),days:[...days].map(([date,items])=>({date,items}))};
 }
 
