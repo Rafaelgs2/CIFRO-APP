@@ -7,7 +7,7 @@ import {FinancialFlow} from './finance-chart';
 import type {AppContext} from './finance-main';
 
 export function FinanceDashboard({context:c,hidden,onToggleValues}:{context:AppContext,hidden:boolean,onToggleValues:()=>void}) {
-  const {state,month,navigate,transaction,selectAccount,selectCard,editTx,open}=c;
+  const {state,month,navigate,transaction,selectAccount,selectCard,viewTx,open}=c;
   const end=dateInMonth(month,31),period=totals(state,`${month}-01`,end);
   const balance=state.accounts.reduce((n,a)=>n+accountBalance(state,a,end),0);
   const shown=(n:number)=>hidden?'••••':money(n);
@@ -27,7 +27,7 @@ export function FinanceDashboard({context:c,hidden,onToggleValues}:{context:AppC
     <div className="overview-composition">
       <section className="flow-section"><div className="section-heading"><div><p className="section-kicker">NOS ÚLTIMOS SEIS MESES</p><h2>Fluxo financeiro</h2></div><button className="text-button" onClick={()=>navigate('reports')}>Ver relatório <ArrowRight size={16}/></button></div><FinancialFlow state={state} month={month} hidden={hidden}/></section>
       <section className="category-section"><div className="section-heading"><div><p className="section-kicker">NESTE MÊS</p><h2>Gastos por categoria</h2></div></div>{hidden?<p className="chart-private">Valores ocultos</p>:<CategoryChart state={state} items={period.transactions}/>}</section>
-      <section className="recent-section"><div className="section-heading"><h2>Últimas transações</h2><button className="text-button" onClick={()=>navigate('transactions')}>Ver todas <ArrowRight size={16}/></button></div><TransactionRows items={[...period.transactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5)} state={state} onSelect={editTx} hidden={hidden}/></section>
+      <section className="recent-section"><div className="section-heading"><h2>Últimas transações</h2><button className="text-button" onClick={()=>navigate('transactions')}>Ver todas <ArrowRight size={16}/></button></div><TransactionRows items={[...period.transactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5)} state={state} onSelect={viewTx} hidden={hidden}/></section>
       <section className="payment-section"><div className="section-heading"><h2>Próximos compromissos</h2><button className="icon-button" onClick={()=>navigate('planning')} aria-label="Ver planejamento"><ArrowRight size={18}/></button></div>{commitments.length?<div>{commitments.slice(0,4).map(item=><button key={item.id} className="commitment-row" onClick={()=>item.cardId?selectCard(item.cardId):navigate('planning')}><span className="payment-copy"><b>{item.name}</b><small>{new Date(item.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} · {item.date<today()?'Em atraso':item.type==='income'?'A receber':'A pagar'}</small></span><strong>{shown(item.amount)}</strong></button>)}</div>:<EmptyState title="Nenhum compromisso pendente" description="Cadastre pagamentos e recebimentos no planejamento."/>}<button className="closing-link" onClick={()=>navigate('closing')}>Revisar fechamento do mês <ArrowRight size={16}/></button></section>
     </div>
     {!!accounts.length&&<section className="accounts-section"><div className="section-heading"><h2>Minhas contas</h2><button className="text-button" onClick={()=>navigate('accounts')}>Gerenciar <ArrowRight size={16}/></button></div><div className="account-grid">{accounts.map(a=><AccountTile key={a.id} account={a} state={state} end={end} hidden={hidden} onClick={()=>selectAccount(a.id)}/>)}</div></section>}
