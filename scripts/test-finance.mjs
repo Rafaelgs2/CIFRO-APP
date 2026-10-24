@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-const {emptyState,baseTransaction,validateState,accountBalance,totals,firstInvoice,purchaseInstallments,invoice,cardUsed,dateInMonth,demoState,categoryUsage}=await import('../lib/finance.ts');
+const {emptyState,baseTransaction,validateState,accountBalance,totals,firstInvoice,purchaseInstallments,invoice,cardUsed,dateInMonth,demoState,categoryUsage,billsForMonth,openInvoices,searchKey}=await import('../lib/finance.ts');
 const s=emptyState();
 s.accounts=['salary','vr','investment','reserve'].map((kind,i)=>({id:kind,name:kind,kind,initial:kind==='salary'?10000:0,date:'2026-01-01',archived:false,order:i}));
 const add=t=>s.transactions.push({...baseTransaction(),date:'2026-09-05',...t});
@@ -37,6 +37,10 @@ const custom=structuredClone(s);custom.categories.push({id:'cat-pet',name:'Pets'
 const twin={...custom.categories.at(-1),id:'cat-twin',name:' PETS '};assert.throws(()=>validateState({...custom,categories:[...custom.categories,twin]}),/Já existe uma categoria de despesa chamada “PETS”/);validateState({...custom,categories:[...custom.categories,{...twin,type:'income'}]});
 assert.throws(()=>validateState({...custom,categories:custom.categories.map(x=>x.id==='cat-pet'?{...x,icon:'rocket'}:x)}));assert.throws(()=>validateState({...custom,categories:custom.categories.map(x=>x.id==='cat-pet'?{...x,type:'income'}:x)}),/compatível/);
 assert.equal(totals(s,'2026-10-01','2026-10-31').expense,0);
+assert.deepEqual(openInvoices(s,'2026-11','2026-11-01').map(x=>x.month),['2026-10','2026-11']);assert.deepEqual(openInvoices(s,'2026-11','2026-10-01').map(x=>x.month),['2026-11']);assert.deepEqual(openInvoices(s,'2026-09','2026-11-01'),[]);
+const late={...s,bills:[{id:'b-luz',name:'Luz',amount:15000,date:'2026-09-18',type:'expense',accountId:'salary',categoryId:'cat-0',transactionId:''}]};assert.equal(billsForMonth(late,'2026-10','2026-10-05').length,1);assert.equal(billsForMonth(late,'2026-10','2026-09-10').length,0);
+const settled={...late,bills:late.bills.map(b=>({...b,transactionId:s.transactions[2].id}))};assert.equal(billsForMonth(settled,'2026-10','2026-10-05').length,0);assert.equal(billsForMonth(settled,'2026-09','2026-10-05').length,1);
+assert.equal(searchKey('Água de Coco'),'agua de coco');assert.ok(searchKey('Conta de energia elétrica').includes(searchKey('ELETRICA')));
 validateState(demoState('2026-09'));
 const {firstRecordDate,monthsBetween,buildMonthlyReport,buildFullReport}=await import('../lib/report.ts');
 const {renderReportHtml,esc,resultNote}=await import('../lib/report-html.ts');
@@ -63,4 +67,4 @@ assert.ok(!html.includes('<script>')&&!html.includes('<img'));assert.ok(html.inc
 const monthlyHtml=renderReportHtml(monthly,{name:'Ana',demo:false,origin:''});assert.ok(monthlyHtml.includes('O saldo ao longo do mês')&&monthlyHtml.includes('saldo <em>'));
 const empty=renderReportHtml(buildMonthlyReport(emptyState(),'2026-09','2026-09-30'),{name:'',demo:false,origin:''});assert.ok(empty.includes('Nenhum lançamento neste mês.'));
 renderReportHtml(buildMonthlyReport(demoState('2026-09'),'2026-09'),{name:'Ana',demo:true,origin:''});
-console.log('PASS: accounts, salary/VR, transfers, no duplicate expenses, installments with exact cents, closing cycles, leap dates, payments, validation and demonstration, custom categories, reports.');
+console.log('PASS: accounts, salary/VR, transfers, no duplicate expenses, installments with exact cents, closing cycles, leap dates, payments, validation and demonstration, custom categories, overdue carry-over, accent-insensitive search, reports.');
