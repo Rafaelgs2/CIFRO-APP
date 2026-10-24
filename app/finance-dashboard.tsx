@@ -1,7 +1,7 @@
 'use client';
 
 import {ArrowRight,Plus,Eye,EyeOff,ArrowUpRight,ArrowLeftRight,CreditCard} from '@/components/icons';
-import {accountBalance,dateInMonth,money,today,totals,invoice,monthOf} from '@/lib/finance';
+import {accountBalance,accountKinds,dateInMonth,money,today,totals,invoice,monthOf} from '@/lib/finance';
 import {AccountTile,CategoryChart,TransactionRows,EmptyState,Bar} from './finance-ui';
 import {FinancialFlow} from './finance-chart';
 import type {AppContext} from './finance-main';
@@ -12,12 +12,14 @@ export function FinanceDashboard({context:c,hidden,onToggleValues}:{context:AppC
   const balance=state.accounts.reduce((n,a)=>n+accountBalance(state,a,end),0);
   const shown=(n:number)=>hidden?'••••':money(n);
   const accounts=state.accounts.filter(a=>!a.archived).sort((a,b)=>a.order-b.order);
+  const groups=(['salary','vr','other','investment','reserve'] as const).map(kind=>{const list=accounts.filter(a=>a.kind===kind);return {kind,list,value:list.reduce((n,a)=>n+accountBalance(state,a,end),0)}}).filter(g=>g.list.length);
+  const positive=groups.reduce((n,g)=>n+Math.max(g.value,0),0);
   const bills=state.bills.filter(b=>!b.transactionId&&monthOf(b.date)===month).map(b=>({...b,cardId:''}));
   const invoices=state.cards.map(card=>({card,inv:invoice(state,card,month)})).filter(x=>x.inv.remaining>0).map(({card,inv})=>({id:card.id,name:`Fatura ${card.name}`,amount:inv.remaining,date:inv.due,type:'expense',cardId:card.id}));
   const commitments=[...bills,...invoices].sort((a,b)=>a.date.localeCompare(b.date));
   return <div className="home-layout">
     <section className="financial-hero" aria-label="Resumo financeiro">
-      <div className="hero-balance"><div className="balance-label"><span>Saldo nas contas</span><button className="icon-button" onClick={onToggleValues} aria-label={hidden?'Mostrar valores':'Ocultar valores'}>{hidden?<EyeOff size={18}/>:<Eye size={18}/>}</button></div><strong className="balance-number">{shown(balance)}</strong><p>Até o fim do mês selecionado · inclui investimentos e reserva</p><button className="text-button" onClick={()=>navigate('accounts')}>Ver minhas contas <ArrowRight size={16}/></button></div>
+      <div className="hero-balance"><div className="balance-label"><span>Saldo nas contas</span><button className="icon-button" onClick={onToggleValues} aria-label={hidden?'Mostrar valores':'Ocultar valores'}>{hidden?<EyeOff size={18}/>:<Eye size={18}/>}</button></div><strong className="balance-number">{shown(balance)}</strong>{groups.length>1&&<div className="balance-split">{!hidden&&positive>0&&<div className="balance-bar" aria-hidden="true">{groups.map(g=>g.value>0&&<i key={g.kind} className={`kind-${g.kind}`} style={{flexGrow:g.value/positive}}/>)}</div>}<div className="balance-groups">{groups.map(g=><button key={g.kind} onClick={()=>g.list.length===1?selectAccount(g.list[0].id):navigate('accounts')}><span><i className={`kind-${g.kind}`}/>{g.kind==='vr'?'VR':g.kind==='reserve'?'Reserva':g.kind==='other'?'Outras':accountKinds[g.kind]}</span><b>{shown(g.value)}</b></button>)}</div></div>}<p>Até o fim do mês selecionado</p><button className="text-button" onClick={()=>navigate('accounts')}>Ver minhas contas <ArrowRight size={16}/></button></div>
       <dl className="hero-metrics"><div><dt>Receitas deste mês</dt><dd>{shown(period.income)}</dd></div><div><dt>Despesas deste mês</dt><dd>{shown(period.expense)}</dd></div><div className="metric-result"><dt>Resultado mensal</dt><dd>{shown(period.result)}</dd><span>Receitas menos despesas</span></div></dl>
     </section>
     <div className="quick-actions" aria-label="Movimentações"><button className="primary" onClick={()=>transaction('expense')}><Plus size={18}/>Nova despesa</button><button className="secondary" onClick={()=>transaction('income')}><ArrowUpRight size={18}/>Nova receita</button><button className="secondary" onClick={()=>transaction('transfer')}><ArrowLeftRight size={17}/>Transferir</button><button className="text-button" onClick={()=>navigate('cards')}><CreditCard size={17}/>Meus cartões</button></div>
