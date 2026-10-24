@@ -13,7 +13,7 @@ import {
   ShieldCheck,
   TrendingUp,
   Wallet,
-} from 'lucide-react';
+} from '@/components/icons';
 import {Brand,BrandSymbol} from './brand';
 
 const transactions=[

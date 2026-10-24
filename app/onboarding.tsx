@@ -1,7 +1,7 @@
 'use client';
 
 import {FormEvent,useEffect,useRef,useState} from 'react';
-import {ArrowRight,Check,CheckCircle2,Circle,CreditCard,Landmark,LayoutDashboard,ReceiptText,Target} from 'lucide-react';
+import {ArrowRight,Check,CheckCircle2,Circle,CreditCard,Landmark,LayoutDashboard,ReceiptText,Target} from '@/components/icons';
 import {AccountFormFields,type AccountFormValue} from './account-form-fields';
 import {Brand} from './brand';
 import {today,type State} from '@/lib/finance';

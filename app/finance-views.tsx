@@ -1,6 +1,6 @@
 'use client';
 import {useState} from 'react';
-import {Plus,ArrowRight,ArrowUp,Landmark,CreditCard,CalendarDays,Target,Check,MoreHorizontal,Pencil,Trash2,Archive,RotateCcw,Download,Tags,UserRound,ShieldCheck,ChartNoAxesCombined,ChevronRight,ChevronLeft,Info,LogOut} from 'lucide-react';
+import {Plus,ArrowRight,ArrowUp,Landmark,CreditCard,CalendarDays,Target,Check,MoreHorizontal,Pencil,Trash2,Archive,RotateCcw,Download,Tags,UserRound,ShieldCheck,ChartNoAxesCombined,ChevronRight,ChevronLeft,Info,LogOut} from '@/components/icons';
 import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger} from '@/components/ui/dropdown-menu';

@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore, type ReactNode } from 'react';
 import { ThemeProvider, useTheme } from 'next-themes';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from '@/components/icons';
 import { Switch as SwitchPrimitive } from 'radix-ui';
 import { Toaster } from '@/components/ui/sonner';
 

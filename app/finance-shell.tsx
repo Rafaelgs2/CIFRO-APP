@@ -1,7 +1,7 @@
 'use client';
 
 import {Fragment,useEffect,useRef,useState,type CSSProperties,type KeyboardEvent as ReactKeyboardEvent,type ReactNode} from 'react';
-import {House,ReceiptText,CalendarDays,ChartNoAxesCombined,UserRound,Landmark,CreditCard,PanelLeftClose,PanelLeftOpen,ChevronRight,Plus,ArrowUpRight,ArrowDownLeft,ArrowLeftRight,ShoppingBag,WalletCards} from 'lucide-react';
+import {House,ReceiptText,CalendarDays,ChartNoAxesCombined,UserRound,Landmark,CreditCard,PanelLeftClose,PanelLeftOpen,ChevronRight,Plus,ArrowUpRight,ArrowDownLeft,ArrowLeftRight,ShoppingBag,WalletCards} from '@/components/icons';
 import {SidebarProvider,Sidebar,SidebarContent,SidebarMenu,SidebarMenuItem,SidebarMenuButton} from '@/components/ui/sidebar';
 import {Brand} from './brand';
 import {ThemeToggle} from './theme-controls';

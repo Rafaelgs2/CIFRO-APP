@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useState,useRef,useCallback,useMemo} from 'react';
 import {useRouter} from 'next/navigation';
-import {ChevronLeft,ChevronRight,Search,SlidersHorizontal,Info,ArrowRight,X} from 'lucide-react';
+import {ChevronLeft,ChevronRight,Search,SlidersHorizontal,Info,ArrowRight,X} from '@/components/icons';
 import {AlertDialog,AlertDialogContent,AlertDialogTitle,AlertDialogDescription,AlertDialogFooter,AlertDialogCancel,AlertDialogAction} from '@/components/ui/alert-dialog';
 import {AppToaster} from './theme-controls';
 import {toast} from 'sonner';

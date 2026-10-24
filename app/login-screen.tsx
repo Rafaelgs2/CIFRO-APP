@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, EyeOff } from '@/components/icons';
 import { Brand } from './brand';
 import {getSupabaseBrowserClient,isSupabaseConfigured} from '@/lib/supabase/browser';
 

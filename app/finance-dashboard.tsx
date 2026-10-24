@@ -1,6 +1,6 @@
 'use client';
 
-import {ArrowRight,Plus,Eye,EyeOff,ArrowDownLeft,ArrowLeftRight,CreditCard} from 'lucide-react';
+import {ArrowRight,Plus,Eye,EyeOff,ArrowDownLeft,ArrowLeftRight,CreditCard} from '@/components/icons';
 import {accountBalance,dateInMonth,money,today,totals,invoice,monthOf} from '@/lib/finance';
 import {AccountTile,CategoryChart,TransactionRows,EmptyState,Bar} from './finance-ui';
 import {FinancialFlow} from './finance-chart';

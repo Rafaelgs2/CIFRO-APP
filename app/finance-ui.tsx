@@ -1,6 +1,6 @@
 'use client';
 import {type ReactNode} from 'react';
-import {ArrowDownLeft,ArrowUpRight,ArrowLeftRight,ReceiptText,House,Utensils,Car,Clapperboard,BriefcaseBusiness,Gift,HeartPulse,Shapes,Wallet,Landmark,ShieldCheck,TrendingUp,ChevronRight} from 'lucide-react';
+import {ArrowDownLeft,ArrowUpRight,ArrowLeftRight,ReceiptText,House,Utensils,Car,Clapperboard,BriefcaseBusiness,Gift,HeartPulse,Shapes,Wallet,Landmark,ShieldCheck,TrendingUp,ChevronRight} from '@/components/icons';
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/components/ui/select';
 import {Empty,EmptyHeader,EmptyTitle,EmptyDescription} from '@/components/ui/empty';
 import {Progress} from '@/components/ui/progress';
