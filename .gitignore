@@ -44,3 +44,7 @@ outputs/
 .DS_Store
 .vscode/
 .idea/
+
+# Gerados automaticamente pelo next dev
+AGENTS.md
+CLAUDE.md
