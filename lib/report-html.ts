@@ -6,7 +6,7 @@ export type RenderOptions={name:string,demo:boolean,origin:string};
 /** Every string that came from the user goes through here: the report opens on the app's own origin. */
 export const esc=(v:unknown)=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]!);
 const date=(d:string)=>new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR');
-const dayMonth=(d:string)=>new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).replace('.','');
+const dayMonth=(d:string)=>new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).replace('.','').replace(/ /g,'\u00a0');
 const dayTitle=(d:string)=>{const s=new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});return s.charAt(0).toUpperCase()+s.slice(1)};
 const shortMonth=(m:string)=>new Date(`${m}-15T12:00:00`).toLocaleDateString('pt-BR',{month:'short'}).replace('.','');
 const dayBefore=(d:string)=>new Date(Date.parse(`${d}T12:00:00Z`)-864e5).toISOString().slice(0,10);
@@ -14,17 +14,22 @@ const pct=(v:number|null)=>v===null?'—':`${v.toLocaleString('pt-BR',{maximumFr
 const signed=(v:number)=>`${v>0?'+':v<0?'−':''}${money(Math.abs(v))}`;
 const compact=(v:number,sign=true)=>`${v<0?'−':sign&&v>0?'+':''}${new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Math.abs(v)/100)}`;
 const tone=(v:number)=>v>0?'pos':v<0?'neg':'';
-const meta=(...parts:(string|false|null|undefined)[])=>parts.filter(Boolean).join(' · ');
+// Short fixed phrases are glued with no-break spaces; lines may only break after a separator dot, never before it.
+const meta=(...parts:(string|false|null|undefined)[])=>parts.filter(Boolean).join('\u00a0· ');
+const nb=(s:string)=>s.replace(/ /g,'\u00a0');
 const plural=(n:number,one:string,many:string)=>`${n.toLocaleString('pt-BR')} ${n===1?one:many}`;
 const clamp=(v:number)=>Number.isFinite(v)?Math.max(0,Math.min(100,v)):0;
 const lower=(label:string)=>label.split(' ')[0].toLowerCase();
 
 /** Category colors are user data: anything that is not a plain hex falls back to neutral. */
 const color=(c:string)=>/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c)?c:'#93a0b5';
-const rgb=(c:string)=>{let h=color(c).slice(1);if(h.length===3)h=[...h].map(x=>x+x).join('');return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16))};
-/** Icon badges follow the app: a light wash of the category color behind a deeper stroke of it. */
-const badge=(icon:string,c='#92989a')=>{const [r,g,b]=rgb(c);const d=[r,g,b].map((v,i)=>Math.round(v*.7+[26,31,43][i]*.3));return `<span class="badge" style="--bg:rgb(${r} ${g} ${b}/.18);--fg:rgb(${d.join(' ')})">${ico(icon)}</span>`};
-const kinds:Record<AccountLine['type'],{icon:string,color:string}>={salary:{icon:'wallet',color:'#245cdc'},vr:{icon:'food',color:'#3d9b8b'},investment:{icon:'trend',color:'#a18bd5'},reserve:{icon:'shield',color:'#edab62'},other:{icon:'bank',color:'#93a0b5'}};
+/** Icon badges follow the app: a neutral glass square; only a category paints the stroke in its own color. */
+const badge=(icon:string,c?:string)=>`<span class="badge"${c?` style="--fg:${color(c)}"`:''}>${ico(icon)}</span>`;
+// Same icons as accountIcons in the app. Colors only feed the patrimony bar: one blue, the rest neutral chart series.
+const kinds:Record<AccountLine['type'],{icon:string,color:string}>={salary:{icon:'bank',color:'#245cdc'},vr:{icon:'food',color:'#859e95'},investment:{icon:'trend',color:'#082455'},reserve:{icon:'shield',color:'#92989a'},other:{icon:'wallet',color:'#c3cac4'}};
+/** The app's transactionVisual: the type decides the icon, a category overrides it for spending. */
+const rowIcon=(r:Row)=>r.type==='income'?ico('income'):r.type==='transfer'?ico('transfer'):r.type==='payment'?ico('receipt'):ico(r.icon??'expense');
+const rowBadge=(r:Row)=>`<span class="badge"${r.icon&&r.type!=='income'&&r.type!=='transfer'&&r.type!=='payment'?` style="--fg:${color(r.color)}"`:''}>${rowIcon(r)}</span>`;
 
 const logo=(id:string)=>`<span class="logo" role="img" aria-label="CIFRO"><svg class="logo-symbol" viewBox="0 0 120 88" fill="none" aria-hidden="true"><defs><linearGradient id="${id}b" x1="62" y1="0" x2="99" y2="88" gradientUnits="userSpaceOnUse"><stop stop-color="#39a6ff"/><stop offset="1" stop-color="#066bff"/></linearGradient><linearGradient id="${id}f" x1="14" y1="30" x2="76" y2="65" gradientUnits="userSpaceOnUse"><stop stop-color="#066bff"/><stop offset="1" stop-color="#003bd1"/></linearGradient></defs><path d="M34 28C41 10 55 2 72 2C98 2 118 23 118 51V78Q118 86 110 86H88Q80 86 80 78V56C80 42 69 32 55 32Z" fill="url(#${id}b)"/><path d="M2 64C2 39 22 25 43 25C61 25 74 33 79 45C55 39 42 56 42 78Q42 86 34 86H10Q2 86 2 78Z" fill="url(#${id}f)"/></svg><svg class="logo-word" viewBox="-2 -2 264 66" fill="currentColor" aria-hidden="true"><path d="M49.506 10.494A29 29 0 1 0 49.506 51.506L39.607 41.607A15 15 0 1 1 39.607 20.393Z"/><rect x="55" y="2" width="14" height="58" rx="2"/><path d="M79 60V27C79 10 89 2 104 2H125V10Q125 16 119 16H105Q94 16 94 27H119V40H94V60Z"/><path d="M132 2H157C177 2 183 12 183 24C183 35 177 40 169 43L185 60H165L147 39V60H132V30H157Q169 30 169 24Q169 16 157 16H142Q132 16 132 6Z"/><path fill-rule="evenodd" d="M224 1A30 30 0 1 1 224 61A30 30 0 1 1 224 1ZM224 15A16 16 0 1 0 224 47A16 16 0 1 0 224 15Z"/></svg></span>`;
 
@@ -48,8 +53,12 @@ const ICONS:Record<string,string>={
  target:`<circle ${P} cx="11" cy="13" r="4.5"/><circle cx="11" cy="13" r="8"/><path d="M11 13l7.5-7.5M16.5 3.5v4h4"/><circle ${D} cx="11" cy="13" r="1.6"/>`,
  calendar:`<circle ${P} cx="15.5" cy="15.3" r="3.2"/><rect x="3.5" y="5" width="17" height="15.5" rx="4"/><path d="M8 3v4M16 3v4M3.5 10h17"/><circle ${D} cx="15.5" cy="15.3" r="1.25"/><circle ${D} cx="8.5" cy="13.6" r=".9"/><circle ${D} cx="8.5" cy="17.1" r=".9"/>`,
  income:`<path ${P} d="M3 13a8 8 0 0 1 8 8H3Z"/><path d="M8 16 19 5M11 5h8v8"/>`,
+ expense:`<path ${P} d="M3 13a8 8 0 0 1 8 8H3Z"/><path d="M19 5 8 16M8 8v8h8"/>`,
+ transfer:`<circle ${P} cx="18.5" cy="8.5" r="3.2"/><circle ${P} cx="5.5" cy="15.5" r="3.2"/><path d="M4 8.5h14M15 5.5l3 3-3 3M20 15.5H6M9 12.5l-3 3 3 3"/>`,
+ receipt:`<path ${P} d="M5 14.5h14V17a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z"/><rect x="5" y="3" width="14" height="18" rx="4"/><path d="M9 8h6M9 11.5h6M12.2 17.6h3"/><circle ${D} cx="9.2" cy="17.6" r="1.1"/>`,
 };
-const sprite=`<svg width="0" height="0" style="position:absolute" aria-hidden="true">${Object.entries(ICONS).map(([k,v])=>`<symbol id="i-${k}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${v}</symbol>`).join('')}</svg>`;
+// Badges in the app draw at 1.6 (globals.css overrides the icon default of 1.75); a stroke set on the symbol wins over CSS.
+const sprite=`<svg width="0" height="0" style="position:absolute" aria-hidden="true">${Object.entries(ICONS).map(([k,v])=>`<symbol id="i-${k}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${v}</symbol>`).join('')}</svg>`;
 const ico=(name:string)=>`<svg class="i" aria-hidden="true"><use href="#i-${ICONS[name]?name:'other'}"/></svg>`;
 
 /** State is a drawn mark next to its word, so it still reads when printed without color. */
@@ -78,17 +87,41 @@ function chart(values:number[],o:{step:boolean,labels:{i:number,text:string,now?
  const L=8,R=352,T=18,B=180,n=values.length;
  const lo0=Math.min(...values),hi0=Math.max(...values);
  const raw=Math.max(hi0-lo0,Math.abs(hi0)*.2,10000)/3,mag=10**Math.floor(Math.log10(raw)),step=[1,2,5,10].map(m=>m*mag).find(s=>s>=raw)!;
- const lo=Math.floor(lo0/step)*step,hi=Math.max(Math.ceil(hi0/step)*step,lo+step);
+ let lo=Math.floor(lo0/step)*step,hi=Math.max(Math.ceil(hi0/step)*step,lo+step);
+ // A peak that grazes the top rule gets one more step of headroom, so its point and label are not pressed against the frame.
+ if(hi-hi0<step*.25)hi+=step;
  const x=(i:number)=>n<2?(L+R)/2:L+i/(n-1)*(R-L),y=(v:number)=>B-(v-lo)/(hi-lo)*(B-T),f=(v:number)=>v.toFixed(2);
  const path=(a:number,b:number)=>values.slice(a,b+1).map((v,k)=>{const i=a+k;return k===0?`M${f(x(i))} ${f(y(v))}`:o.step?`H${f(x(i))}V${f(y(v))}`:`L${f(x(i))} ${f(y(v))}`}).join('');
  const last=o.cut===null?n-1:Math.max(0,Math.min(n-1,o.cut));
+ // Likewise at the bottom, when a labeled end sits on the axis; a zero baseline stays, since below it would only be negatives.
+ if(lo!==0&&[values[0],values[last]].some(v=>(v-lo)/(hi-lo)*(B-T)<22))lo-=step;
  // The baseline keeps its rule but not its label: the starting value is written right above it.
  const grid:string[]=[];for(let v=lo;v<=hi+1;v+=step)grid.push(`<path d="M${L} ${f(y(v))}H${R}" stroke="#e8ebe6"/>${v>lo?`<text class="c-t" x="${L}" y="${f(y(v)-4)}">${compact(v,false)}</text>`:''}`);
  const cutX=o.cut===null?null:x(last);
- const ex=x(last),ey=y(values[last]),endAnchor=ex<150?'start':'end',endX=ex<150?ex+8:ex-6,endY=ey-9<T+6?ey+17:ey-9;
- const sy=y(values[0]),startY=sy+17<=B-6?sy+17:sy-9;
  const placed:{x:number,y:number}[]=[];
  const marks=o.marks.map(m=>{let mx=x(m.i);const my=y(m.v);while(placed.some(p=>Math.abs(p.x-mx)<16&&Math.abs(p.y-my)<16))mx+=16;placed.push({x:mx,y:my});return `<circle cx="${f(mx)}" cy="${f(my)}" r="7.5" fill="#232728"/><text class="c-n" x="${f(mx)}" y="${f(my+3.4)}" text-anchor="middle">${m.n}</text>`}).join('');
+ // A value label sits beside its point, level with it if it can, and moves up or down only as far as the line requires.
+ // The line is continuous, so it stays clear of a label's box exactly when its height range over that box's width does.
+ const span=(a:number,b:number)=>{let t=Infinity,u=-Infinity;const see=(v:number)=>{t=Math.min(t,y(v));u=Math.max(u,y(v))};
+  for(let i=1;i<n;i++){const x0=x(i-1),x1=x(i);if(x1<a||x0>b)continue;
+   if(o.step){see(values[i-1]);if(x1<=b)see(values[i])}else{const at=(px:number)=>values[i-1]+(values[i]-values[i-1])*(px-x0)/(x1-x0);see(at(Math.max(a,x0)));see(at(Math.min(b,x1)))}}
+  return [t,u]};
+ const sy=y(values[0]),ex=x(last),ey=y(values[last]);
+ const blocks=[...placed.map(p=>[p.x-9,p.x+9,p.y-9,p.y+9]),[x(0)-6,x(0)+6,sy-6,sy+6],[ex-6,ex+6,ey-6,ey+6]];
+ for(let v=lo+step;v<=hi+1;v+=step)blocks.push([L-2,L+compact(v,false).length*6+2,y(v)-15,y(v)-1]);
+ if(cutX!==null&&R-cutX>64)blocks.push([(cutX+R)/2-40,(cutX+R)/2+40,T-8,T+4]);
+ const spot=(py:number,tx:number,anchor:'start'|'end',text:string,prefer:'above'|'below')=>{
+  const w=text.length*6.4,a=anchor==='start'?tx:tx-w,b=anchor==='start'?tx+w:tx,[t,u]=span(a,b),level=py+4;
+  // Glyphs reach ~10.5 above the baseline and ~2.5 below it (the "$"); the line gets ~3 of air past its stroke on either side.
+  const free=(yb:number)=>yb>=11&&yb<=B-6&&!blocks.some(([x0,x1,y0,y1])=>x0<b&&x1>a&&y0<yb+2.5&&y1>yb-10.5);
+  // Above means the whole box clears the line's highest point over it, below its lowest. Each side then steps away from the line
+  // until nothing else is in the way; the spot nearest level wins, and the preferred side gets a little slack.
+  const up=Math.min(t-6,level),down=Math.max(u+14,level),far=(c:{v:number,s:string})=>Math.abs(c.v-level)-(c.s===prefer?6:0);
+  const spots=Array.from({length:40},(_,k)=>[{v:up-2*k,s:'above'},{v:down+2*k,s:'below'}]).flat().filter(c=>free(c.v)).sort((p,q)=>far(p)-far(q));
+  const yb=spots[0]?.v??(prefer==='above'?Math.max(11,up):Math.min(B-6,down));
+  blocks.push([a,b,yb-10.5,yb+2.5]);return yb};
+ const startY=n>1?spot(sy,x(0)+6,'start',money(values[0]),'below'):0;
+ const endAnchor=ex<150?'start':'end',endX=ex<150?ex+8:ex-6,endY=spot(ey,endX,endAnchor,money(values[last]),'above');
  const labels=o.labels.map(l=>`<text class="c-t${l.now?' now':''}" x="${f(x(l.i))}" y="${B+15}" text-anchor="${l.i===0&&n>1?'start':l.i===n-1&&n>1?'end':'middle'}">${l.text}</text>`).join('');
  const h=cutX===null?200:214;
  return `<figure class="chart"><svg viewBox="0 0 360 ${h}" role="img" aria-label="${esc(o.aria)}"><defs><pattern id="hz" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V6" stroke="#dfe3dd" stroke-width="1.5"/></pattern></defs>
@@ -163,32 +196,32 @@ function accountTile(a:AccountLine,was:string|null){
  const other=a.closing-(a.opening+a.received+a.transferIn-a.spent-a.transferred);
  const lines:[string,number,string][]=[['Entradas',a.received,'pos'],['Saídas',-a.spent,'neg'],['Transferências e faturas',-a.transferred,''],['Transferências recebidas',a.transferIn,''],[a.opening?'Ajustes de saldo':'Saldo de abertura',other,'']];
  const shown=lines.filter(([,v])=>v);
- return `<article class="tile">${badge(k.icon,k.color)}<h3>${esc(a.name)}${a.archived?' <small>arquivada</small>':''}</h3>${a.kind!==a.name?`<small class="kind">${esc(a.kind)}</small>`:''}<strong>${money(a.closing)}</strong>${was?`<span class="was">era ${money(a.opening)} ${was}</span><span class="delta ${tone(delta)}">${delta?signed(delta):'sem mudança'}</span>`:''}${shown.length?`<ul>${shown.map(([l,v,c])=>`<li>${l}<b class="${c}">${signed(v)}</b></li>`).join('')}</ul>`:''}</article>`;
+ return `<article class="tile">${badge(k.icon)}<h3>${esc(a.name)}${a.archived?' <small>arquivada</small>':''}</h3>${a.kind!==a.name?`<small class="kind">${esc(a.kind)}</small>`:''}<strong>${money(a.closing)}</strong>${was?`<span class="was">era ${money(a.opening)} ${was}</span><span class="delta ${tone(delta)}">${delta?signed(delta):'sem mudança'}</span>`:''}${shown.length?`<ul>${shown.map(([l,v,c])=>`<li>${l}<b class="${c}">${signed(v)}</b></li>`).join('')}</ul>`:''}</article>`;
 }
 const accounts=(list:AccountLine[],was:string|null)=>list.length?`<div class="tiles">${list.map(a=>accountTile(a,was)).join('')}</div>`:empty('Nenhuma conta cadastrada.');
 
 function goals(list:GoalLine[]){
  if(!list.length)return empty('Nenhuma meta definida.');
- return list.map(g=>{const done=g.pct>=100;return `<div class="row">${badge('target','#245cdc')}<div><p>${esc(g.name)}</p><small>${meta(g.account&&esc(g.account),`até ${date(g.date)}`)}</small></div><b class="${done?'pos':''}">${Math.round(g.pct)}%</b><div class="full">${bar(g.pct,done?'done':'')}<small>${money(g.current)} de ${money(g.target)}${done?' · meta alcançada':` · faltam ${money(Math.max(0,g.target-g.current))}`}</small></div></div>`}).join('');
+ return list.map(g=>{const done=g.pct>=100;return `<div class="row">${badge('target')}<div><p>${esc(g.name)}</p><small>${meta(g.account&&esc(g.account),nb(`até ${date(g.date)}`))}</small></div><b class="${done?'pos':''}">${Math.round(g.pct)}%</b><div class="full">${bar(g.pct,done?'done':'')}<small>${money(g.current)} de ${money(g.target)}${done?'\u00a0· meta\u00a0alcançada':`\u00a0· faltam\u00a0${money(Math.max(0,g.target-g.current))}`}</small></div></div>`}).join('');
 }
 
 /** The statement as a timeline: each row carries the sum of all accounts right after it. */
 function event(r:Row,withDate:boolean){
  const value=r.flow==='in'?`+${money(r.amount)}`:r.flow==='out'?`−${money(r.amount)}`:money(r.amount);
  const after=r.effect?`saldo <em>${money(r.after)}</em>`:r.type==='purchase'?'no cartão · saldo igual':'saldo igual';
- return `<div class="ev ${r.flow}"><p>${esc(r.description)}<small>${meta(withDate&&dayMonth(r.date),r.category&&esc(r.category),r.origin!==r.category&&r.origin&&esc(r.origin),r.installments>1&&`${r.installments}x`)}</small>${r.notes?`<em>${esc(r.notes)}</em>`:''}</p><b class="${r.flow==='in'?'pos':r.flow==='out'?'neg':''}">${value}<small>${after}</small></b></div>`;
+ return `<div class="ev ${r.flow}">${rowBadge(r)}<p>${esc(r.description)}<small>${meta(withDate&&dayMonth(r.date),r.category&&esc(r.category),r.origin!==r.category&&r.origin&&esc(r.origin),r.installments>1&&`${r.installments}x`)}</small>${r.notes?`<em>${esc(r.notes)}</em>`:''}</p><b class="${r.flow==='in'?'pos':r.flow==='out'?'neg':''}">${value}<small>${after}</small></b></div>`;
 }
 const sums=(rows:Row[])=>({in:rows.filter(r=>r.flow==='in').reduce((n,r)=>n+r.amount,0),out:rows.filter(r=>r.flow==='out').reduce((n,r)=>n+r.amount,0)});
 const total=(label:string,rows:Row[])=>{const t=sums(rows);return `<div class="total"><span>Entrou ${label}</span><span class="pos">+${money(t.in)}</span><span>Saiu ${label}</span><span class="neg">−${money(t.out)}</span></div>`};
-const opening=(day:string,value:number)=>`<div class="tl-day">${esc(dayTitle(day))}</div><div class="ev start"><p>Saldo inicial<small>soma de todas as contas</small></p><b>${money(value)}</b></div>`;
+const opening=(day:string,value:number)=>`<div class="tl-day">${esc(dayTitle(day))}</div><div class="ev start">${badge('wallet')}<p>Saldo inicial<small>soma de todas as contas</small></p><b>${money(value)}</b></div>`;
 
 function monthly(r:MonthlyReport){
  const rows=r.days.flatMap(d=>d.items);const word=lower(r.label);
  const rec=r.bills.filter(b=>b.type==='income'),pay=r.bills.filter(b=>b.type==='expense');const sum=(l:typeof r.bills)=>l.reduce((n,b)=>n+b.amount,0);
  const cards=r.cards.length?r.cards.map(c=>{const carry=c.total-c.items.reduce((n,i)=>n+i.amount,0);
-  const items=[...(carry?[`<li><span>Saldo inicial do cartão</span><b>${money(carry)}</b></li>`]:[]),...c.items.map(i=>`<li><span>${esc(i.description)}<small>${meta(dayMonth(i.date),i.installments>1&&`parcela ${i.number}/${i.installments}`)}</small></span><b>${money(i.amount)}</b></li>`)];
-  return `<div class="row">${badge('card')}<div><p>${esc(c.name)}</p><small>${meta(c.institution!==c.name&&esc(c.institution),`fecha ${dayMonth(c.closing)}`,`vence ${dayMonth(c.due)}`)}</small>${status(c.status)}</div><b>${money(c.total)}<small>${c.paid?`pago ${money(c.paid)} · `:''}restante ${money(c.remaining)}</small></b><div class="full">${items.length?`<ul class="items">${items.join('')}</ul>`:'<small>Nenhuma compra nesta fatura.</small>'}${bar(c.limit?c.used/c.limit*100:0,c.limit&&c.used>c.limit*.85?'hot':'')}<small>Limite usado ${money(c.used)} de ${money(c.limit)}</small></div></div>`}).join(''):empty('Nenhum cartão cadastrado.');
- const bills=r.bills.length?`${r.bills.map(b=>`<div class="row">${badge(b.type==='income'?'income':'calendar',b.type==='income'?'#177449':'#92989a')}<div><p>${esc(b.name)}</p><small>${b.type==='income'?'a receber':'a pagar'} · ${dayMonth(b.date)}</small>${status(b.status)}</div><b class="${/atraso/i.test(b.status)?'neg':''}">${money(b.amount)}</b></div>`).join('')}<p class="fine">A receber ${money(sum(rec))} · a pagar ${money(sum(pay))}.</p>`:empty('Nenhum compromisso neste mês.');
+  const items=[...(carry?[`<li><span>Saldo inicial do cartão</span><b>${money(carry)}</b></li>`]:[]),...c.items.map(i=>`<li><span>${esc(i.description)}<small>${meta(dayMonth(i.date),i.installments>1&&nb(`parcela ${i.number}/${i.installments}`))}</small></span><b>${money(i.amount)}</b></li>`)];
+  return `<div class="row">${badge('card')}<div><p>${esc(c.name)}</p><small>${meta(c.institution!==c.name&&esc(c.institution),nb(`fecha ${dayMonth(c.closing)}`),nb(`vence ${dayMonth(c.due)}`))}</small>${status(c.status)}</div><b>${money(c.total)}${c.paid?`<small>pago ${money(c.paid)}</small>`:''}<small>restante ${money(c.remaining)}</small></b><div class="full">${items.length?`<ul class="items">${items.join('')}</ul>`:'<small>Nenhuma compra nesta fatura.</small>'}${bar(c.limit?c.used/c.limit*100:0,c.limit&&c.used>c.limit*.85?'hot':'')}<small>Limite usado ${money(c.used)} de ${money(c.limit)}</small></div></div>`}).join(''):empty('Nenhum cartão cadastrado.');
+ const bills=r.bills.length?`${r.bills.map(b=>`<div class="row">${badge(b.type==='income'?'income':'calendar')}<div><p>${esc(b.name)}</p><small>${meta(nb(b.type==='income'?'a receber':'a pagar'),dayMonth(b.date))}</small>${status(b.status)}</div><b class="${/atraso/i.test(b.status)?'neg':''}">${money(b.amount)}</b></div>`).join('')}<p class="fine">A receber ${money(sum(rec))} · a pagar ${money(sum(pay))}.</p>`:empty('Nenhum compromisso neste mês.');
  return [
   panel('saldo','O saldo ao longo do mês','Soma de todas as contas, dia a dia. Os números marcam os lançamentos que mais mexeram no saldo.',monthlyChart(r)),
   why(r.bridge,true,r.accounts.length>0),
@@ -205,7 +238,7 @@ function full(r:FullReport){
  const patrimony=r.byKind.filter(k=>k.value>0);const kindColor=(label:string)=>{const t=(Object.keys(kinds) as AccountLine['type'][]).find(k=>accountKinds[k]===label);return (t?kinds[t]:kinds.other).color};
  const rows=r.appendix.flatMap(m=>m.items);
  const cards=r.cards.length?r.cards.map(c=>{const other=c.used-(c.purchased-c.paid);const lines:[string,number][]=[['Saldo inicial do cartão',Math.max(0,other)],['Total comprado',c.purchased],['Faturas pagas',c.paid],['Ajustes',Math.max(0,-other)],['Parcelas de faturas futuras',c.future]];
-  return `<div class="row">${badge('card')}<div><p>${esc(c.name)}</p><small>${meta(c.institution!==c.name&&esc(c.institution),`limite ${money(c.limit)}`)}</small></div><b>${money(c.used)}<small>em aberto</small></b><div class="full"><ul class="items">${lines.filter(([,v])=>v).map(([k,v])=>`<li><span>${k}</span><b>${money(v)}</b></li>`).join('')}</ul>${bar(c.limit?c.used/c.limit*100:0,c.limit&&c.used>c.limit*.85?'hot':'')}<small>Limite usado ${money(c.used)} de ${money(c.limit)}</small></div></div>`}).join(''):empty('Nenhum cartão cadastrado.');
+  return `<div class="row">${badge('card')}<div><p>${esc(c.name)}</p><small>${meta(c.institution!==c.name&&esc(c.institution),nb(`limite ${money(c.limit)}`))}</small></div><b>${money(c.used)}<small>em aberto</small></b><div class="full"><ul class="items">${lines.filter(([,v])=>v).map(([k,v])=>`<li><span>${k}</span><b>${money(v)}</b></li>`).join('')}</ul>${bar(c.limit?c.used/c.limit*100:0,c.limit&&c.used>c.limit*.85?'hot':'')}<small>Limite usado ${money(c.used)} de ${money(c.limit)}</small></div></div>`}).join(''):empty('Nenhum cartão cadastrado.');
  const top=r.topExpenses.length?r.topExpenses.map(t=>`<div class="row">${badge(t.icon??'other',t.color)}<div><p>${esc(t.description)}</p><small>${meta(dayMonth(t.date),t.category&&esc(t.category),t.origin!==t.category&&t.origin&&esc(t.origin),t.installments>1&&`${t.installments}x`)}</small></div><b class="neg">−${money(t.amount)}</b></div>`).join(''):empty('Nenhuma despesa registrada.');
  const table=`<div class="table"><div class="h-row h-head"><span>Mês</span><span>Entrou</span><span>Saiu</span><span>Resultado</span><span>Saldo</span></div>${r.series.map(p=>`<div class="h-row"><b class="h-m">${esc(p.label)}</b><span class="h-i"><small>Entrou</small>${money(p.income)}</span><span class="h-e"><small>Saiu</small>${money(p.expense)}</span><span class="h-r ${tone(p.result)}">${signed(p.result)}</span><span class="h-b"><small>Saldo</small>${money(p.balance)}</span></div>`).join('')}<div class="h-row h-total"><b class="h-m">Total</b><span class="h-i"><small>Entrou</small>${money(r.income)}</span><span class="h-e"><small>Saiu</small>${money(r.expense)}</span><span class="h-r ${tone(r.result)}">${signed(r.result)}</span><span class="h-b"><small>Saldo</small>${money(r.balance)}</span></div></div>`;
  return [
@@ -230,10 +263,10 @@ function full(r:FullReport){
 const toc=(items:[string,string][])=>`<nav class="toc" aria-label="Seções do relatório">${items.map(([id,t])=>`<a href="#${id}">${t}</a>`).join('')}</nav>`;
 
 const CSS=`
-:root{--bg:#f6f7f5;--surface:rgb(255 255 255/.66);--ink:#232728;--ink2:#646c68;--ink3:#6c7370;--line:#dfe3dd;--line2:#e8ebe6;--blue:#245cdc;--blue-deep:#174cb7;--blue-wash:#e7effd;--track:#e4e8e1;--in:#177449;--in-wash:#eaf5ef;--out:#b64146;--out-wash:#fceef0;--warn:#946015;--warn-wash:#fbf4e4;--shadow:0 8px 28px rgb(42 59 73/.06),inset 0 1px 0 rgb(255 255 255/.9)}
+:root{--bg:#f6f7f5;--surface:rgb(255 255 255/.62);--subtle:rgb(227 232 232/.62);--rim:rgb(255 255 255/.88);--ink:#232728;--ink2:#646c68;--ink3:#6c7370;--line:#dfe3dd;--line2:#e8ebe6;--blue:#245cdc;--blue-deep:#174cb7;--blue-wash:#e7effd;--track:#e4e8e1;--in:#177449;--in-wash:#eaf5ef;--out:#b64146;--out-wash:#fceef0;--warn:#946015;--warn-wash:#fbf4e4;--shadow:0 8px 28px rgb(42 59 73/.06),inset 0 1px 0 var(--rim),inset 0 -1px 0 rgb(255 255 255/.35)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;-webkit-print-color-adjust:exact;print-color-adjust:exact;scroll-padding-top:76px}
-body{font-family:Manrope,'Segoe UI',system-ui,-apple-system,sans-serif;font-size:14.5px;line-height:1.55;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;background:radial-gradient(70% 38% at 100% 0,rgb(36 92 220/.09),transparent 70%),radial-gradient(60% 40% at 0 100%,rgb(255 255 255/.9),transparent 70%),var(--bg);background-attachment:fixed}
+body{font-family:Manrope,'Segoe UI',system-ui,-apple-system,sans-serif;font-size:14.5px;line-height:1.55;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;background:radial-gradient(ellipse at 85% 8%,rgb(141 177 220/.23),transparent 52%),radial-gradient(ellipse at 12% 75%,rgb(231 213 195/.23),transparent 50%),var(--bg);background-attachment:fixed}
 ::selection{background:#d5e1fa;color:var(--ink)}
 :focus-visible{outline:2px solid #0870fa;outline-offset:3px;border-radius:6px}
 a{color:inherit}
@@ -276,7 +309,7 @@ h1{margin-top:6px;font-size:40px;line-height:1.08;font-weight:500;letter-spacing
 .why .eq{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;margin-top:10px;padding-top:10px;border-top:1px solid #c9d8f6;font-size:13.5px}
 .why .eq span:nth-child(even){text-align:right;font-weight:600;white-space:nowrap}
 .why .eq .t{padding-top:6px;border-top:1px solid #9fb7ea;font-weight:700}
-.badge{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--bg);color:var(--fg)}
+.badge{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--subtle);color:var(--fg,var(--ink2));box-shadow:inset 0 1px 0 var(--rim)}
 .cat{display:grid;grid-template-columns:36px minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line2)}.cat:last-child{border-bottom:0}
 .cat-body{min-width:0}.cat p{display:flex;justify-content:space-between;gap:8px;font-weight:600;overflow-wrap:anywhere}.cat p small{font-size:12.5px;font-weight:500;color:var(--ink2)}
 .cat .meter{margin-top:7px}.cat .meter i{background:var(--c)}.cat>b{font-weight:600;white-space:nowrap}
@@ -292,7 +325,7 @@ h1{margin-top:6px;font-size:40px;line-height:1.08;font-weight:500;letter-spacing
 .hc.now .hl{color:var(--ink);font-weight:700}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .tile{min-width:0;padding:14px 13px;border-radius:18px;background:var(--surface);border:1px solid rgb(255 255 255/.8);outline:1px solid var(--line2);outline-offset:-1px;box-shadow:var(--shadow)}
-.tile .badge{width:32px;height:32px;border-radius:10px}
+.tile .badge{width:32px;height:32px;border-radius:10px;background:transparent;box-shadow:none}
 .tile h3{margin-top:10px;font-size:13px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}.tile h3 small{font-size:11.5px;font-weight:600;color:var(--warn)}
 .tile .kind{display:block;font-size:12px;color:var(--ink2)}
 .tile strong{display:block;margin-top:4px;font-size:20px;font-weight:500;letter-spacing:-.04em;white-space:nowrap}
@@ -327,10 +360,11 @@ h1{margin-top:6px;font-size:40px;line-height:1.08;font-weight:500;letter-spacing
 .tl-day::before{content:'';position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid #9aa29d}
 .tl-month{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;margin-top:22px;padding-bottom:6px;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink)}
 .tl-month span+span{font-size:12.5px;font-weight:500;color:var(--ink2)}.tl-month i{font-style:normal;font-weight:600}
-.ev{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line2)}
-.ev::before{content:'';position:absolute;left:-18px;top:16px;width:6px;height:6px;border-radius:50%;background:var(--dot,#9aa29d)}
+.ev{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto;column-gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line2)}
+.ev::before{content:'';position:absolute;left:-18px;top:calc(50% - 3px);width:6px;height:6px;border-radius:50%;background:var(--dot,#9aa29d)}
 .ev.in{--dot:var(--in)}.ev.out{--dot:var(--out)}.ev.move{--dot:var(--blue)}
 .ev p{min-width:0;font-weight:600;line-height:1.35;overflow-wrap:anywhere}.ev p small{display:block;font-size:12.5px;font-weight:500;color:var(--ink2)}.ev p em{display:block;margin-top:2px;font-size:12.5px;font-style:normal;font-weight:500;color:var(--ink3)}
+.ev>.badge{width:28px;height:28px;border-radius:9px;align-self:center}.ev>.badge svg.i{width:16px;height:16px}
 .ev>b{font-weight:600;white-space:nowrap;text-align:right}.ev.move>b{font-weight:500;color:var(--ink2)}
 .ev>b small{display:block;margin-top:1px;font-size:12px;font-weight:500;color:var(--ink2)}.ev>b small em{font-style:normal;font-weight:600;color:var(--ink)}
 .ev.start p{color:var(--ink2)}
