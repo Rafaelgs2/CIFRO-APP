@@ -1,0 +1,744 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T03:07:57.489Z",
+  "title": "Design System: CIFRO",
+  "extensions": {
+    "colorMeta": {
+      "ledger-blue": {
+        "role": "primary",
+        "displayName": "Azul Livro-Caixa",
+        "canonical": "#245cdc",
+        "tonalRamp": [
+          "oklch(15.0% 0.031 263.2)",
+          "oklch(27.0% 0.087 263.2)",
+          "oklch(39.0% 0.148 263.2)",
+          "oklch(51.0% 0.205 263.2)",
+          "oklch(63.0% 0.189 263.2)",
+          "oklch(75.0% 0.128 263.2)",
+          "oklch(86.0% 0.072 263.2)",
+          "oklch(95.0% 0.031 263.2)"
+        ]
+      },
+      "ledger-blue-deep": {
+        "role": "primary",
+        "displayName": "Azul Livro-Caixa Profundo",
+        "canonical": "#174cb7",
+        "tonalRamp": [
+          "oklch(15.0% 0.027 262.2)",
+          "oklch(27.0% 0.076 262.2)",
+          "oklch(39.0% 0.129 262.2)",
+          "oklch(51.0% 0.178 262.2)",
+          "oklch(63.0% 0.165 262.2)",
+          "oklch(75.0% 0.111 262.2)",
+          "oklch(86.0% 0.062 262.2)",
+          "oklch(95.0% 0.027 262.2)"
+        ]
+      },
+      "signal-blue": {
+        "role": "primary",
+        "displayName": "Azul Sinal",
+        "canonical": "#0870fa",
+        "tonalRamp": [
+          "oklch(15.0% 0.033 259.2)",
+          "oklch(27.0% 0.095 259.2)",
+          "oklch(39.0% 0.161 259.2)",
+          "oklch(51.0% 0.223 259.2)",
+          "oklch(63.0% 0.206 259.2)",
+          "oklch(75.0% 0.139 259.2)",
+          "oklch(86.0% 0.078 259.2)",
+          "oklch(95.0% 0.033 259.2)"
+        ]
+      },
+      "brand-navy": {
+        "role": "primary",
+        "displayName": "Marinho da Marca",
+        "canonical": "#07152e",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 260.7)",
+          "oklch(27.0% 0.023 260.7)",
+          "oklch(39.0% 0.039 260.7)",
+          "oklch(51.0% 0.054 260.7)",
+          "oklch(63.0% 0.050 260.7)",
+          "oklch(75.0% 0.034 260.7)",
+          "oklch(86.0% 0.019 260.7)",
+          "oklch(95.0% 0.008 260.7)"
+        ]
+      },
+      "brand-ink": {
+        "role": "primary",
+        "displayName": "Tinta da Marca",
+        "canonical": "#082455",
+        "tonalRamp": [
+          "oklch(15.0% 0.014 260.7)",
+          "oklch(27.0% 0.041 260.7)",
+          "oklch(39.0% 0.069 260.7)",
+          "oklch(51.0% 0.095 260.7)",
+          "oklch(63.0% 0.088 260.7)",
+          "oklch(75.0% 0.060 260.7)",
+          "oklch(86.0% 0.033 260.7)",
+          "oklch(95.0% 0.014 260.7)"
+        ]
+      },
+      "blue-mist": {
+        "role": "primary",
+        "displayName": "Névoa Azul",
+        "canonical": "#f3f7fe",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 261.8)",
+          "oklch(27.0% 0.004 261.8)",
+          "oklch(39.0% 0.007 261.8)",
+          "oklch(51.0% 0.010 261.8)",
+          "oklch(63.0% 0.010 261.8)",
+          "oklch(75.0% 0.006 261.8)",
+          "oklch(86.0% 0.004 261.8)",
+          "oklch(95.0% 0.002 261.8)"
+        ]
+      },
+      "blue-wash": {
+        "role": "primary",
+        "displayName": "Lavado Azul",
+        "canonical": "#e7effd",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 261.8)",
+          "oklch(27.0% 0.009 261.8)",
+          "oklch(39.0% 0.015 261.8)",
+          "oklch(51.0% 0.021 261.8)",
+          "oklch(63.0% 0.019 261.8)",
+          "oklch(75.0% 0.013 261.8)",
+          "oklch(86.0% 0.007 261.8)",
+          "oklch(95.0% 0.003 261.8)"
+        ]
+      },
+      "stone-paper": {
+        "role": "neutral",
+        "displayName": "Papel de Pedra",
+        "canonical": "#f6f7f5",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 128.5)",
+          "oklch(27.0% 0.001 128.5)",
+          "oklch(39.0% 0.002 128.5)",
+          "oklch(51.0% 0.003 128.5)",
+          "oklch(63.0% 0.003 128.5)",
+          "oklch(75.0% 0.002 128.5)",
+          "oklch(86.0% 0.001 128.5)",
+          "oklch(95.0% 0.000 128.5)"
+        ]
+      },
+      "graphite-ink": {
+        "role": "neutral",
+        "displayName": "Tinta Grafite",
+        "canonical": "#232728",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 214.4)",
+          "oklch(27.0% 0.003 214.4)",
+          "oklch(39.0% 0.004 214.4)",
+          "oklch(51.0% 0.006 214.4)",
+          "oklch(63.0% 0.006 214.4)",
+          "oklch(75.0% 0.004 214.4)",
+          "oklch(86.0% 0.002 214.4)",
+          "oklch(95.0% 0.001 214.4)"
+        ]
+      },
+      "sage-gray": {
+        "role": "neutral",
+        "displayName": "Cinza Sálvia",
+        "canonical": "#646c68",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 164.6)",
+          "oklch(27.0% 0.005 164.6)",
+          "oklch(39.0% 0.008 164.6)",
+          "oklch(51.0% 0.012 164.6)",
+          "oklch(63.0% 0.011 164.6)",
+          "oklch(75.0% 0.007 164.6)",
+          "oklch(86.0% 0.004 164.6)",
+          "oklch(95.0% 0.002 164.6)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Linha",
+        "canonical": "#dfe3dd",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 134.9)",
+          "oklch(27.0% 0.004 134.9)",
+          "oklch(39.0% 0.007 134.9)",
+          "oklch(51.0% 0.009 134.9)",
+          "oklch(63.0% 0.008 134.9)",
+          "oklch(75.0% 0.006 134.9)",
+          "oklch(86.0% 0.003 134.9)",
+          "oklch(95.0% 0.001 134.9)"
+        ]
+      },
+      "hairline-soft": {
+        "role": "neutral",
+        "displayName": "Linha Suave",
+        "canonical": "#e8ebe6",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 132.4)",
+          "oklch(27.0% 0.003 132.4)",
+          "oklch(39.0% 0.005 132.4)",
+          "oklch(51.0% 0.007 132.4)",
+          "oklch(63.0% 0.007 132.4)",
+          "oklch(75.0% 0.005 132.4)",
+          "oklch(86.0% 0.003 132.4)",
+          "oklch(95.0% 0.001 132.4)"
+        ]
+      },
+      "field-stroke": {
+        "role": "neutral",
+        "displayName": "Traço de Campo",
+        "canonical": "#cbd1ca",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 141.3)",
+          "oklch(27.0% 0.005 141.3)",
+          "oklch(39.0% 0.008 141.3)",
+          "oklch(51.0% 0.012 141.3)",
+          "oklch(63.0% 0.011 141.3)",
+          "oklch(75.0% 0.007 141.3)",
+          "oklch(86.0% 0.004 141.3)",
+          "oklch(95.0% 0.002 141.3)"
+        ]
+      },
+      "income-green": {
+        "role": "semantic",
+        "displayName": "Verde Receita",
+        "canonical": "#177449",
+        "tonalRamp": [
+          "oklch(15.0% 0.016 157.5)",
+          "oklch(27.0% 0.046 157.5)",
+          "oklch(39.0% 0.079 157.5)",
+          "oklch(51.0% 0.108 157.5)",
+          "oklch(63.0% 0.100 157.5)",
+          "oklch(75.0% 0.068 157.5)",
+          "oklch(86.0% 0.038 157.5)",
+          "oklch(95.0% 0.016 157.5)"
+        ]
+      },
+      "income-wash": {
+        "role": "semantic",
+        "displayName": "Lavado Receita",
+        "canonical": "#eaf5ef",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 162.5)",
+          "oklch(27.0% 0.006 162.5)",
+          "oklch(39.0% 0.010 162.5)",
+          "oklch(51.0% 0.014 162.5)",
+          "oklch(63.0% 0.013 162.5)",
+          "oklch(75.0% 0.009 162.5)",
+          "oklch(86.0% 0.005 162.5)",
+          "oklch(95.0% 0.002 162.5)"
+        ]
+      },
+      "expense-red": {
+        "role": "semantic",
+        "displayName": "Vermelho Despesa",
+        "canonical": "#b64146",
+        "tonalRamp": [
+          "oklch(15.0% 0.023 21.3)",
+          "oklch(27.0% 0.064 21.3)",
+          "oklch(39.0% 0.110 21.3)",
+          "oklch(51.0% 0.152 21.3)",
+          "oklch(63.0% 0.140 21.3)",
+          "oklch(75.0% 0.095 21.3)",
+          "oklch(86.0% 0.053 21.3)",
+          "oklch(95.0% 0.023 21.3)"
+        ]
+      },
+      "expense-wash": {
+        "role": "semantic",
+        "displayName": "Lavado Despesa",
+        "canonical": "#fceef0",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 7.5)",
+          "oklch(27.0% 0.007 7.5)",
+          "oklch(39.0% 0.011 7.5)",
+          "oklch(51.0% 0.015 7.5)",
+          "oklch(63.0% 0.014 7.5)",
+          "oklch(75.0% 0.010 7.5)",
+          "oklch(86.0% 0.005 7.5)",
+          "oklch(95.0% 0.002 7.5)"
+        ]
+      },
+      "warning-amber": {
+        "role": "semantic",
+        "displayName": "Âmbar Alerta",
+        "canonical": "#946015",
+        "tonalRamp": [
+          "oklch(15.0% 0.016 69.9)",
+          "oklch(27.0% 0.046 69.9)",
+          "oklch(39.0% 0.078 69.9)",
+          "oklch(51.0% 0.108 69.9)",
+          "oklch(63.0% 0.100 69.9)",
+          "oklch(75.0% 0.067 69.9)",
+          "oklch(86.0% 0.038 69.9)",
+          "oklch(95.0% 0.016 69.9)"
+        ]
+      },
+      "warning-wash": {
+        "role": "semantic",
+        "displayName": "Lavado Alerta",
+        "canonical": "#fbf4e4",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 87.2)",
+          "oklch(27.0% 0.010 87.2)",
+          "oklch(39.0% 0.016 87.2)",
+          "oklch(51.0% 0.022 87.2)",
+          "oklch(63.0% 0.021 87.2)",
+          "oklch(75.0% 0.014 87.2)",
+          "oklch(86.0% 0.008 87.2)",
+          "oklch(95.0% 0.003 87.2)"
+        ]
+      },
+      "chart-sage": {
+        "role": "neutral",
+        "displayName": "Série Sálvia",
+        "canonical": "#859e95",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 171.6)",
+          "oklch(27.0% 0.013 171.6)",
+          "oklch(39.0% 0.022 171.6)",
+          "oklch(51.0% 0.031 171.6)",
+          "oklch(63.0% 0.029 171.6)",
+          "oklch(75.0% 0.019 171.6)",
+          "oklch(86.0% 0.011 171.6)",
+          "oklch(95.0% 0.005 171.6)"
+        ]
+      },
+      "chart-pewter": {
+        "role": "neutral",
+        "displayName": "Série Estanho",
+        "canonical": "#92989a",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 219.6)",
+          "oklch(27.0% 0.003 219.6)",
+          "oklch(39.0% 0.005 219.6)",
+          "oklch(51.0% 0.008 219.6)",
+          "oklch(63.0% 0.007 219.6)",
+          "oklch(75.0% 0.005 219.6)",
+          "oklch(86.0% 0.003 219.6)",
+          "oklch(95.0% 0.001 219.6)"
+        ]
+      },
+      "chart-track": {
+        "role": "neutral",
+        "displayName": "Trilho de Gráfico",
+        "canonical": "#e4e8e1",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 131.4)",
+          "oklch(27.0% 0.004 131.4)",
+          "oklch(39.0% 0.007 131.4)",
+          "oklch(51.0% 0.010 131.4)",
+          "oklch(63.0% 0.009 131.4)",
+          "oklch(75.0% 0.006 131.4)",
+          "oklch(86.0% 0.004 131.4)",
+          "oklch(95.0% 0.002 131.4)"
+        ]
+      },
+      "night-paper": {
+        "role": "neutral",
+        "displayName": "Papel Noturno",
+        "canonical": "#151819",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 219.7)",
+          "oklch(27.0% 0.002 219.7)",
+          "oklch(39.0% 0.004 219.7)",
+          "oklch(51.0% 0.005 219.7)",
+          "oklch(63.0% 0.005 219.7)",
+          "oklch(75.0% 0.003 219.7)",
+          "oklch(86.0% 0.002 219.7)",
+          "oklch(95.0% 0.001 219.7)"
+        ]
+      },
+      "night-ink": {
+        "role": "neutral",
+        "displayName": "Tinta Noturna",
+        "canonical": "#edf0ec",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 137.8)",
+          "oklch(27.0% 0.003 137.8)",
+          "oklch(39.0% 0.004 137.8)",
+          "oklch(51.0% 0.006 137.8)",
+          "oklch(63.0% 0.006 137.8)",
+          "oklch(75.0% 0.004 137.8)",
+          "oklch(86.0% 0.002 137.8)",
+          "oklch(95.0% 0.001 137.8)"
+        ]
+      },
+      "night-sage": {
+        "role": "neutral",
+        "displayName": "Sálvia Noturna",
+        "canonical": "#a6afaa",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 161.9)",
+          "oklch(27.0% 0.005 161.9)",
+          "oklch(39.0% 0.009 161.9)",
+          "oklch(51.0% 0.012 161.9)",
+          "oklch(63.0% 0.011 161.9)",
+          "oklch(75.0% 0.008 161.9)",
+          "oklch(86.0% 0.004 161.9)",
+          "oklch(95.0% 0.002 161.9)"
+        ]
+      },
+      "night-hairline": {
+        "role": "neutral",
+        "displayName": "Linha Noturna",
+        "canonical": "#363e3d",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 187.6)",
+          "oklch(27.0% 0.005 187.6)",
+          "oklch(39.0% 0.008 187.6)",
+          "oklch(51.0% 0.011 187.6)",
+          "oklch(63.0% 0.010 187.6)",
+          "oklch(75.0% 0.007 187.6)",
+          "oklch(86.0% 0.004 187.6)",
+          "oklch(95.0% 0.002 187.6)"
+        ]
+      },
+      "night-blue": {
+        "role": "primary",
+        "displayName": "Azul Noturno",
+        "canonical": "#246ce4",
+        "tonalRamp": [
+          "oklch(15.0% 0.029 260.3)",
+          "oklch(27.0% 0.083 260.3)",
+          "oklch(39.0% 0.142 260.3)",
+          "oklch(51.0% 0.196 260.3)",
+          "oklch(63.0% 0.181 260.3)",
+          "oklch(75.0% 0.122 260.3)",
+          "oklch(86.0% 0.069 260.3)",
+          "oklch(95.0% 0.029 260.3)"
+        ]
+      },
+      "night-link": {
+        "role": "primary",
+        "displayName": "Link Noturno",
+        "canonical": "#95bcff",
+        "tonalRamp": [
+          "oklch(15.0% 0.016 261.0)",
+          "oklch(27.0% 0.045 261.0)",
+          "oklch(39.0% 0.076 261.0)",
+          "oklch(51.0% 0.105 261.0)",
+          "oklch(63.0% 0.097 261.0)",
+          "oklch(75.0% 0.066 261.0)",
+          "oklch(86.0% 0.037 261.0)",
+          "oklch(95.0% 0.016 261.0)"
+        ]
+      },
+      "lp-ink": {
+        "role": "neutral",
+        "displayName": "Tinta da Landing",
+        "canonical": "#0b1933",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 261.6)",
+          "oklch(27.0% 0.023 261.6)",
+          "oklch(39.0% 0.040 261.6)",
+          "oklch(51.0% 0.055 261.6)",
+          "oklch(63.0% 0.051 261.6)",
+          "oklch(75.0% 0.034 261.6)",
+          "oklch(86.0% 0.019 261.6)",
+          "oklch(95.0% 0.008 261.6)"
+        ]
+      },
+      "lp-muted": {
+        "role": "neutral",
+        "displayName": "Cinza da Landing",
+        "canonical": "#667188",
+        "tonalRamp": [
+          "oklch(15.0% 0.006 265.0)",
+          "oklch(27.0% 0.016 265.0)",
+          "oklch(39.0% 0.028 265.0)",
+          "oklch(51.0% 0.038 265.0)",
+          "oklch(63.0% 0.035 265.0)",
+          "oklch(75.0% 0.024 265.0)",
+          "oklch(86.0% 0.013 265.0)",
+          "oklch(95.0% 0.006 265.0)"
+        ]
+      },
+      "lp-blue": {
+        "role": "primary",
+        "displayName": "Azul da Landing",
+        "canonical": "#0755d9",
+        "tonalRamp": [
+          "oklch(15.0% 0.032 261.3)",
+          "oklch(27.0% 0.091 261.3)",
+          "oklch(39.0% 0.155 261.3)",
+          "oklch(51.0% 0.213 261.3)",
+          "oklch(63.0% 0.197 261.3)",
+          "oklch(75.0% 0.133 261.3)",
+          "oklch(86.0% 0.075 261.3)",
+          "oklch(95.0% 0.032 261.3)"
+        ]
+      },
+      "lp-paper": {
+        "role": "neutral",
+        "displayName": "Papel da Landing",
+        "canonical": "#f8fafc",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 247.9)",
+          "oklch(27.0% 0.001 247.9)",
+          "oklch(39.0% 0.002 247.9)",
+          "oklch(51.0% 0.003 247.9)",
+          "oklch(63.0% 0.003 247.9)",
+          "oklch(75.0% 0.002 247.9)",
+          "oklch(86.0% 0.001 247.9)",
+          "oklch(95.0% 0.001 247.9)"
+        ]
+      },
+      "lp-dark": {
+        "role": "neutral",
+        "displayName": "Noite da Landing",
+        "canonical": "#08101f",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 261.9)",
+          "oklch(27.0% 0.014 261.9)",
+          "oklch(39.0% 0.024 261.9)",
+          "oklch(51.0% 0.034 261.9)",
+          "oklch(63.0% 0.031 261.9)",
+          "oklch(75.0% 0.021 261.9)",
+          "oklch(86.0% 0.012 261.9)",
+          "oklch(95.0% 0.005 261.9)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Saldo",
+        "purpose": "O saldo principal da home. Só um por tela."
+      },
+      "headline": {
+        "displayName": "Título de página",
+        "purpose": "h1 das páginas do app."
+      },
+      "title": {
+        "displayName": "Título de seção",
+        "purpose": "h2 de seções e painéis."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Linhas de lista, descrições e apoio."
+      },
+      "label": {
+        "displayName": "Kicker",
+        "purpose": "Rótulos curtos em caixa alta com tracking largo."
+      },
+      "lp-display": {
+        "displayName": "Manchete da landing",
+        "purpose": "Títulos das seções da landing page."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glass-shadow",
+        "value": "0 8px 28px rgb(42 59 73 / .06), inset 0 1px 0 rgb(255 255 255 / .88), inset 0 -1px 0 rgb(255 255 255 / .35)",
+        "purpose": "Superfícies elevadas em repouso."
+      },
+      {
+        "name": "glass-raised",
+        "value": "0 12px 36px rgb(42 59 73 / .1), inset 0 1px 0 rgb(255 255 255 / .88)",
+        "purpose": "Hover de tiles e botões secundários; dock mobile."
+      },
+      {
+        "name": "glass-inset",
+        "value": "inset 2px 2px 5px rgb(35 48 61 / .05), inset -1px -1px 0 rgb(255 255 255 / .7)",
+        "purpose": "Inputs, busca e face do cartão de crédito."
+      },
+      {
+        "name": "shadow-popover",
+        "value": "0 8px 28px rgb(7 21 46 / .12)",
+        "purpose": "Menus, selects, tooltips e seletor de mês."
+      },
+      {
+        "name": "shadow-modal",
+        "value": "0 16px 64px rgb(7 21 46 / .18)",
+        "purpose": "Diálogos e onboarding."
+      },
+      {
+        "name": "glass-blur",
+        "value": "blur(22px) saturate(135%)",
+        "purpose": "backdrop-filter das superfícies de vidro; vira none com prefers-reduced-transparency."
+      }
+    ],
+    "motion": [
+      {
+        "name": "motion-fast",
+        "value": "140ms",
+        "purpose": "Cor e fundo de hover."
+      },
+      {
+        "name": "motion-normal",
+        "value": "200ms",
+        "purpose": "Abertura de diálogos e popovers."
+      },
+      {
+        "name": "motion-slow",
+        "value": "300ms",
+        "purpose": "Entrada de página e expansão da dock."
+      },
+      {
+        "name": "motion-ease",
+        "value": "cubic-bezier(.2,.7,.2,1)",
+        "purpose": "Easing padrão do app."
+      },
+      {
+        "name": "lp-ease",
+        "value": "cubic-bezier(.22,1,.36,1)",
+        "purpose": "Easing das animações da landing."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "370px"
+      },
+      {
+        "name": "mobile",
+        "value": "800px"
+      },
+      {
+        "name": "tablet",
+        "value": "1050px"
+      },
+      {
+        "name": "rail",
+        "value": "1180px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal da tela; um por contexto.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>Novo lançamento</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:12px 20px; border:0; border-radius:12px; background:var(--primary,#245cdc); color:var(--on-primary,#fff); font:600 .8rem/1 Manrope,'Segoe UI',Arial,sans-serif; box-shadow:inset 0 1px 0 rgb(255 255 255 / .3),0 4px 10px rgb(25 70 150 / .1); cursor:pointer; transition:background-color 140ms cubic-bezier(.2,.7,.2,1); } .ds-btn-primary:hover { background:var(--primary-hover,#174cb7); } .ds-btn-primary:focus-visible { outline:2px solid var(--ring,#0870fa); outline-offset:3px; }"
+    },
+    {
+      "name": "Botão secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ações de apoio; fundo de vidro discreto que se levanta no hover.",
+      "html": "<button class=\"ds-btn-secondary\">Ver relatório</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:11px 17px; border:1px solid rgb(255 255 255 / .88); border-radius:12px; background:rgb(255 255 255 / .62); color:#232728; font:600 .8rem/1 Manrope,'Segoe UI',Arial,sans-serif; box-shadow:0 8px 28px rgb(42 59 73 / .06),inset 0 1px 0 rgb(255 255 255 / .88); cursor:pointer; transition:box-shadow 140ms cubic-bezier(.2,.7,.2,1),background-color 140ms; } .ds-btn-secondary:hover { background:#fff; box-shadow:0 12px 36px rgb(42 59 73 / .1),inset 0 1px 0 rgb(255 255 255 / .88); } .ds-btn-secondary:focus-visible { outline:2px solid #0870fa; outline-offset:3px; }"
+    },
+    {
+      "name": "Botão de texto",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Links de navegação dentro de seções (\"Ver todos\").",
+      "html": "<button class=\"ds-btn-text\">Ver todos</button>",
+      "css": ".ds-btn-text { min-height:44px; padding:0 4px; border:0; background:none; color:#646c68; font:600 .8rem/1 Manrope,'Segoe UI',Arial,sans-serif; cursor:pointer; transition:color 140ms cubic-bezier(.2,.7,.2,1); } .ds-btn-text:hover { color:#174cb7; } .ds-btn-text:focus-visible { outline:2px solid #0870fa; outline-offset:3px; }"
+    },
+    {
+      "name": "Campo de dinheiro",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo afundado com R$ e valor em número de destaque.",
+      "html": "<label class=\"ds-field\"><span>Valor</span><div class=\"ds-money\"><em>R$</em><input value=\"1.250,00\" inputmode=\"decimal\"></div></label>",
+      "css": ".ds-field { display:flex; flex-direction:column; gap:9px; font:500 .8rem Manrope,'Segoe UI',Arial,sans-serif; color:#232728; } .ds-money { display:flex; align-items:center; gap:8px; min-height:46px; padding:6px 13px; border:1px solid #cbd1ca; border-radius:12px; background:rgb(227 232 232 / .62); box-shadow:inset 2px 2px 5px rgb(35 48 61 / .05),inset -1px -1px 0 rgb(255 255 255 / .7); } .ds-money em { font-style:normal; color:#646c68; font-size:.875rem; } .ds-money input { flex:1; min-width:0; border:0; background:transparent; color:#232728; font:500 1.9rem Manrope,'Segoe UI',Arial,sans-serif; letter-spacing:-.04em; font-variant-numeric:tabular-nums; outline:none; } .ds-money:focus-within { outline:2px solid #0870fa; outline-offset:2px; }"
+    },
+    {
+      "name": "Linha de lançamento",
+      "kind": "custom",
+      "refersTo": "transaction-row",
+      "description": "A unidade básica do livro-caixa: ícone, descrição, meta e valor.",
+      "html": "<button class=\"ds-tx-row\"><span class=\"ds-badge\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"21\" r=\"1\"/><circle cx=\"19\" cy=\"21\" r=\"1\"/><path d=\"M2 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6\"/></svg></span><span class=\"ds-tx-info\"><b>Mercado</b><span>Alimentação · Conta principal</span></span><span class=\"ds-tx-value\"><b>−R$ 184,90</b><span>23 out</span></span></button>",
+      "css": ".ds-tx-row { display:flex; align-items:center; gap:12px; width:100%; min-height:76px; padding:14px 12px; border:0; border-bottom:1px solid #e8ebe6; border-radius:14px; background:none; text-align:left; font-family:Manrope,'Segoe UI',Arial,sans-serif; color:#232728; cursor:pointer; transition:background-color 140ms cubic-bezier(.2,.7,.2,1); } .ds-tx-row:hover { background:rgb(227 232 232 / .62); } .ds-tx-row:focus-visible { outline:2px solid #0870fa; outline-offset:3px; } .ds-badge { width:36px; height:36px; display:inline-grid; place-items:center; flex-shrink:0; border-radius:11px; color:#646c68; background:rgb(227 232 232 / .62); box-shadow:inset 0 1px 0 rgb(255 255 255 / .88); } .ds-tx-info { flex:1; min-width:0; display:grid; gap:6px; } .ds-tx-info b,.ds-tx-value b { font-size:.8rem; font-weight:500; } .ds-tx-info span,.ds-tx-value span { font-size:.7rem; color:#646c68; } .ds-tx-value { display:grid; gap:6px; text-align:right; } .ds-tx-value b { color:#b64146; font-variant-numeric:tabular-nums; }"
+    },
+    {
+      "name": "Tile de conta",
+      "kind": "card",
+      "refersTo": "account-tile",
+      "description": "Saldo de uma conta; vidro discreto que levanta no hover.",
+      "html": "<button class=\"ds-account\"><span class=\"ds-account-icon\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2\"/><path d=\"M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4\"/></svg></span><span class=\"ds-account-info\"><b>Conta principal</b><span>Conta corrente</span></span><strong>R$ 4.812,37</strong></button>",
+      "css": ".ds-account { display:grid; grid-template-columns:32px minmax(0,1fr); gap:10px; width:240px; padding:20px 16px; border:1px solid rgb(255 255 255 / .88); border-radius:18px; background:rgb(255 255 255 / .62); box-shadow:0 8px 28px rgb(42 59 73 / .06),inset 0 1px 0 rgb(255 255 255 / .88); text-align:left; font-family:Manrope,'Segoe UI',Arial,sans-serif; color:#232728; cursor:pointer; transition:box-shadow 140ms cubic-bezier(.2,.7,.2,1); } .ds-account:hover { box-shadow:0 12px 36px rgb(42 59 73 / .1),inset 0 1px 0 rgb(255 255 255 / .88); } .ds-account:focus-visible { outline:2px solid #0870fa; outline-offset:3px; } .ds-account-icon { display:grid; place-items:center; color:#646c68; } .ds-account-info b { display:block; font-size:.8rem; font-weight:500; } .ds-account-info span { display:block; margin-top:5px; font-size:.65rem; color:#646c68; } .ds-account strong { grid-column:1/-1; margin-top:15px; font-size:1.35rem; font-weight:500; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }"
+    },
+    {
+      "name": "Item da navegação lateral",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Navegação desktop; ativo com vidro e traço azul.",
+      "html": "<nav class=\"ds-side\"><a class=\"ds-nav active\" href=\"#\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5 9.5V21h14V9.5\"/></svg><span>Visão geral</span></a><a class=\"ds-nav\" href=\"#\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 6h13\"/><path d=\"M8 12h13\"/><path d=\"M8 18h13\"/><path d=\"M3 6h.01\"/><path d=\"M3 12h.01\"/><path d=\"M3 18h.01\"/></svg><span>Lançamentos</span></a><a class=\"ds-nav\" href=\"#\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M2 10h20\"/></svg><span>Cartões</span></a></nav>",
+      "css": ".ds-side { display:grid; gap:5px; width:220px; font-family:Manrope,'Segoe UI',Arial,sans-serif; } .ds-nav { position:relative; display:flex; align-items:center; gap:13px; height:46px; padding:0 14px; border-radius:10px; color:#646c68; font-size:.875rem; font-weight:500; text-decoration:none; transition:background-color 140ms cubic-bezier(.2,.7,.2,1),color 140ms; } .ds-nav:hover { background:rgb(227 232 232 / .62); color:#232728; } .ds-nav.active { background:rgb(255 255 255 / .62); color:#232728; box-shadow:0 8px 28px rgb(42 59 73 / .06),inset 0 1px 0 rgb(255 255 255 / .88); } .ds-nav.active::before { content:''; position:absolute; left:0; top:16px; width:3px; height:14px; border-radius:3px; background:#245cdc; } .ds-nav:focus-visible { outline:2px solid #0870fa; outline-offset:3px; }"
+    },
+    {
+      "name": "Dock mobile",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Pílula flutuante de vidro; ativo escuro revela o rótulo, \"+\" central abre ações rápidas.",
+      "html": "<nav class=\"ds-dock\"><button class=\"active\" aria-label=\"Início\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5 9.5V21h14V9.5\"/></svg><span>Início</span></button><button aria-label=\"Lançamentos\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 6h13\"/><path d=\"M8 12h13\"/><path d=\"M8 18h13\"/><path d=\"M3 6h.01\"/><path d=\"M3 12h.01\"/><path d=\"M3 18h.01\"/></svg></button><button class=\"ds-dock-add\" aria-label=\"Adicionar\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button><button aria-label=\"Cartões\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M2 10h20\"/></svg></button><button aria-label=\"Relatórios\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v18h18\"/><path d=\"m7 15 4-4 3 3 5-6\"/></svg></button></nav>",
+      "css": ".ds-dock { display:flex; align-items:center; width:360px; padding:6px; border:1px solid rgb(255 255 255 / .88); border-radius:38px; background:rgb(243 246 247 / .65); backdrop-filter:blur(28px) saturate(155%); box-shadow:0 12px 36px rgb(42 59 73 / .1),inset 0 1px 0 rgb(255 255 255 / .88); font-family:Manrope,'Segoe UI',Arial,sans-serif; } .ds-dock button { display:flex; align-items:center; justify-content:center; flex:1 1 0; min-height:52px; padding:0 5px; border:0; border-radius:30px; background:none; color:#232728; font-size:.7rem; cursor:pointer; transition:background-color 200ms cubic-bezier(.2,.7,.2,1); } .ds-dock button:hover { background:rgb(255 255 255 / .62); } .ds-dock button.active { flex:0 0 auto; padding:0 12px; gap:7px; background:#292e33; color:#fff; font-weight:600; } .ds-dock button span { white-space:nowrap; } .ds-dock .ds-dock-add { flex:0 0 52px; width:52px; margin:0 4px; border-radius:50%; color:#fff; background:linear-gradient(145deg,#0870fa,#0755d9); box-shadow:inset 0 1px 1px rgb(255 255 255 / .35),0 6px 16px rgb(8 85 217 / .38); } .ds-dock button:focus-visible { outline:2px solid #245cdc; outline-offset:3px; }"
+    },
+    {
+      "name": "Pílula de status",
+      "kind": "chip",
+      "refersTo": "status-pill",
+      "description": "Estado curto; âmbar só para vencido/atenção.",
+      "html": "<span class=\"ds-pill\">Aberta</span> <span class=\"ds-pill ds-pill-overdue\">Vencida</span>",
+      "css": ".ds-pill { display:inline-block; padding:6px 9px; border-radius:8px; background:rgb(227 232 232 / .62); color:#232728; font:500 .65rem Manrope,'Segoe UI',Arial,sans-serif; } .ds-pill-overdue { color:#946015; background:#fbf4e4; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Livro-Caixa de Vidro",
+    "overview": "O CIFRO é um livro-caixa: a estrutura vem de linhas finas, colunas de números alinhados e espaço generoso, como uma página de extrato bem composta. O \"vidro\" é a clareza, não o material: nada fica escondido entre o usuário e o que aconteceu com o dinheiro. O efeito translúcido (desfoque, borda de luz, sombra baixa) existe, mas é acabamento discreto, nunca o que organiza a tela.\n\nO painel autenticado é calmo e denso na medida certa. O fundo é um papel de pedra levemente quente, com dois brilhos ambientes muito fracos (azul no alto à direita, pérola embaixo à esquerda). Sobre ele, um único azul faz todo o trabalho de ação e destaque; verde, vermelho e âmbar aparecem só quando carregam significado financeiro. Os números são o conteúdo principal: grandes, de peso médio, com espaçamento negativo e algarismos tabulares.\n\nA landing page e o login são um segundo mundo, intencional: mais claros e frios, com azul mais saturado, títulos enormes, animação de rolagem e uma seção escura. Eles compartilham a fonte, o símbolo e o azul da marca com o app, mas têm paleta própria (`--lp-*`, `--login-*`) e não devem ser misturados com os tokens do painel.",
+    "keyCharacteristics": [
+      "Estrutura por divisórias de 1px e espaço, não por caixas empilhadas.",
+      "Um acento azul; cor semântica só para receita, despesa e alerta.",
+      "Números como manchete: Manrope 500, tracking negativo, `tabular-nums`.",
+      "Rótulos pequenos em caixa alta com tracking largo como sinalização.",
+      "Vidro discreto em superfícies elevadas; tudo funciona sem ele.",
+      "Celular primeiro: dock flutuante em pílula, folhas que sobem de baixo.",
+      "Temas claro e escuro completos sobre os mesmos nomes de token."
+    ],
+    "rules": [
+      {
+        "name": "A Regra do Azul Único",
+        "body": "Só existe um azul de ação por tela. Não crie segundo acento (roxo, laranja, ciano) para variedade.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra da Cor com Significado",
+        "body": "Verde, vermelho e âmbar só aparecem quando dizem algo sobre o dinheiro (entrou, saiu, atenção). Nunca como decoração ou categoria genérica.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Número Tabular",
+        "body": "Todo valor monetário que pode ser comparado com outro usa `font-variant-numeric: tabular-nums` e peso 500. Nunca negrito 700 em valores.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra do Piso de Leitura",
+        "body": "Os rótulos mais pequenos já estão em 0.55–0.6rem. Não desça abaixo disso, e não use esse tamanho para nada além de sinalização curta.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra do Vidro Opcional",
+        "body": "Toda tela precisa ficar correta com `--glass-blur: none` e superfícies sólidas. O vidro só refina; se ele for necessário para separar uma coisa da outra, falta uma linha ou espaço.",
+        "section": "elevation"
+      },
+      {
+        "name": "A Regra da Linha Antes da Caixa",
+        "body": "Para agrupar conteúdo, prefira uma divisória de 1px e espaço. Use um painel só quando o grupo é uma unidade que se toca (um cartão, uma conta, um formulário).",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do usar `stone-paper` como fundo do app e deixar os brilhos ambientes em 23% ou menos.",
+      "Do separar seções com divisórias de 1px (`hairline`) e espaço de 28–46px antes de pensar em painel.",
+      "Do escrever todo valor monetário em Manrope 500 com `tabular-nums` e tracking negativo proporcional ao tamanho.",
+      "Do manter alvos de toque de pelo menos 44×44px (48px nos botões do rodapé de formulário no celular).",
+      "Do definir cada cor nova nos dois temas, em `:root` e `:root.dark`, e conferir contraste AA.",
+      "Do garantir que a tela funcione com `prefers-reduced-transparency` e `prefers-reduced-motion`, como o sistema já faz.",
+      "Do usar as durações do sistema (140 / 200 / 300ms) com `cubic-bezier(.2,.7,.2,1)`."
+    ],
+    "donts": [
+      "Don't usar o vidro como estrutura principal nem empilhar vidro sobre vidro.",
+      "Don't introduzir um segundo acento de cor no app.",
+      "Don't usar verde ou vermelho fora do sentido de receita, despesa ou erro.",
+      "Don't usar peso 700 em números grandes; o sistema fala em 500.",
+      "Don't misturar tokens `--lp-*` ou `--login-*` no painel, nem tokens do painel na landing.",
+      "Don't usar branco puro como fundo de página no app.",
+      "Don't criar texto menor que 0.55rem."
+    ]
+  }
+}
