@@ -91,7 +91,8 @@ export function LoginScreen({initialMode='signIn'}:{initialMode?:Extract<AuthMod
         const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:`${window.location.origin}/dashboard`}});
         if(error)throw error;
         if(data.session)router.replace('/dashboard');
-        else setNotice('Confira seu e-mail para confirmar a conta antes de entrar.');
+        else if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0)setAuthError('Este e-mail já possui uma conta. Entre com sua senha ou use "Esqueci minha senha".');
+        else setNotice('Confira seu e-mail para confirmar a conta antes de entrar. Confira também a caixa de spam.');
       }else{
         const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});
         if(error)throw error;

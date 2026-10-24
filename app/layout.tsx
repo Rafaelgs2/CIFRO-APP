@@ -9,7 +9,8 @@ export const metadata:Metadata={
   applicationName:'CIFRO',
   description:'Suas finanças mais conectadas.',
   manifest:'/manifest.webmanifest',
-  icons:{icon:'/favicon.svg?v=2'},
+  icons:{icon:'/favicon.svg?v=2',apple:'/icons/apple-touch-icon.png'},
+  appleWebApp:{capable:true,title:'CIFRO',statusBarStyle:'default'},
   openGraph:{
     type:'website',
     locale:'pt_BR',
