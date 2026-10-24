@@ -15,8 +15,8 @@ export const mainNavigation=[
   {id:'profile',name:'Perfil',mobile:'Perfil',icon:UserRound},
 ] as const;
 const quickActions=[
-  {id:'expense',label:'Nova despesa',icon:ArrowUpRight},
-  {id:'income',label:'Nova receita',icon:ArrowDownLeft},
+  {id:'expense',label:'Nova despesa',icon:ArrowDownLeft},
+  {id:'income',label:'Nova receita',icon:ArrowUpRight},
   {id:'transfer',label:'Transferir',icon:ArrowLeftRight},
   {id:'purchase',label:'Compra no cartão',icon:ShoppingBag},
   {id:'account',label:'Nova conta',icon:Landmark},

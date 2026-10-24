@@ -1,6 +1,6 @@
 'use client';
 
-import {ArrowRight,Plus,Eye,EyeOff,ArrowDownLeft,ArrowLeftRight,CreditCard} from '@/components/icons';
+import {ArrowRight,Plus,Eye,EyeOff,ArrowUpRight,ArrowLeftRight,CreditCard} from '@/components/icons';
 import {accountBalance,dateInMonth,money,today,totals,invoice,monthOf} from '@/lib/finance';
 import {AccountTile,CategoryChart,TransactionRows,EmptyState,Bar} from './finance-ui';
 import {FinancialFlow} from './finance-chart';
@@ -20,7 +20,7 @@ export function FinanceDashboard({context:c,hidden,onToggleValues}:{context:AppC
       <div className="hero-balance"><div className="balance-label"><span>Saldo nas contas</span><button className="icon-button" onClick={onToggleValues} aria-label={hidden?'Mostrar valores':'Ocultar valores'}>{hidden?<EyeOff size={18}/>:<Eye size={18}/>}</button></div><strong className="balance-number">{shown(balance)}</strong><p>Até o fim do mês selecionado · inclui investimentos e reserva</p><button className="text-button" onClick={()=>navigate('accounts')}>Ver minhas contas <ArrowRight size={16}/></button></div>
       <dl className="hero-metrics"><div><dt>Receitas deste mês</dt><dd>{shown(period.income)}</dd></div><div><dt>Despesas deste mês</dt><dd>{shown(period.expense)}</dd></div><div className="metric-result"><dt>Resultado mensal</dt><dd>{shown(period.result)}</dd><span>Receitas menos despesas</span></div></dl>
     </section>
-    <div className="quick-actions" aria-label="Movimentações"><button className="primary" onClick={()=>transaction('expense')}><Plus size={18}/>Nova despesa</button><button className="secondary" onClick={()=>transaction('income')}><ArrowDownLeft size={18}/>Nova receita</button><button className="secondary" onClick={()=>transaction('transfer')}><ArrowLeftRight size={17}/>Transferir</button><button className="text-button" onClick={()=>navigate('cards')}><CreditCard size={17}/>Meus cartões</button></div>
+    <div className="quick-actions" aria-label="Movimentações"><button className="primary" onClick={()=>transaction('expense')}><Plus size={18}/>Nova despesa</button><button className="secondary" onClick={()=>transaction('income')}><ArrowUpRight size={18}/>Nova receita</button><button className="secondary" onClick={()=>transaction('transfer')}><ArrowLeftRight size={17}/>Transferir</button><button className="text-button" onClick={()=>navigate('cards')}><CreditCard size={17}/>Meus cartões</button></div>
     {!state.accounts.length&&<section className="welcome-card"><div><h2>Adicione sua primeira conta.</h2><p>Informe o saldo inicial para começar a acompanhar suas movimentações.</p></div><button className="primary" onClick={()=>open({kind:'account'})}>Adicionar minha primeira conta</button>{!c.demo&&<button className="demo-link" onClick={c.switchDemo}>Conhecer com dados de exemplo <ArrowRight size={16}/></button>}</section>}
     <div className="overview-composition">
       <section className="flow-section"><div className="section-heading"><div><p className="section-kicker">NOS ÚLTIMOS SEIS MESES</p><h2>Fluxo financeiro</h2></div><button className="text-button" onClick={()=>navigate('reports')}>Ver relatório <ArrowRight size={16}/></button></div><FinancialFlow state={state} month={month} hidden={hidden}/></section>

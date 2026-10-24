@@ -111,13 +111,13 @@ export const ShoppingBag = icon('bag', <>
   <circle {...dot} cx="15" cy="10.8" r=".95"/>
 </>);
 
-// Expense and income share the same quarter-disc "base": money leaves it or lands in it.
-export const ArrowUpRight = icon('expense', <>
+// Expense and income share the same quarter-disc "base": income (up) leaves it, expense (down) lands in it.
+export const ArrowUpRight = icon('income', <>
   <path {...plane} d="M3 13a8 8 0 0 1 8 8H3Z"/>
   <path d="M8 16 19 5M11 5h8v8"/>
 </>);
 
-export const ArrowDownLeft = icon('income', <>
+export const ArrowDownLeft = icon('expense', <>
   <path {...plane} d="M3 13a8 8 0 0 1 8 8H3Z"/>
   <path d="M19 5 8 16M8 8v8h8"/>
 </>);
