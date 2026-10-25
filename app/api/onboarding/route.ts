@@ -7,7 +7,8 @@ const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cach
 export async function POST(request:Request){
   const origin=request.headers.get('origin');
   if(!origin||origin!==new URL(request.url).origin)return reply({error:'Origem da solicitação inválida.'},403);
-  const context=await authenticatedContext(request);
+  const context=await authenticatedContext(request).catch((error:unknown)=>{console.error('Onboarding authentication failed',error);return undefined;});
+  if(context===undefined)return reply({error:'Não foi possível validar sua sessão. Tente novamente.'},503);
   if(!context)return reply({error:'Autenticação necessária.'},401);
 
   const {error}=await context.supabase.from('profiles').update({onboarding_completed_at:new Date().toISOString()}).eq('id',context.user.id);

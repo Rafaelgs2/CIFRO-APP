@@ -1,4 +1,4 @@
-import {createClient} from '@supabase/supabase-js';
+import {createClient,isAuthRetryableFetchError} from '@supabase/supabase-js';
 
 function config(){
   const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -24,5 +24,7 @@ export async function authenticatedContext(request:Request){
   if(!context)return null;
   const {supabase,token}=context;
   const {data:{user},error}=await supabase.auth.getUser(token);
+  // Not reaching Supabase says nothing about the token. Throwing lets the route answer 503 instead of 401, which the app treats as a logout.
+  if(error&&isAuthRetryableFetchError(error))throw error;
   return error||!user?null:{user,supabase};
 }
