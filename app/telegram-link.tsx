@@ -57,6 +57,8 @@ export function TelegramLink({accounts,authorizedFetch,setConfirm}:{accounts:Acc
   const [editing,setEditing]=useState(false);
   const [accountId,setAccountId]=useState('');
   const [linkUrl,setLinkUrl]=useState('');
+  const [appUrl,setAppUrl]=useState('');
+  const [linkCopied,setLinkCopied]=useState(false);
   const [linkExpired,setLinkExpired]=useState(false);
   const [busy,setBusy]=useState(false);
   const [helpOpen,setHelpOpen]=useState(false);
@@ -91,7 +93,7 @@ export function TelegramLink({accounts,authorizedFetch,setConfirm}:{accounts:Acc
 
   async function request(init:RequestInit){
     const response=await authorizedFetch(ENDPOINT,init);
-    const data=await response.json() as Status&{url?:string;error?:string};
+    const data=await response.json() as Status&{url?:string;appUrl?:string;error?:string};
     if(!response.ok)throw Error(data.error??'Não foi possível atualizar a conexão.');
     return data;
   }
@@ -102,7 +104,7 @@ export function TelegramLink({accounts,authorizedFetch,setConfirm}:{accounts:Acc
     try{
       const data=await request({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({accountId:accountId||active[0]?.id})});
       if(!data.url)throw Error('Não foi possível gerar o link.');
-      setLinkUrl(data.url);
+      setLinkUrl(data.url);setAppUrl(data.appUrl??'');setLinkCopied(false);
     }catch(error){
       toast.error(error instanceof Error?error.message:'Não foi possível gerar o link.');
     }finally{setBusy(false)}
@@ -132,6 +134,11 @@ export function TelegramLink({accounts,authorizedFetch,setConfirm}:{accounts:Acc
         toast.success('Telegram desconectado.');
       },
     });
+  }
+
+  async function copyLink(){
+    try{await navigator.clipboard.writeText(linkUrl);setLinkCopied(true)}
+    catch{toast.error('Não foi possível copiar. Clique com o botão direito em Abrir no Telegram e copie o endereço.')}
   }
 
   function cancelEditing(){setAccountId(status?.accountId??'');setEditing(false)}
@@ -168,8 +175,10 @@ export function TelegramLink({accounts,authorizedFetch,setConfirm}:{accounts:Acc
       <p className="form-hint">O link vale por 15 minutos e só funciona uma vez. Não compartilhe.</p>
       <div className="telegram-actions">
         <a className="primary" href={linkUrl} target="_blank" rel="noreferrer">Abrir no Telegram</a>
+        <button type="button" className="secondary" onClick={()=>void copyLink()}>{linkCopied&&<Check size={16} aria-hidden="true"/>}{linkCopied?'Link copiado':'Copiar link'}</button>
         <button type="button" className="text-button" onClick={()=>setLinkUrl('')}>Cancelar</button>
       </div>
+      <p className="form-hint">Não abriu? Cole o link no Telegram, em Mensagens salvas, e toque nele{appUrl&&<>, ou <a className="inline-link" href={appUrl}>abra direto no app do Telegram</a></>}.</p>
     </div>;
     if(!active.length)return <p className="form-hint">Adicione uma conta para conectar o Telegram.</p>;
     return <form className="telegram-form" onSubmit={event=>void connect(event)}>

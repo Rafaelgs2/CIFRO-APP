@@ -44,7 +44,8 @@ export async function POST(request:Request){
     console.error('Telegram link failed',{code:error.code,message:error.message});
     return reply({error:'Não foi possível conectar o Telegram. Tente novamente.'},503);
   }
-  return reply({url:`https://t.me/${botUsername}?start=${data}`});
+  // appUrl opens the installed app directly, for browsers or networks where t.me does not load.
+  return reply({url:`https://t.me/${botUsername}?start=${data}`,appUrl:`tg://resolve?domain=${botUsername}&start=${data}`});
 }
 
 export async function PATCH(request:Request){
