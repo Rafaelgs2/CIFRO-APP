@@ -142,7 +142,8 @@ export function LoginScreen({initialMode='signIn'}:{initialMode?:Extract<AuthMod
           <p>{mode==='signIn'?'Acesse sua conta para continuar':mode==='signUp'?'Comece a organizar suas finanças.':mode==='forgot'?'Enviaremos um link seguro para seu e-mail.':'Use uma senha com pelo menos 12 caracteres.'}</p>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit} noValidate>
+        {/* POST keeps the password out of the URL if the form is submitted before the page's JavaScript runs. */}
+        <form className="login-form" method="post" onSubmit={handleSubmit} noValidate>
           {mode!=='reset'&&<div className="login-field">
             <label htmlFor="email">E-mail</label>
             <div className="login-input-shell">
