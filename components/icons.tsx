@@ -403,6 +403,16 @@ export const ArrowRight = icon('arrow-right', <path d="M5 12h13M13 7l5 5-5 5"/>)
 export const ArrowLeft = icon('arrow-left', <path d="M19 12H6M11 7l-5 5 5 5"/>);
 export const ArrowUp = icon('arrow-up', <path d="M12 19V6M7 11l5-5 5 5"/>);
 export const X = icon('x', <path d="M6 6l12 12M18 6 6 18"/>);
+export const CircleHelp = icon('help', <>
+  <circle {...plane} cx="12" cy="12" r="9"/>
+  <circle cx="12" cy="12" r="9"/>
+  <path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2-2.4 3.5"/>
+  <circle {...dot} cx="12" cy="17" r="1.1"/>
+</>);
+export const Send = icon('send', <>
+  <path {...plane} d="M21 3 10 14l3.5 7Z"/>
+  <path d="M21 3 3 10.5l7 3.5 3.5 7ZM21 3 10 14"/>
+</>);
 
 const panel = <>
   <path {...plane} d="M9 4H6.5a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3H9Z"/>

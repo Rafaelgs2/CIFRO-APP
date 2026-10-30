@@ -26,22 +26,46 @@ export async function POST(request:Request){
   const authenticated=await requestContext(request);
   if('response'in authenticated)return authenticated.response;
 
-  let body:{chatId?:unknown;accountId?:unknown};
+  const botUsername=process.env.TELEGRAM_BOT_USERNAME;
+  if(!botUsername||!/^[A-Za-z0-9_]{5,32}$/.test(botUsername)){
+    console.error('TELEGRAM_BOT_USERNAME is missing or invalid');
+    return reply({error:'A conexão com o Telegram ainda não está disponível.'},503);
+  }
+
+  let body:{accountId?:unknown};
   try{body=await request.json()}
   catch{return reply({error:'Dados inválidos.'},400)}
-  const {chatId,accountId}=body??{};
-  // Telegram ids fit in 52 bits, but they travel as text so no JSON layer has to care.
-  if(typeof chatId!=='string'||!/^-?\d{1,16}$/.test(chatId))return reply({error:'Informe um chat id válido.'},400);
+  const accountId=body?.accountId;
   if(typeof accountId!=='string'||!accountId)return reply({error:'Escolha uma conta.'},400);
 
-  const {data,error}=await authenticated.context.supabase.rpc('link_telegram',{p_chat_id:chatId,p_account_id:accountId});
+  const {data,error}=await authenticated.context.supabase.rpc('start_telegram_link',{p_account_id:accountId});
   if(error){
-    if(error.code==='23505')return reply({error:'Este chat já está conectado a outra conta do Cifro.'},409);
     if(error.code==='22023'||error.code==='22P02')return reply({error:'Escolha uma conta ativa.'},400);
     console.error('Telegram link failed',{code:error.code,message:error.message});
     return reply({error:'Não foi possível conectar o Telegram. Tente novamente.'},503);
   }
-  return reply({secret:data});
+  return reply({url:`https://t.me/${botUsername}?start=${data}`});
+}
+
+export async function PATCH(request:Request){
+  if(!sameOrigin(request))return reply({error:'Origem da solicitação inválida.'},403);
+  const authenticated=await requestContext(request);
+  if('response'in authenticated)return authenticated.response;
+
+  let body:{accountId?:unknown};
+  try{body=await request.json()}
+  catch{return reply({error:'Dados inválidos.'},400)}
+  const accountId=body?.accountId;
+  if(typeof accountId!=='string'||!accountId)return reply({error:'Escolha uma conta.'},400);
+
+  const {error}=await authenticated.context.supabase.rpc('update_telegram_account',{p_account_id:accountId});
+  if(error){
+    if(error.code==='P0002')return reply({error:'O Telegram não está mais conectado. Recarregue a página.'},409);
+    if(error.code==='22023'||error.code==='22P02')return reply({error:'Escolha uma conta ativa.'},400);
+    console.error('Telegram account update failed',{code:error.code,message:error.message});
+    return reply({error:'Não foi possível alterar a conta. Tente novamente.'},503);
+  }
+  return reply({linked:true,accountId});
 }
 
 export async function DELETE(request:Request){

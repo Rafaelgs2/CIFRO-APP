@@ -27,7 +27,7 @@ Este documento registra apenas decisões atualmente refletidas no código.
 - A interface envia o estado financeiro validado para uma RPC transacional de compatibilidade.
 - Uma revisão por usuário impede que uma aba sobrescreva silenciosamente alterações de outra sessão.
 - A próxima evolução de persistência deve substituir o salvamento integral por operações granulares.
-- A captura pelo Telegram já é granular: a RPC `capture_expense` insere uma única despesa, sem sessão de usuário, autenticada por chat id e um segredo guardado só como hash. Ela não lê nem altera outros registros, incrementa a revisão e aplica as mesmas regras de `validateState`, pois um registro inválido impediria o app de carregar o estado. O guia está em `docs/telegram-n8n.md`.
+- A captura pelo Telegram já é granular: a RPC `capture_telegram_expense` insere uma única despesa, sem sessão de usuário, autenticada por um segredo único do bot guardado só como hash. O dono é definido pelo chat, e um chat só se liga a um usuário por um link de uso único gerado na conta logada. A RPC não lê nem altera outros registros, incrementa a revisão e aplica as mesmas regras de `validateState`, pois um registro inválido impediria o app de carregar o estado. O guia está em `docs/telegram-n8n.md`.
 
 ## Regras financeiras
 
@@ -45,7 +45,7 @@ Este documento registra apenas decisões atualmente refletidas no código.
 
 - Não há integração bancária, importação automática ou uso familiar.
 - Não há separação entre finanças pessoais e de empresa.
-- A captura pelo Telegram atende um usuário por chat, com o segredo guardado na automação. Vários usuários no mesmo bot exigirão outra forma de autenticar a automação e confirmar a posse do chat.
+- A captura pelo Telegram atende um chat privado por usuário. Não há limite de envio por usuário, e a automação depende de o n8n estar no ar.
 - A exportação JSON é manual; não existe restauração automática.
 - A aplicação usa o fuso `America/Sao_Paulo` para a data corrente.
 - O volume máximo aceito pelo estado é limitado pelos schemas em `lib/finance.ts` e pelo limite de corpo da API.
