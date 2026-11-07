@@ -394,9 +394,29 @@ body:has(.onboarding) [data-slot=select-content] { z-index:80; }
  .dock-menu[data-open=true] { transform:none; opacity:1; visibility:visible; pointer-events:auto; transition-delay:0s; }
  .dock-menu button { display:flex; align-items:center; gap:12px; min-height:60px; padding:0 14px 0 10px; border:1px solid var(--border); border-radius:20px; background:var(--surface); color:var(--text-primary); font-size:.8rem; font-weight:500; text-align:left; line-height:1.25; }
  .dock-menu button:active { transform:scale(.97); }
+.dock-menu .dock-menu-wide { grid-column:1/-1; min-height:52px; }
  .dock-menu button:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
  .dock-menu[data-open=true] button { animation:dock-item-in var(--motion-slow) var(--motion-ease) both; animation-delay:calc(var(--i) * 28ms); }
  .dock-menu-icon { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; border-radius:50%; background:var(--brand-tint-strong); color:var(--primary); }
  html[data-keyboard-open] .mobile-dock,html[data-keyboard-open] .dock-scrim { display:none; }
 }
 @keyframes dock-item-in { from { opacity:0; transform:translateY(8px) scale(.96); } to { opacity:1; transform:none; } }
+/* Batch expenses: one textarea in, a reviewable list out. */
+.toolbar-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.batch-text { font-variant-numeric:tabular-nums; line-height:1.7; min-height:200px; }
+.batch-hint { margin-top:-8px; }
+.batch-hint b { color:var(--text-primary); font-weight:500; }
+.batch-list { list-style:none; display:grid; }
+.batch-row { display:grid; grid-template-columns:52px minmax(0,1fr) auto; align-items:start; gap:12px; padding:14px 0; border-bottom:1px solid var(--border-subtle); }
+.batch-row:last-child { border-bottom:0; }
+.batch-row-date { padding-top:2px; white-space:nowrap; color:var(--text-secondary); font-size:.75rem; font-variant-numeric:tabular-nums; }
+.batch-row-info { display:grid; gap:8px; min-width:0; }
+.batch-row-info b { font-size:.8rem; font-weight:500; overflow-wrap:anywhere; }
+.batch-row-info>span { font-size:.7rem; color:var(--text-secondary); line-height:1.5; }
+.batch-row-info .picker-trigger { min-height:38px; padding:7px 10px; font-size:.8rem; }
+.batch-row-amount { font-size:.875rem; font-weight:500; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.batch-row-warning { display:inline-flex; align-items:center; gap:5px; }
+.batch-row-error { grid-template-columns:24px minmax(0,1fr); }
+.batch-row-error .batch-row-icon { color:var(--expense); margin-top:1px; }
+.batch-row-error .batch-row-info>span { color:var(--expense); }
+@media(max-width:640px) { .batch-row { grid-template-columns:44px minmax(0,1fr) auto; gap:10px; }.toolbar-actions { width:100%; }.toolbar-actions>button { flex:1; } }

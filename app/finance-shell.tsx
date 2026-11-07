@@ -21,6 +21,7 @@ const quickActions=[
   {id:'purchase',label:'Compra no cartão',icon:ShoppingBag},
   {id:'account',label:'Nova conta',icon:Landmark},
   {id:'card',label:'Novo cartão',icon:WalletCards},
+  {id:'batch',label:'Lançar várias despesas',icon:ReceiptText},
 ] as const;
 export type QuickAction=(typeof quickActions)[number]['id'];
 const moneyNavigation=[{id:'accounts',name:'Contas',icon:Landmark},{id:'cards',name:'Cartões',icon:CreditCard}] as const;
@@ -82,7 +83,7 @@ export function FinanceShell({children,view,navigate,name,title,onCreate}:{child
     <div className="dock-scrim" data-open={addOpen} onClick={()=>setAddOpen(false)} aria-hidden="true"/>
     <div className="mobile-dock">
       <div id="dock-add-menu" ref={menuRef} className="dock-menu" role="menu" aria-label="Adicionar" data-open={addOpen} onKeyDown={moveFocus}>
-        {quickActions.map((action,index)=><button key={action.id} type="button" role="menuitem" style={{'--i':index} as CSSProperties} onClick={()=>{setAddOpen(false);onCreate(action.id);}}><span className="dock-menu-icon" aria-hidden="true"><action.icon size={19}/></span>{action.label}</button>)}
+        {quickActions.map((action,index)=><button key={action.id} type="button" role="menuitem" className={action.id==='batch'?'dock-menu-wide':undefined} style={{'--i':index} as CSSProperties} onClick={()=>{setAddOpen(false);onCreate(action.id);}}><span className="dock-menu-icon" aria-hidden="true"><action.icon size={19}/></span>{action.label}</button>)}
       </div>
       <nav className="mobile-nav" aria-label="Navegação principal">{mainNavigation.map((item,index)=>{
         const active=view===item.id||item.id==='profile'&&['accounts','cards','categories'].includes(view)||item.id==='reports'&&view==='closing';
