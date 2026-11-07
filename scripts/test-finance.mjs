@@ -88,4 +88,18 @@ assert.ok(!html.includes('<script>')&&!html.includes('<img'));assert.ok(html.inc
 const monthlyHtml=renderReportHtml(monthly,{name:'Ana',demo:false,origin:''});assert.ok(monthlyHtml.includes('O saldo ao longo do mês')&&monthlyHtml.includes('saldo <em>'));
 const empty=renderReportHtml(buildMonthlyReport(emptyState(),'2026-09','2026-09-30'),{name:'',demo:false,origin:''});assert.ok(empty.includes('Nenhum lançamento neste mês.'));
 renderReportHtml(buildMonthlyReport(demoState('2026-09'),'2026-09'),{name:'Ana',demo:true,origin:''});
-console.log('PASS: accounts, salary/VR, transfers, no duplicate expenses, installments with exact cents, closing cycles, leap dates, payments, validation and demonstration, custom categories, overdue carry-over, accent-insensitive search, recurring series, reports.');
+{const {parseBatch,batchTransactions,guessCategory}=await import('../lib/batch.ts');
+const b=emptyState();b.accounts=[{id:'acc',name:'Conta',kind:'salary',initial:100000,date:'2026-10-01',archived:false,order:0}];b.cards=[{id:'nu',name:'Nubank',institution:'Nubank',limit:800000,closing:3,due:10,initial:0,initialMonth:'2026-11'}];
+b.transactions.push({...baseTransaction(),description:'Uber',amount:1890,date:'2026-10-29',accountId:'acc',categoryId:'cat-2'});
+const acc={kind:'account',id:'acc'},asOf='2026-11-06';
+const rows=parseBatch('28/10\nalmoço 32,50\n- uber 99 18,90\n29/10 mercado R$ 1.214,37\n29/10 Uber 18,90\nontem: farmácia 12\n05/01 presente 50\n28/12 viagem 10\n30/02 café 5\nsem valor\n31/12/2026 futuro 10\n15/09 antes da conta 10',b,acc,asOf);
+assert.deepEqual(rows.map(r=>[r.line,r.date,r.description,r.amount]),[[2,'2026-10-28','almoço',3250],[3,'2026-10-28','uber 99',1890],[4,'2026-10-29','mercado',121437],[5,'2026-10-29','Uber',1890],[6,'2026-11-05','farmácia',1200],[7,'2026-01-05','presente',5000],[8,'2025-12-28','viagem',1000],[9,'2025-12-28','',0],[10,'','',0],[11,'2026-12-31','futuro',1000],[12,'2026-09-15','antes da conta',1000]]);
+assert.deepEqual(rows.map(r=>!!r.error),[false,false,false,false,false,true,true,true,true,true,true]);assert.match(rows[5].error,/05\/01\/2026 é antes do saldo inicial de Conta \(01\/10\/2026\)/);
+assert.match(rows[7].error,/inválida/);assert.match(rows[8].error,/valor/);assert.match(rows[9].error,/31\/12\/2026 ainda não chegou/);assert.match(rows[10].error,/saldo inicial/);
+assert.deepEqual(rows.slice(0,5).map(r=>r.categoryId),['cat-1','cat-2','cat-5','cat-2','cat-4']);assert.equal(rows[3].duplicate,true);assert.equal(rows[1].duplicate,false);
+assert.equal(guessCategory('ração do pet',[...b.categories,{id:'pets',name:'Pet',type:'expense',icon:'pet',color:'#c27bb0',order:10}]),'pets');assert.equal(guessCategory('almoço no Lazer',b.categories),'cat-3');assert.equal(guessCategory('nada a ver',b.categories),'cat-5');
+assert.equal(parseBatch('almoço 10',b,acc,asOf)[0].error.startsWith('Comece com a data'),true);{const soon=parseBatch('11/11 teste 5\n07/12 teste 5\n08/12 teste 5',b,acc,asOf);assert.deepEqual(soon.map(r=>r.date),['2026-11-11','2026-12-07','2025-12-08']);assert.match(soon[0].error,/^11\/11\/2026 ainda não chegou/);}assert.deepEqual(parseBatch('ontem farmácia 12\npadaria 5',b,acc,asOf).map(r=>r.date),['2026-11-05','2026-11-05']);
+const ok=rows.filter(r=>!r.error&&r.date>='2026-10-01');validateState({...b,transactions:[...b.transactions,...batchTransactions(ok,acc)]});
+const card=batchTransactions(ok,{kind:'card',id:'nu'});assert.ok(card.every(t=>t.type==='purchase'&&t.cardId==='nu'&&!t.accountId));validateState({...b,transactions:[...b.transactions,...card]});
+assert.equal(parseBatch('15/09 antes 10',b,{kind:'card',id:'nu'},asOf)[0].error,'');}
+console.log('PASS: accounts, salary/VR, transfers, no duplicate expenses, installments with exact cents, closing cycles, leap dates, payments, validation and demonstration, custom categories, overdue carry-over, accent-insensitive search, recurring series, reports, batch expenses.');
